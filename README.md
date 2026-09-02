@@ -2,13 +2,13 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go HTTP 서버와 health check API입니다. 실험 결과는 아직 없습니다.
+현재 구현된 범위는 Go media endpoint와 E1 단일 프로세스 cache-stampede workload/분석 vertical slice입니다. Calibration은 끝났지만 10회 retained result는 아직 없습니다.
 
 ## 실험
 
 | 실험 | 확인하려는 것 | 주요 지표 | 상태 |
 | --- | --- | --- | --- |
-| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | 실제 변환 횟수, p99, CPU, 메모리 | 계획 완료 · 구현 전 |
+| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | 실제 변환 횟수, p99, CPU, 메모리 | S0/S1/S2 구현·보정 완료 · 본 측정 전 |
 | E2. 이미지 변환기 비교 | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, 최대 메모리, 파일 크기와 품질 | 준비 중 |
 | E3. 멀티 리전 장애 | 한 리전의 응답이 느려지거나 끊겼을 때 사용자에게 얼마나 오래 영향을 주는가? | 리전별 p95/p99, 오류율, 복구 시간 | 준비 중 |
 | E4. 장애 격리 | 변환기나 저장소 장애가 캐시에 있는 이미지 요청까지 번지는 것을 막을 수 있는가? | 영향받은 요청 범위, 탐지·완화·복구 시간 | 준비 중 |
@@ -94,23 +94,27 @@ GET  /i/{content_hash}/{transform_spec}.{format}
 
 ## 현재 구현
 
-- Go HTTP 서버와 종료 신호 처리
+- Go HTTP 서버, 종료 신호 처리와 dependency-injected media pipeline
 - `GET /health/live`, `GET /health/ready`
-- JSON 응답과 허용하지 않은 HTTP 메서드 처리
-- HTTP 처리 코드의 자동 테스트
+- `GET /i/{content_hash}/{transform_spec}.{format}`의 canonical key, WebP 변환과 atomic local publish
+- `none`/`process-singleflight` coordinator와 요청별 cancellation/server-side timeout 계약
+- govips/libvips transformer와 deterministic failure transformer
+- E1 S0/S1/S2/F1 barrier workload, raw CSV/Prometheus/log/resource output
+- Raw counter/request 교차 검증, 기반 표와 두 SVG 자동 생성
+- Docker build 안의 test와 vet
 
 ## 로컬 실행
 
-Go 1.26.7 이상이 필요합니다. 2026-09-01 현재 보안 수정이 제공되는 두 버전 중 패치가 충분히 누적된 1.26의 최신 버전을 골랐습니다. 초기 실험에 불필요한 toolchain 변화를 넣지 않기 위한 선택이며, 1.27은 같은 테스트와 성능 측정을 통과한 뒤 검토합니다.
+서비스 자체를 실행하려면 Go 1.26.7과 libvips 8.16.1 개발 파일이 필요합니다. 버전이 고정된 Docker build가 재현 경로입니다.
 
 ```bash
-go run ./cmd/content-serving
+commit="$(git rev-parse HEAD)"
+docker build --target service --build-arg "GIT_COMMIT=${commit}" -t content-serving-lab:local .
+docker run --rm -p 8080:8080 content-serving-lab:local
 curl http://localhost:8080/health/ready
-go test ./...
-go vet ./...
 ```
 
-기본 포트는 `8080`이며 `PORT` 환경 변수로 바꿀 수 있습니다.
+기본 포트는 `8080`입니다. E1 workload와 결과 재생성 명령은 [E1 문서](experiments/e1-cache-stampede/README.md#로컬-재현)에 있습니다.
 
 ## 측정 원칙
 
@@ -125,10 +129,11 @@ go vet ./...
 
 ```text
 cmd/content-serving/     실행 프로그램
-internal/                서비스 코드
+cmd/e1-runner/           E1 실행·분석 CLI
+internal/                서비스, workload와 분석 코드
 api/                     OpenAPI와 API 동작 테스트 (예정)
 deploy/                  Docker와 Terraform (예정)
-experiments/             부하·장애 시나리오와 원본 측정 자료
+experiments/             부하·장애 시나리오, fixture와 원본 측정 자료
 reports/                 실험별 결과 리포트 (예정)
 docs/                    구성안과 설계 결정
 operations/              대시보드, 운영 절차와 장애 실험 기록 (예정)

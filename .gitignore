@@ -16,3 +16,10 @@ coverage.*
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Calibration runs are excluded unless selected as public evidence.
+experiments/e1-cache-stampede/results/calibration-*/
+!experiments/e1-cache-stampede/results/calibration-20260902-f/
+!experiments/e1-cache-stampede/results/calibration-20260902-f/**
+!experiments/e1-cache-stampede/results/calibration-20260902-g/
+!experiments/e1-cache-stampede/results/calibration-20260902-g/**

@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **실험 계획 작성 완료 · 구현 전**
+상태: **S0/S1/S2 vertical slice와 calibration 완료 · retained measurement 전**
 
 > 아직 변환된 이미지가 없을 때 같은 요청이 한꺼번에 들어오면, 실제 변환 횟수를 얼마나 줄이면서 응답 지연과 오류를 억제할 수 있을까?
 
@@ -18,6 +18,8 @@ E1은 첫 변환이 진행되는 동안 같은 요청이 여러 개 도착했을
 - CPU 사용 시간과 최대 메모리
 - 시간 초과와 오류
 - 다른 이미지 요청의 응답 시간
+
+현재 공개 구현은 단일 프로세스의 S0, S1-10/50/100, S2-10/50/100과 F1까지입니다. Canonical key, local atomic publish, 실제 libvips 변환, HTTP endpoint, barrier workload, raw result 검증과 SVG 재생성을 한 container image에 포함합니다. S3 이후의 unrelated-key isolation, multi-process, S3/ECS와 distributed coordination은 아직 구현하지 않았으므로 이 단계의 결과로 결론 내리지 않습니다.
 
 ## 용어
 
@@ -68,6 +70,8 @@ S3 conditional write는 `If-None-Match: *` 조건을 사용해 해당 키가 없
 
 여러 프로세스 사이의 요청 조정은 중복 변환 비용이 외부 저장소, lock 만료와 실패 복구의 복잡성보다 큰 경우에 도입합니다.
 
+`process-singleflight`의 공유 작업은 첫 요청의 client context에서 분리되고 server-side transform timeout을 사용합니다. 각 waiter는 자신의 client context가 끝나면 독립적으로 대기를 중단할 수 있습니다. libvips의 native C 호출은 시작된 뒤 Go context로 중단할 수 없으므로 transformer는 호출 전후에 context를 확인하고, 동시에 실행할 native 변환 수를 별도로 제한합니다.
+
 ## 고정할 입력
 
 첫 비교는 [CC0 고해상도 JPEG fixture](fixtures/README.md)와 아래 변환 옵션으로 실행합니다. Fixture는 Git LFS로 관리하며 파일의 출처, 저작자 credit, 라이선스, 크기, 해상도와 SHA-256은 fixture 문서에 고정합니다.
@@ -83,6 +87,29 @@ S3 conditional write는 `If-None-Match: *` 조건을 사용해 해당 키가 없
 `640 × 640`은 업로드 원본의 크기가 아니라 card/thumbnail용 파생 이미지 크기입니다. 약 16.1 megapixel인 원본을 사용해 고해상도 JPEG decode와 큰 폭의 축소를 포함합니다. 실제 변환기와 인코더 버전도 실행 결과에 남깁니다.
 
 대표 결과를 얻은 뒤에는 같은 원본의 `1280 × 1280` 변환, 더 큰 JPEG와 알파 채널이 있는 PNG에서도 같은 경향이 나타나는지 확인합니다. 추가 조건은 sensitivity scenario로 분리하며 첫 결과의 조건을 사후에 바꾸지 않습니다.
+
+## 고정한 구현과 실행 조건
+
+Retained measurement 전에 다음 값을 고정했습니다.
+
+| 항목 | 값 |
+| --- | --- |
+| Go | `1.26.7` |
+| govips | `v2.16.0` |
+| libvips | Debian package `8.16.1-1+deb13u1` (`libvips 8.16.1`) |
+| Builder image | `golang:1.26.7@sha256:e30143be198ab04cf7ba25fba83ab3a692ca584c994aad0bf131fa0eb32dd8c1` |
+| Runtime image | `debian:trixie-slim@sha256:d7e12182ce18b85b93007c1dedf31f2d29e01ccf3182cc4017c709b6259bc132` |
+| Container limit | 1 vCPU, 2 GiB memory |
+| libvips 설정 | operation cache disabled, 한 변환의 concurrency 1 |
+| Service transform 상한 | 동시에 최대 4건 |
+| Request / shared transform timeout | 90초 / 60초 |
+| Start-skew 허용값 | 100ms |
+| Resource sampling | 10ms |
+| 반복 | 성공 시나리오별 독립 cold state 10회 |
+
+libvips의 concurrency는 한 변환 내부의 worker 수만 제한하므로 동시에 시작할 변환 건수에는 별도 semaphore를 둡니다. 4건 상한은 1 vCPU/2 GiB calibration에서 S1-100의 100회 변환을 모두 완료하면서 cgroup memory limit을 넘지 않은 값입니다. 각 trial은 별도 자식 프로세스에서 예열 후 실행해 이전 trial의 native allocator 상태가 peak memory에 남지 않게 합니다.
+
+100-way 요청은 server와 같은 1 vCPU를 쓰는 loopback generator에서 시작 시각 차이가 최대 약 69.4ms까지 관측됐습니다. 100ms 기준은 이 generator 분포에 여유를 둔 값이며, 실제 서비스의 허용 지연이나 외부 load generator의 일반 기준이 아닙니다. 선택 과정과 제외한 dry run은 [calibration 기록](CALIBRATION.md)에 남깁니다.
 
 ## Cold 상태 만들기
 
@@ -100,13 +127,13 @@ S3 conditional write는 `If-None-Match: *` 조건을 사용해 해당 키가 없
 
 부하 생성기는 먼저 필요한 수만큼 요청 실행 단위를 준비합니다. 모두 준비됐다는 것을 확인한 뒤 하나의 시작 신호를 보내 같은 URL을 거의 동시에 요청하게 합니다.
 
-실제로는 요청이 정확히 같은 시각에 출발하지 않으므로 첫 요청과 마지막 요청이 시작된 시각 차이를 기록합니다. 이 차이가 너무 큰 실행은 캐시 폭주를 제대로 만들지 못한 것으로 보고 제외합니다. 허용할 시간 차이는 부하 생성기 자체를 시험한 뒤 본 측정 전에 정합니다.
+실제로는 요청이 정확히 같은 시각에 출발하지 않으므로 첫 요청과 마지막 요청이 시작된 시각 차이를 기록합니다. 이 차이를 **요청 시작 편차(request start skew, 이하 start skew)**라고 부릅니다. Start skew가 너무 큰 실행은 캐시 폭주를 제대로 만들지 못한 것으로 보고 제외합니다. 허용값은 부하 생성기 자체를 시험한 뒤 본 측정 전에 정하며, 측정 전에 그 시간만큼 기다린다는 뜻이 아닙니다.
 
 각 실행에는 다음 정보를 남깁니다.
 
 - 목표 동시 요청 수
 - 각 요청의 실제 시작 시각
-- 첫 요청과 마지막 요청 사이의 시간 차이
+- 첫 요청과 마지막 요청 사이의 시간 차이(start skew)
 - 요청 제한 시간
 - 부하 생성기를 실행한 위치와 CPU·네트워크 조건
 
@@ -191,7 +218,6 @@ CPU 사용 시간, 최대 메모리, 네트워크 전송량과 S3 요청 수도 
 ```text
 experiments/e1-cache-stampede/
   README.md
-  workload/                    부하와 장애를 만드는 코드
   fixtures/                    테스트 이미지의 사용 조건과 해시
   results/<run-id>/
     run.json                   실행 환경과 조건
@@ -200,10 +226,48 @@ experiments/e1-cache-stampede/
     resources.csv              시간대별 CPU·메모리 사용량
     metrics.prom               메트릭 원본
     logs.jsonl                 요청을 연결해 볼 수 있는 로그
-  analyze/                     집계, 검증과 그래프 생성 코드
+    analysis/
+      analysis.json            raw 교차 검증 결과와 집계 조건
+      summary.csv              trial 경계를 보존한 기반 표
+      transform-count.svg      실제 변환 횟수 chart
+      latency-error.svg        latency percentile와 오류율 chart
+
+cmd/e1-runner/                 실행과 분석 CLI
+internal/e1runner/             workload, raw writer, 검증과 chart 코드
 ```
 
 그래프는 원본 자료에서 다시 만들 수 있어야 합니다. 결과 파일이 너무 크면 별도 보관 방법을 정하되, 리포트의 숫자를 확인하는 데 필요한 자료와 코드는 공개합니다.
+
+## 로컬 재현
+
+Docker와 Git LFS가 필요합니다. Retained result는 깨끗한 commit에서 만들며, 같은 image 안의 동일 binary가 `none`과 `process-singleflight`를 번갈아 실행합니다. 아래 명령의 `run`은 완료 후 raw 파일을 교차 검증하고 두 SVG도 자동 생성합니다.
+
+```bash
+git lfs pull
+test -z "$(git status --porcelain)"
+
+commit="$(git rev-parse HEAD)"
+image="content-serving-e1:${commit}"
+docker build --target experiment --build-arg "GIT_COMMIT=${commit}" -t "${image}" .
+image_id="$(docker image inspect --format '{{.Id}}' "${image}")"
+
+mkdir -p experiments/e1-cache-stampede/results
+docker run --rm --cpus=1 --memory=2g \
+  --mount "type=bind,source=${PWD}/experiments/e1-cache-stampede/results,target=/results" \
+  "${image}" run \
+  --run-id "retained-${commit}" \
+  --container-image "${image}#${image_id}"
+```
+
+기존 raw result에서 검증과 chart만 다시 실행할 수 있습니다.
+
+```bash
+docker run --rm \
+  --mount "type=bind,source=${PWD}/experiments/e1-cache-stampede/results,target=/results" \
+  "${image}" analyze --run-dir "/results/retained-${commit}"
+```
+
+Docker build 단계가 `go test ./...`와 `go vet ./...`를 실행합니다. 결과의 `run.json`에는 commit, image 식별자, fixture/library/resource/timeout 조건과 실제 실행 명령이 들어갑니다. `analysis.json`의 `raw_validation`이 `passed`가 아니거나 invalid trial이 있으면 대표 결과로 사용하지 않습니다.
 
 ## 결과에서 보여줄 것
 
