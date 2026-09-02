@@ -36,7 +36,10 @@ func TestProcessCoordinatorCoalescesSameKey(t *testing.T) {
 		}()
 	}
 	ready.Wait()
-	waitFor(t, time.Second, func() bool { return calls.Load() == 1 })
+	waitFor(t, time.Second, func() bool {
+		snapshot := coordinator.Snapshot()
+		return calls.Load() == 1 && snapshot.Keys == 1 && snapshot.Waiters == requestCount-1
+	})
 	close(start)
 
 	coalescedCount := 0
@@ -117,9 +120,8 @@ func TestProcessCoordinatorLeaderCancellationDoesNotCancelSharedWork(t *testing.
 		waiterResult <- err
 	}()
 	waitFor(t, time.Second, func() bool {
-		coordinator.mu.Lock()
-		defer coordinator.mu.Unlock()
-		return coordinator.inflight["key"] != nil && coordinator.inflight["key"].waiters == 1
+		snapshot := coordinator.Snapshot()
+		return snapshot.Keys == 1 && snapshot.Waiters == 1
 	})
 
 	cancelLeader()
@@ -130,6 +132,27 @@ func TestProcessCoordinatorLeaderCancellationDoesNotCancelSharedWork(t *testing.
 	if err := <-waiterResult; err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestProcessCoordinatorSnapshotAggregatesKeysAndWaiters(t *testing.T) {
+	t.Parallel()
+
+	coordinator := NewProcessCoordinator(time.Second)
+	release := make(chan struct{})
+	work := func(context.Context) ([]byte, error) {
+		<-release
+		return []byte("result"), nil
+	}
+
+	for _, key := range []string{"first", "second"} {
+		go func() { _, _, _ = coordinator.Do(context.Background(), key, work) }()
+		go func() { _, _, _ = coordinator.Do(context.Background(), key, work) }()
+	}
+	waitFor(t, time.Second, func() bool {
+		snapshot := coordinator.Snapshot()
+		return snapshot.Keys == 2 && snapshot.Waiters == 2
+	})
+	close(release)
 }
 
 func TestProcessCoordinatorCleansUpAfterFailure(t *testing.T) {

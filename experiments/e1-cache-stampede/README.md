@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A 완료 — 단일 프로세스 S0/S1/S2/F1 retained 측정과 채택 판단 완료**
+상태: **Phase A 완료 / Phase B calibration 완료 — Phase A 재현 경로를 보존하며 S3/F2/local S4 retained 측정 준비**
 
 대표 결과와 결정은 [동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)에서 확인할 수 있습니다.
 
@@ -162,7 +162,7 @@ libvips의 concurrency는 한 변환 내부의 worker 수만 제한하므로 동
 
 ## Phase B 후속 후보
 
-Phase B는 Phase A의 완료 조건이 아닙니다. 프로세스 경계와 격리 동작을 별도 질문과 조건으로 측정할 때 착수합니다.
+Phase B는 Phase A의 완료 조건이 아니며 Phase A의 `e1-v1` raw, retained result와 `e1-runner run|analyze|analyze-set` 명령을 변경하지 않습니다. Phase B는 별도 `e1-phase-b-v1` schema와 `results-phase-b/` 디렉터리에서 S3, F2와 local S4를 측정합니다. S5 distributed coordination과 AWS/ECS 실행은 local S4 결과가 필요성을 보일 때만 별도로 착수합니다.
 
 ### 다른 key 격리
 
@@ -170,7 +170,7 @@ Phase B는 Phase A의 완료 조건이 아닙니다. 프로세스 경계와 격�
 | --- | ---: | --- | ---: | --- |
 | S3 | 100 | 프로세스 내부 | 2개 이상 | 인기 이미지가 다른 이미지 요청을 막는지 확인 |
 
-S3에서는 같은 인기 이미지 요청과 별도 이미지 요청을 섞습니다. 이미 만들어진 이미지를 읽는 요청도 따로 표시해, 변환 작업이 캐시된 이미지 전달까지 느리게 만드는지 봅니다. 요청 비율은 측정 전에 고정합니다.
+S3의 retained workload는 총 100개를 hot key 90개와 unrelated key 10개로 고정합니다. 같은 fixture와 640×640 cover를 유지하되 hot key는 WebP quality 80, unrelated key는 quality 79를 사용해 source content 차이 없이 derivative-key coordination만 분리합니다. `S3-COLD-CONTROL`, `S3-COLD`, `S3-WARM-CONTROL`, `S3-WARM`을 각각 독립 cold process에서 10회 실행합니다. Cold mixed에서는 key별 transform이 한 번이고 두 transform이 동시에 in-flight가 될 수 있어야 합니다. Warm mixed에서는 unrelated 요청 10개가 모두 derivative hit이고 추가 transform을 만들지 않아야 합니다. Latency는 hot/unrelated request class별로 control과 mixed를 나누어 표시합니다.
 
 ### 여러 프로세스 또는 ECS Task
 
@@ -181,7 +181,7 @@ S3에서는 같은 인기 이미지 요청과 별도 이미지 요청을 섞습�
 | S5-2 | 2 | 100 | 프로세스 사이에서도 조정 | conditional write | 외부 조정으로 실제 변환이 전체 한 번이 되는지 확인 |
 | S5-4 | 4 | 100 | 프로세스 사이에서도 조정 | conditional write | 프로세스 또는 ECS Task 수가 늘어도 한 번으로 유지되는지 확인 |
 
-먼저 로컬에서 여러 프로세스로 실행하고, 이후 ECS에서도 같은 입력과 동시 요청 수로 반복합니다. ALB가 요청을 ECS Task마다 똑같이 나눈다고 가정하지 않고 각 Task가 받은 요청 수를 기록합니다.
+먼저 local S4에서 독립 service process 2개와 4개를 실행하고 같은 local derivative directory의 atomic create를 공유합니다. 총 100개 요청을 재현 가능한 round-robin으로 보내 process별 실제 요청 수, transform과 publish metric을 기록합니다. 이는 coordination scope와 local atomic publish를 검증하는 harness이며 S3의 동작이나 ALB 분배를 재현한다고 간주하지 않습니다. 이후 ECS를 실행할 때는 ALB가 요청을 Task마다 똑같이 나눈다고 가정하지 않고 각 Task가 받은 요청 수를 기록합니다.
 
 S5는 S4에서 발생한 중복 변환이 실제로 CPU·메모리 포화, 오류 또는 받아들이기 어려운 비용으로 이어진 경우에 구현합니다.
 
@@ -199,6 +199,19 @@ S5는 S4에서 발생한 중복 변환이 실제로 CPU·메모리 포화, 오�
 | F5 | Phase B 후보 | leader의 변환을 수행하던 프로세스 종료 | 다른 프로세스가 복구하고 재시도가 다시 폭주하지 않는가 |
 
 실패 시나리오에서 모든 요청이 성공할 필요는 없습니다. 다만 정한 시간 안에 끝나야 하며, 계속 남는 작업이나 제한 없는 재시도가 없어야 합니다.
+
+F2는 leader transform 시작과 waiter 9개의 in-flight 합류를 관찰한 뒤 leader request context를 취소합니다. Leader client만 canceled로 끝나고 waiter 9개는 같은 결과로 성공해야 합니다. Transform, original read와 publish-created는 각각 한 번이고 inflight는 0으로 돌아오며 follow-up request는 새 transform 없이 derivative hit여야 합니다. 이 순서는 임의의 sleep이 아니라 관찰 가능한 event로 제어하고 10회 반복합니다.
+
+### Phase B 완료 조건
+
+- Phase A의 기존 CLI, `e1-v1` raw 검증과 retained report가 그대로 재현됩니다.
+- S3 네 scenario, F2와 local S4-2/S4-4를 각각 유효 trial 10회 측정합니다.
+- Request class, request role, target/actual process와 cancellation event가 raw에 남습니다.
+- Analyzer가 request, trial과 process metric을 교차 검증하고 세 chart를 raw에서 다시 만듭니다.
+- S3에서 unrelated key가 coordinator의 global serialization을 받지 않고 warm hit가 추가 transform을 만들지 않습니다.
+- F2에서 leader cancellation이 shared work나 waiter를 취소하지 않고 후속 hit까지 완료됩니다.
+- S4에서 모든 응답 hash가 같고 transform 수가 active process 수 이하이며 하나의 완성된 derivative만 publish됩니다.
+- S4 결과로 S5 distributed coordination을 구현할지 보류할지 결정합니다.
 
 ## 기록할 메트릭
 
@@ -278,6 +291,34 @@ docker run --rm \
 ```
 
 Docker build 단계가 `go test ./...`와 `go vet ./...`를 실행합니다. 결과의 `run.json`에는 commit, image 식별자, fixture/library/resource/timeout 조건과 실제 실행 명령이 들어갑니다. `analysis.json`의 `raw_validation`이 `passed`가 아니거나 invalid trial이 있으면 대표 결과로 사용하지 않습니다.
+
+### Phase B 로컬 재현
+
+Phase B는 별도 binary, schema와 result root를 사용합니다. 아래 명령은 S3의 cold/warm control과 mixed workload, F2, local S4-2/S4-4를 각각 10회 실행하고 raw 검증과 세 SVG를 생성합니다. Phase A의 `e1-runner` 명령이나 `results/` 파일은 변경하지 않습니다.
+
+```bash
+commit="$(git rev-parse HEAD)"
+image="content-serving-e1-phase-b:${commit}"
+docker build --target experiment-phase-b --build-arg "GIT_COMMIT=${commit}" -t "${image}" .
+image_id="$(docker image inspect --format '{{.Id}}' "${image}")"
+
+mkdir -p experiments/e1-cache-stampede/results-phase-b
+docker run --rm --cpus=1 --memory=2g \
+  --mount "type=bind,source=${PWD}/experiments/e1-cache-stampede/results-phase-b,target=/results-phase-b" \
+  "${image}" run \
+  --run-id "retained-${commit}" \
+  --container-image "${image}#${image_id}"
+```
+
+기존 Phase B raw만 다시 검증하고 chart를 재생성할 수 있습니다.
+
+```bash
+docker run --rm \
+  --mount "type=bind,source=${PWD}/experiments/e1-cache-stampede/results-phase-b,target=/results-phase-b" \
+  "${image}" analyze --run-dir "/results-phase-b/retained-${commit}"
+```
+
+Phase B 결과는 `run.json`, `trials.csv`, `requests.csv`, `resources.csv`, process별 `metrics.csv`, 순서 제어 근거인 `events.csv`와 `analysis/` 아래의 `analysis.json`, `summary.csv`, `unrelated-latency.svg`, `cancellation-timeline.svg`, `multiprocess-work.svg`로 구성됩니다. 미커밋 build 또는 `--calibration` 실행은 retained 근거로 사용하지 않습니다.
 
 ## 결과에서 보여줄 것
 

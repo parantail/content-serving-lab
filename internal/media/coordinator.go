@@ -45,6 +45,13 @@ type ProcessCoordinator struct {
 	inflight map[string]*flightCall
 }
 
+// ProcessCoordinatorSnapshot exposes coordination state for deterministic
+// failure experiments without changing request execution semantics.
+type ProcessCoordinatorSnapshot struct {
+	Keys    int
+	Waiters int
+}
+
 func NewProcessCoordinator(workTimeout time.Duration) *ProcessCoordinator {
 	return &ProcessCoordinator{
 		workTimeout: workTimeout,
@@ -78,6 +85,17 @@ func (c *ProcessCoordinator) run(derivativeKey string, call *flightCall, work Wo
 	delete(c.inflight, derivativeKey)
 	close(call.done)
 	c.mu.Unlock()
+}
+
+func (c *ProcessCoordinator) Snapshot() ProcessCoordinatorSnapshot {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	snapshot := ProcessCoordinatorSnapshot{Keys: len(c.inflight)}
+	for _, call := range c.inflight {
+		snapshot.Waiters += call.waiters
+	}
+	return snapshot
 }
 
 func waitForCall(requestCtx context.Context, call *flightCall, coalesced bool) ([]byte, bool, error) {

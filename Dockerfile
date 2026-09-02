@@ -22,7 +22,8 @@ COPY . .
 RUN go test ./... \
     && go vet ./... \
     && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/content-serving ./cmd/content-serving \
-    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-runner ./cmd/e1-runner
+    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-runner ./cmd/e1-runner \
+    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-phase-b ./cmd/e1-phase-b
 
 FROM ${RUNTIME_IMAGE} AS runtime-base
 ARG LIBVIPS_VERSION
@@ -54,6 +55,10 @@ ENTRYPOINT ["/app/content-serving"]
 
 FROM runtime-base AS experiment
 COPY --from=build /out/e1-runner /app/e1-runner
+COPY --from=build /out/e1-phase-b /app/e1-phase-b
 COPY --chown=content:content experiments/e1-cache-stampede/fixtures/landscape-4928x3264.jpg /app/fixtures/landscape-4928x3264.jpg
 
 ENTRYPOINT ["/app/e1-runner"]
+
+FROM experiment AS experiment-phase-b
+ENTRYPOINT ["/app/e1-phase-b"]

@@ -1,6 +1,7 @@
 .git
 .gitignore
 experiments/e1-cache-stampede/results
+experiments/e1-cache-stampede/results-phase-b
 reports
 bin
 dist

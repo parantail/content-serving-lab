@@ -23,3 +23,6 @@ experiments/e1-cache-stampede/results/calibration-*/
 !experiments/e1-cache-stampede/results/calibration-20260902-f/**
 !experiments/e1-cache-stampede/results/calibration-20260902-g/
 !experiments/e1-cache-stampede/results/calibration-20260902-g/**
+
+# Phase B development/calibration runs are excluded until selected as public evidence.
+experiments/e1-cache-stampede/results-phase-b/calibration-*/
