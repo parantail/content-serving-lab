@@ -1,0 +1,16 @@
+{
+  "schema_version": "e1-v1",
+  "run_id": "retained-supplement-20260902-68135d3ad33f-01",
+  "calibration": false,
+  "raw_validation": "passed",
+  "total_trials": 8,
+  "valid_trials": 8,
+  "invalid_trials": 0,
+  "f1_valid": true,
+  "aggregation_note": "Means and ranges are calculated from per-trial summaries; request samples are not pooled across trials.",
+  "files": [
+    "summary.csv",
+    "transform-count.svg",
+    "latency-error.svg"
+  ]
+}

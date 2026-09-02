@@ -10,6 +10,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -44,16 +45,22 @@ type AnalysisOutput struct {
 }
 
 type analysisManifest struct {
-	SchemaVersion   string   `json:"schema_version"`
-	RunID           string   `json:"run_id"`
-	Calibration     bool     `json:"calibration"`
-	RawValidation   string   `json:"raw_validation"`
-	TotalTrials     int      `json:"total_trials"`
-	ValidTrials     int      `json:"valid_trials"`
-	InvalidTrials   int      `json:"invalid_trials"`
-	F1Valid         bool     `json:"f1_valid"`
-	AggregationNote string   `json:"aggregation_note"`
-	Files           []string `json:"files"`
+	SchemaVersion      string   `json:"schema_version"`
+	RunID              string   `json:"run_id"`
+	Calibration        bool     `json:"calibration"`
+	RawValidation      string   `json:"raw_validation"`
+	TotalTrials        int      `json:"total_trials"`
+	ValidTrials        int      `json:"valid_trials"`
+	InvalidTrials      int      `json:"invalid_trials"`
+	F1Valid            bool     `json:"f1_valid"`
+	AggregationNote    string   `json:"aggregation_note"`
+	Files              []string `json:"files"`
+	SourceRuns         []string `json:"source_runs,omitempty"`
+	SourceCompatibility string  `json:"source_compatibility,omitempty"`
+	SelectionRule      string   `json:"selection_rule,omitempty"`
+	SelectedTrials     []string `json:"selected_trials,omitempty"`
+	InvalidTrialsList  []string `json:"invalid_trials_list,omitempty"`
+	SurplusValidTrials []string `json:"surplus_valid_trials,omitempty"`
 }
 
 func Analyze(runDirectory string) (AnalysisOutput, error) {
@@ -127,6 +134,208 @@ func Analyze(runDirectory string) (AnalysisOutput, error) {
 		return AnalysisOutput{}, err
 	}
 	return output, nil
+}
+
+func AnalyzeSet(runDirectories []string, outputDirectory, analysisID string, validTrialsPerScenario int) (AnalysisOutput, error) {
+	if len(runDirectories) == 0 {
+		return AnalysisOutput{}, errors.New("analyze set requires at least one run directory")
+	}
+	if outputDirectory == "" || analysisID == "" || validTrialsPerScenario < 1 {
+		return AnalysisOutput{}, errors.New("analyze set requires output directory, analysis ID and a positive valid trial limit")
+	}
+	var sourceTrials []TrialResult
+	var sourceRuns []string
+	var referenceMetadata *RunMetadata
+	for _, directory := range runDirectories {
+		validated, err := Analyze(directory)
+		if err != nil {
+			return AnalysisOutput{}, fmt.Errorf("validate source run %s: %w", directory, err)
+		}
+		trials, err := readTrials(filepath.Join(directory, "trials.csv"))
+		if err != nil {
+			return AnalysisOutput{}, err
+		}
+		metadata, err := readRunMetadata(filepath.Join(directory, "run.json"))
+		if err != nil {
+			return AnalysisOutput{}, err
+		}
+		if metadata.Calibration {
+			return AnalysisOutput{}, fmt.Errorf("source run %q is calibration data", metadata.RunID)
+		}
+		if referenceMetadata == nil {
+			referenceMetadata = &metadata
+		} else if err := validateCompatibleRunMetadata(*referenceMetadata, metadata); err != nil {
+			return AnalysisOutput{}, err
+		}
+		sourceRuns = append(sourceRuns, validated.RunID)
+		sourceTrials = append(sourceTrials, trials...)
+	}
+	selected, selectedRefs, invalidRefs, surplusRefs, err := selectTrialsForSet(sourceTrials, validTrialsPerScenario)
+	if err != nil {
+		return AnalysisOutput{}, err
+	}
+	if err := validateRetainedScenarioSet(selected, validTrialsPerScenario); err != nil {
+		return AnalysisOutput{}, err
+	}
+	output := AnalysisOutput{
+		Directory:   outputDirectory,
+		RunID:       analysisID,
+		TotalTrials: len(selected),
+		Summary:     summarizeForAnalysis(selected),
+	}
+	for _, trial := range selected {
+		if trial.Valid {
+			output.ValidTrials++
+			if trial.Scenario == "F1" {
+				output.F1Valid = true
+			}
+		} else {
+			output.InvalidTrials++
+		}
+	}
+	if err := os.MkdirAll(output.Directory, 0o755); err != nil {
+		return AnalysisOutput{}, err
+	}
+	if err := writeSummaryCSV(filepath.Join(output.Directory, "summary.csv"), output.Summary); err != nil {
+		return AnalysisOutput{}, err
+	}
+	if err := writeFileAtomic(filepath.Join(output.Directory, "transform-count.svg"), transformCountSVG(output)); err != nil {
+		return AnalysisOutput{}, err
+	}
+	if err := writeFileAtomic(filepath.Join(output.Directory, "latency-error.svg"), latencyErrorSVG(output)); err != nil {
+		return AnalysisOutput{}, err
+	}
+	manifest := analysisManifest{
+		SchemaVersion:      SchemaVersion,
+		RunID:              output.RunID,
+		RawValidation:      "passed",
+		TotalTrials:        output.TotalTrials,
+		ValidTrials:        output.ValidTrials,
+		InvalidTrials:      output.InvalidTrials,
+		F1Valid:            output.F1Valid,
+		AggregationNote:    "Means and ranges are calculated from per-trial summaries; request samples are not pooled across trials.",
+		Files:              []string{"summary.csv", "transform-count.svg", "latency-error.svg"},
+		SourceRuns:         sourceRuns,
+		SourceCompatibility: "passed: commit, image, runtime, fixture, transform, limits and sampling settings match",
+		SelectionRule:      fmt.Sprintf("In source-run order, select the first %d valid trials per success scenario and the first valid F1 trial; preserve every invalid trial; do not use surplus valid trials.", validTrialsPerScenario),
+		SelectedTrials:     selectedRefs,
+		InvalidTrialsList:  invalidRefs,
+		SurplusValidTrials: surplusRefs,
+	}
+	data, err := json.MarshalIndent(manifest, "", "  ")
+	if err != nil {
+		return AnalysisOutput{}, err
+	}
+	data = append(data, '\n')
+	if err := writeFileAtomic(filepath.Join(output.Directory, "analysis.json"), data); err != nil {
+		return AnalysisOutput{}, err
+	}
+	return output, nil
+}
+
+func validateCompatibleRunMetadata(reference, candidate RunMetadata) error {
+	fields := []struct {
+		name      string
+		reference any
+		candidate any
+	}{
+		{"schema_version", reference.SchemaVersion, candidate.SchemaVersion},
+		{"git_commit", reference.GitCommit, candidate.GitCommit},
+		{"container_image", reference.ContainerImage, candidate.ContainerImage},
+		{"go_version", reference.GoVersion, candidate.GoVersion},
+		{"os", reference.OS, candidate.OS},
+		{"architecture", reference.Architecture, candidate.Architecture},
+		{"transformer", reference.Transformer, candidate.Transformer},
+		{"fixture_sha256", reference.FixtureSHA256, candidate.FixtureSHA256},
+		{"fixture_bytes", reference.FixtureBytes, candidate.FixtureBytes},
+		{"source_hash", reference.SourceHash, candidate.SourceHash},
+		{"canonical_spec", reference.CanonicalSpec, candidate.CanonicalSpec},
+		{"derivative_width", reference.DerivativeWidth, candidate.DerivativeWidth},
+		{"derivative_height", reference.DerivativeHeight, candidate.DerivativeHeight},
+		{"derivative_format", reference.DerivativeFormat, candidate.DerivativeFormat},
+		{"derivative_quality", reference.DerivativeQuality, candidate.DerivativeQuality},
+		{"transform_concurrency", reference.TransformConcurrency, candidate.TransformConcurrency},
+		{"request_timeout_ms", reference.RequestTimeoutMS, candidate.RequestTimeoutMS},
+		{"transform_timeout_ms", reference.TransformTimeoutMS, candidate.TransformTimeoutMS},
+		{"start_skew_limit_ms", reference.StartSkewLimitMS, candidate.StartSkewLimitMS},
+		{"resource_sample_gap_ms", reference.ResourceSampleGapMS, candidate.ResourceSampleGapMS},
+		{"cpu_quota", reference.CPUQuota, candidate.CPUQuota},
+		{"memory_limit_bytes", reference.MemoryLimitBytes, candidate.MemoryLimitBytes},
+	}
+	for _, field := range fields {
+		if !reflect.DeepEqual(field.reference, field.candidate) {
+			return fmt.Errorf("source runs %q and %q are incompatible: %s differs (%v != %v)", reference.RunID, candidate.RunID, field.name, field.reference, field.candidate)
+		}
+	}
+	return nil
+}
+
+func validateRetainedScenarioSet(selected []TrialResult, validTrialsPerScenario int) error {
+	expected := []struct {
+		key  string
+		want int
+	}{
+		{"S0\x00none", validTrialsPerScenario},
+		{"S1-10\x00none", validTrialsPerScenario},
+		{"S1-50\x00none", validTrialsPerScenario},
+		{"S1-100\x00none", validTrialsPerScenario},
+		{"S2-10\x00process-singleflight", validTrialsPerScenario},
+		{"S2-50\x00process-singleflight", validTrialsPerScenario},
+		{"S2-100\x00process-singleflight", validTrialsPerScenario},
+		{"F1\x00process-singleflight", 1},
+	}
+	actual := make(map[string]int)
+	for _, trial := range selected {
+		if trial.Valid {
+			actual[trial.Scenario+"\x00"+trial.Mode]++
+		}
+	}
+	for _, scenario := range expected {
+		if actual[scenario.key] != scenario.want {
+			return fmt.Errorf("retained scenario %q has %d selected valid trials, want %d", strings.ReplaceAll(scenario.key, "\x00", "/"), actual[scenario.key], scenario.want)
+		}
+	}
+	return nil
+}
+
+func selectTrialsForSet(source []TrialResult, validTrialsPerScenario int) ([]TrialResult, []string, []string, []string, error) {
+	selected := make([]TrialResult, 0, len(source))
+	selectedRefs := make([]string, 0, len(source))
+	invalidRefs := make([]string, 0)
+	surplusRefs := make([]string, 0)
+	selectedCounts := make(map[string]int)
+	observedValid := make(map[string]bool)
+	for _, trial := range source {
+		ref := trial.RunID + "/" + trial.TrialID
+		if !trial.Valid {
+			selected = append(selected, trial)
+			invalidRefs = append(invalidRefs, ref)
+			continue
+		}
+		key := trial.Scenario + "\x00" + trial.Mode
+		observedValid[key] = true
+		limit := validTrialsPerScenario
+		if trial.Scenario == "F1" {
+			limit = 1
+		}
+		if selectedCounts[key] >= limit {
+			surplusRefs = append(surplusRefs, ref)
+			continue
+		}
+		selectedCounts[key]++
+		selected = append(selected, trial)
+		selectedRefs = append(selectedRefs, ref)
+	}
+	for key := range observedValid {
+		limit := validTrialsPerScenario
+		if strings.HasPrefix(key, "F1\x00") {
+			limit = 1
+		}
+		if selectedCounts[key] < limit {
+			return nil, nil, nil, nil, fmt.Errorf("scenario %q has %d valid trials, want %d", strings.ReplaceAll(key, "\x00", "/"), selectedCounts[key], limit)
+		}
+	}
+	return selected, selectedRefs, invalidRefs, surplusRefs, nil
 }
 
 func readRunMetadata(path string) (RunMetadata, error) {

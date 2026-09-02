@@ -28,6 +28,8 @@ func run(args []string) error {
 		return runExperiment(args[1:])
 	case "analyze":
 		return analyzeExperiment(args[1:])
+	case "analyze-set":
+		return analyzeExperimentSet(args[1:])
 	case "_trial":
 		return runIsolatedTrial(args[1:])
 	default:
@@ -104,6 +106,35 @@ func analyzeExperiment(args []string) error {
 	return nil
 }
 
+type repeatedStringFlag []string
+
+func (values *repeatedStringFlag) String() string {
+	return fmt.Sprint([]string(*values))
+}
+
+func (values *repeatedStringFlag) Set(value string) error {
+	*values = append(*values, value)
+	return nil
+}
+
+func analyzeExperimentSet(args []string) error {
+	flags := flag.NewFlagSet("analyze-set", flag.ContinueOnError)
+	var runDirectories repeatedStringFlag
+	flags.Var(&runDirectories, "run-dir", "source run directory; repeat in selection order")
+	outputDirectory := flags.String("output-dir", "", "directory for the combined analysis")
+	analysisID := flags.String("analysis-id", "", "combined analysis identifier")
+	validTrials := flags.Int("valid-trials", 10, "valid trials selected per success scenario")
+	if err := flags.Parse(args); err != nil {
+		return err
+	}
+	output, err := e1runner.AnalyzeSet(runDirectories, *outputDirectory, *analysisID, *validTrials)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("analysis_directory=%s analysis_id=%s valid=%d invalid=%d raw_validation=passed\n", output.Directory, output.RunID, output.ValidTrials, output.InvalidTrials)
+	return nil
+}
+
 func runIsolatedTrial(args []string) error {
 	flags := flag.NewFlagSet("_trial", flag.ContinueOnError)
 	input := flags.String("input", "", "trial invocation JSON")
@@ -118,5 +149,5 @@ func runIsolatedTrial(args []string) error {
 }
 
 func usageError() error {
-	return fmt.Errorf("usage: e1-runner <run|analyze> [flags]")
+	return fmt.Errorf("usage: e1-runner <run|analyze|analyze-set> [flags]")
 }

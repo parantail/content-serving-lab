@@ -2,13 +2,13 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint와 E1 단일 프로세스 cache-stampede workload/분석 vertical slice입니다. Calibration은 끝났지만 10회 retained result는 아직 없습니다.
+현재 구현된 범위는 Go media endpoint와 E1 Phase A 단일 프로세스 cache-stampede workload/분석입니다. Retained result와 프로세스 내부 동일 요청 합치기 채택 결정까지 공개했습니다.
 
 ## 실험
 
 | 실험 | 확인하려는 것 | 주요 지표 | 상태 |
 | --- | --- | --- | --- |
-| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | 실제 변환 횟수, p99, CPU, 메모리 | S0/S1/S2 구현·보정 완료 · 본 측정 전 |
+| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [100개 요청에서 변환 100→1회, p99 31.78→0.356초](reports/e1-cache-stampede/README.md) | Phase A 완료 |
 | E2. 이미지 변환기 비교 | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, 최대 메모리, 파일 크기와 품질 | 준비 중 |
 | E3. 멀티 리전 장애 | 한 리전의 응답이 느려지거나 끊겼을 때 사용자에게 얼마나 오래 영향을 주는가? | 리전별 p95/p99, 오류율, 복구 시간 | 준비 중 |
 | E4. 장애 격리 | 변환기나 저장소 장애가 캐시에 있는 이미지 요청까지 번지는 것을 막을 수 있는가? | 영향받은 요청 범위, 탐지·완화·복구 시간 | 준비 중 |

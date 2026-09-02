@@ -1,0 +1,54 @@
+{
+  "schema_version": "e1-v1",
+  "run_id": "retained-supplement-20260902-68135d3ad33f-01",
+  "created_at": "2026-09-02T01:44:47.628399071Z",
+  "calibration": false,
+  "git_commit": "68135d3ad33fad1dffecc5b5ec8b78b26d490a27",
+  "container_image": "content-serving-e1:68135d3ad33f#sha256:77e467c8f4d611813a23efb096cc439607e077bd3d4df3a9ccbf3fbe730558b4",
+  "go_version": "go1.26.7",
+  "os": "linux",
+  "architecture": "amd64",
+  "hostname": "0eaeea43f7f8",
+  "transformer": "govips v2.16.0; libvips 8.16.1",
+  "fixture_path": "landscape-4928x3264.jpg",
+  "fixture_sha256": "de206136ed0eeaa42499840f49fa35bd3d57745b8a9580b16f0d6e6393ac7f91",
+  "fixture_bytes": 4075024,
+  "source_hash": "de206136ed0eeaa42499840f49fa35bd3d57745b8a9580b16f0d6e6393ac7f91",
+  "canonical_spec": "width=640,height=640,fit=cover,quality=80,format=webp",
+  "derivative_width": 640,
+  "derivative_height": 640,
+  "derivative_format": "webp",
+  "derivative_quality": 80,
+  "repetitions": 1,
+  "transform_concurrency": 4,
+  "request_timeout_ms": 90000,
+  "transform_timeout_ms": 60000,
+  "start_skew_limit_ms": 100,
+  "resource_sample_gap_ms": 10,
+  "cpu_quota": "100000 100000",
+  "memory_limit_bytes": 2147483648,
+  "execution_order": [
+    "S0-r01",
+    "S2-10-r01",
+    "S1-10-r01",
+    "S1-50-r01",
+    "S2-50-r01",
+    "S2-100-r01",
+    "S1-100-r01",
+    "F1-r01"
+  ],
+  "commands": [
+    "e1-runner run --run-id retained-supplement-20260902-68135d3ad33f-01 --repetitions=1 --transform-concurrency=4 --request-timeout=90s --transform-timeout=60s --start-skew-limit=100ms --resource-sample-gap=10ms --container-image content-serving-e1:68135d3ad33f#sha256:77e467c8f4d611813a23efb096cc439607e077bd3d4df3a9ccbf3fbe730558b4"
+  ],
+  "environment": {
+    "coordinator_modes": "none,process-singleflight",
+    "libvips_concurrency": "1",
+    "libvips_operation_cache": "disabled",
+    "max_concurrent_transforms": "4"
+  },
+  "known_limitations": [
+    "The workload is synthetic loopback HTTP traffic inside one container.",
+    "govips can observe context cancellation before and after a native libvips call but cannot interrupt a call already executing in C.",
+    "The process RSS includes the server, workload generator and native image library."
+  ]
+}

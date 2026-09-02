@@ -3,6 +3,7 @@ package e1runner
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/parantail/content-serving-lab/internal/media"
@@ -66,6 +67,52 @@ func TestAnalyzeRejectsSummaryMismatch(t *testing.T) {
 	}
 	if _, err := Analyze(directory); err == nil {
 		t.Fatal("Analyze succeeded with mismatched request count")
+	}
+}
+
+func TestSelectTrialsForSetUsesFirstValidTrialsAndPreservesInvalid(t *testing.T) {
+	t.Parallel()
+	source := []TrialResult{
+		{RunID: "main", TrialID: "S1-r01", Scenario: "S1-100", Mode: "none", Valid: true},
+		{RunID: "main", TrialID: "S1-r02", Scenario: "S1-100", Mode: "none", Valid: false},
+		{RunID: "supplement", TrialID: "S1-r01", Scenario: "S1-100", Mode: "none", Valid: true},
+		{RunID: "supplement", TrialID: "S1-r02", Scenario: "S1-100", Mode: "none", Valid: true},
+		{RunID: "main", TrialID: "F1-r01", Scenario: "F1", Mode: "process-singleflight", Valid: true},
+		{RunID: "supplement", TrialID: "F1-r01", Scenario: "F1", Mode: "process-singleflight", Valid: true},
+	}
+	selected, refs, invalid, surplus, err := selectTrialsForSet(source, 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(selected) != 4 || len(refs) != 3 || len(invalid) != 1 || len(surplus) != 2 {
+		t.Fatalf("selected=%d refs=%v invalid=%v surplus=%v", len(selected), refs, invalid, surplus)
+	}
+	if refs[1] != "supplement/S1-r01" || invalid[0] != "main/S1-r02" {
+		t.Fatalf("refs=%v invalid=%v", refs, invalid)
+	}
+}
+
+func TestValidateCompatibleRunMetadataRejectsDifferentFixedCondition(t *testing.T) {
+	t.Parallel()
+	reference := RunMetadata{
+		RunID:            "main",
+		GitCommit:        "abc",
+		ContainerImage:   "image@sha256:one",
+		StartSkewLimitMS: 100,
+	}
+	candidate := reference
+	candidate.RunID = "supplement"
+	candidate.StartSkewLimitMS = 150
+	if err := validateCompatibleRunMetadata(reference, candidate); err == nil || !strings.Contains(err.Error(), "start_skew_limit_ms") {
+		t.Fatalf("error = %v, want start_skew_limit_ms mismatch", err)
+	}
+}
+
+func TestValidateRetainedScenarioSetRejectsMissingScenario(t *testing.T) {
+	t.Parallel()
+	selected := []TrialResult{{Scenario: "S0", Mode: "none", Valid: true}}
+	if err := validateRetainedScenarioSet(selected, 1); err == nil || !strings.Contains(err.Error(), "S1-10/none") {
+		t.Fatalf("error = %v, want missing S1-10 scenario", err)
 	}
 }
 
