@@ -1,8 +1,8 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A 완료 / Phase B calibration 완료 — Phase A 재현 경로를 보존하며 S3/F2/local S4 retained 측정 준비**
+상태: **Phase A와 로컬 Phase B 측정 완료 — 다음 단계는 실제 ECS/S3 환경 확인**
 
-대표 결과와 결정은 [동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)에서 확인할 수 있습니다.
+대표 결과와 결정은 [Phase A: 동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)와 [Phase B: 서로 다른 변환 요청과 여러 프로세스에서는 어디까지 합칠 수 있는가?](../../reports/e1-cache-stampede/PHASE-B.md)에서 확인할 수 있습니다.
 
 > 아직 변환된 이미지가 없을 때 같은 요청이 한꺼번에 들어오면, 실제 변환 횟수를 얼마나 줄이면서 응답 지연과 오류를 억제할 수 있을까?
 
@@ -20,7 +20,7 @@ E1은 첫 변환이 진행되는 동안 같은 요청이 여러 개 도착했을
 - CPU 사용 시간과 최대 메모리
 - 시간 초과와 오류
 
-E1 Phase A의 완료 범위는 단일 프로세스의 S0, S1-10/50/100, S2-10/50/100과 F1입니다. Canonical key, local atomic publish, 실제 libvips 변환, HTTP endpoint, barrier workload, raw result 검증과 SVG 재생성을 한 container image에 포함합니다. 다른 key 격리, client cancellation retained 측정, multi-process, S3/ECS와 distributed coordination은 Phase B 후속 후보로 분리하며 Phase A 결과로 결론 내리지 않습니다.
+Phase A에서는 한 프로세스에 같은 이미지 요청이 몰리는 상황과 첫 변환이 실패하는 상황을 확인했습니다. Phase B에서는 인기 이미지가 변환되는 동안 다른 이미지 요청도 진행되는지, 최초 요청이 취소돼도 나머지 요청은 완료되는지, 프로그램을 여러 개 실행하면 중복 변환이 몇 번 생기는지를 확인했습니다. 실제 S3와 ECS, 여러 프로세스를 하나로 묶는 분산 조정은 아직 측정하지 않았으므로 로컬 결과만으로 결론 내리지 않습니다.
 
 ## 용어
 
@@ -160,58 +160,114 @@ libvips의 concurrency는 한 변환 내부의 worker 수만 제한하므로 동
 | S2-50 | 50 | 프로세스 내부 | 1 | 중간 폭주에서 요청 합치기 효과 |
 | S2-100 | 100 | 프로세스 내부 | 1 | 큰 폭주에서 요청 합치기 효과 |
 
-## Phase B 후속 후보
+## Phase B — Phase A가 어디까지 적용되는지 확인
 
-Phase B는 Phase A의 완료 조건이 아니며 Phase A의 `e1-v1` raw, retained result와 `e1-runner run|analyze|analyze-set` 명령을 변경하지 않습니다. Phase B는 별도 `e1-phase-b-v1` schema와 `results-phase-b/` 디렉터리에서 S3, F2와 local S4를 측정합니다. S5 distributed coordination과 AWS/ECS 실행은 local S4 결과가 필요성을 보일 때만 별도로 착수합니다.
+Phase A는 한 프로세스 안에서 같은 파생 이미지 요청을 한 번의 변환으로 합칠 수 있음을 확인했습니다. Phase B에서는 그 방식의 경계를 다음 세 가지 질문으로 나눠 확인했습니다.
 
-### 다른 key 격리
+1. 인기 이미지가 변환되는 동안 다른 변환 요청도 별도로 시작할 수 있는가?
+2. 변환을 처음 시작시킨 클라이언트가 요청을 취소해도 기다리던 다른 클라이언트는 결과를 받을 수 있는가?
+3. 같은 프로그램을 여러 프로세스로 실행하면 이미지 변환은 전체에서 몇 번 일어나는가?
 
-| ID | 동시 요청 | 요청 합치기 | 키 개수 | 목적 |
+모든 시나리오는 1 vCPU·2 GiB로 제한한 로컬 Docker 환경에서 10회씩 실행했습니다. Phase A의 명령과 결과를 덮어쓰지 않도록 Phase B에는 별도 명령 `e1-phase-b`와 결과 디렉터리 `results-phase-b/`를 사용했습니다.
+
+### S3 — 인기 이미지 변환이 다른 요청의 시작을 막는가?
+
+같은 원본에서 출력 품질만 다르게 지정해 서로 다른 파생 이미지 두 개를 만들었습니다. 품질 80 이미지는 요청이 몰리는 **인기 이미지**, 품질 79 이미지는 영향을 확인할 **비교 이미지**입니다. 원본을 같게 둔 이유는 이미지 내용과 크기의 차이를 새 변수로 추가하지 않기 위해서입니다.
+
+시나리오 ID는 다음과 같이 읽습니다.
+
+| 표기 | 뜻 |
+| --- | --- |
+| `S3` | 인기 이미지 요청이 다른 이미지 요청에 미치는 영향을 확인하는 세 번째 정상 시나리오 |
+| `COLD` | 비교 이미지가 아직 저장되어 있지 않아 변환이 필요한 상태 |
+| `WARM` | 비교 이미지가 이미 저장되어 있어 변환 없이 읽을 수 있는 상태 |
+| `CONTROL` | 인기 이미지 요청을 빼고 비교 이미지 요청만 보내는 기준선 |
+
+따라서 `S3-COLD-CONTROL`은 “비교 이미지가 없는 상태에서 비교 요청만 보낸 기준선”입니다. `CONTROL`이 없는 `S3-COLD`와 `S3-WARM`은 인기 이미지 90개와 비교 이미지 10개를 함께 보내는 혼합 실험입니다. 혼합 실험에서 인기 이미지는 항상 저장되어 있지 않은 상태로 시작합니다.
+
+| ID | 동시에 보낸 요청 | 시작할 때의 저장 상태 | 확인할 것 |
+| --- | --- | --- | --- |
+| S3-COLD-CONTROL | 비교 이미지 10개 | 비교 이미지 없음 | 비교 이미지 변환의 기준 시간 |
+| S3-COLD | 인기 이미지 90개 + 비교 이미지 10개 | 두 이미지 모두 없음 | 서로 다른 두 변환이 각각 시작되는가 |
+| S3-WARM-CONTROL | 비교 이미지 10개 | 비교 이미지 있음 | 저장된 이미지 응답의 기준 시간 |
+| S3-WARM | 인기 이미지 90개 + 비교 이미지 10개 | 인기 이미지만 없음 | 인기 이미지 변환 중에도 저장된 비교 이미지를 바로 읽는가 |
+
+Cold 상태의 S3에서는 인기 이미지와 비교 이미지가 각각 한 번 변환됐고, 두 변환이 동시에 진행 중인 시점이 있었습니다. Warm 상태에서는 비교 이미지 요청 10개가 모두 저장된 결과를 읽었으며 추가 변환을 만들지 않았습니다. 즉, 서로 다른 변환 요청이 하나의 작업으로 잘못 합쳐지거나, 인기 이미지 변환이 끝날 때까지 다른 변환의 시작 자체가 막히지는 않았습니다.
+
+다만 같은 CPU를 사용하는 영향은 남았습니다. 비교 이미지의 p99는 cold 단독 322.715ms에서 혼합 624.305ms로, 저장된 이미지의 p99는 단독 0.867ms에서 혼합 56.679ms로 늘었습니다. 이는 요청 합치기 범위는 이미지별로 나뉘어도 변환 작업과 일반 응답이 CPU까지 따로 사용하는 것은 아니라는 뜻입니다.
+
+### F2 — 최초 요청이 취소되면 나머지 요청도 취소되는가?
+
+`F2`는 실패와 취소 때의 동작을 확인하는 시나리오 번호입니다. 여기서는 서버 오류가 아니라 최초 클라이언트의 요청 취소를 다룹니다.
+
+첫 요청이 이미지 변환을 시작한 뒤 같은 결과를 기다리는 요청 9개를 보냈습니다. 9개가 실제로 대기 중인 것을 확인한 다음 첫 요청만 취소했습니다.
+
+- 취소한 첫 요청만 취소 상태로 끝났습니다.
+- 기다리던 요청 9개는 모두 같은 변환 결과를 받았습니다.
+- 원본 읽기, 변환과 새 파일 저장은 각각 한 번만 일어났습니다.
+- 작업이 끝난 뒤 같은 이미지를 다시 요청하자 새 변환 없이 저장된 결과를 받았습니다.
+
+이 결과는 10회 모두 같았습니다. 따라서 이미지 변환 작업의 수명은 처음 요청한 클라이언트 한 명의 연결과 분리하고, 서버가 정한 변환 제한 시간으로 관리합니다.
+
+### S4 — 프로그램을 여러 개 실행하면 변환은 몇 번 일어나는가?
+
+프로세스는 실행 중인 프로그램 한 개를 뜻합니다. 프로세스마다 같은 요청을 합치는 목록을 자기 메모리에 따로 가지고 있으므로, 다른 프로세스에서 이미 변환 중인 작업은 알 수 없습니다.
+
+`S4-2`와 `S4-4`에서 마지막 숫자는 실행한 프로세스 수입니다.
+
+이 경계를 확인하기 위해 독립된 프로세스 2개와 4개를 실행했습니다. 모든 프로세스는 같은 원본과 결과 디렉터리를 사용했습니다. 실제 로드밸런서의 우연한 분배 차이를 없애기 위해 요청 100개는 각 프로세스에 같은 수로 나눠 보냈습니다.
+
+| ID | 프로세스 수 | 요청 분배 | 실제 변환 | 파일 저장 결과 |
 | --- | ---: | --- | ---: | --- |
-| S3 | 100 | 프로세스 내부 | 2개 이상 | 인기 이미지가 다른 이미지 요청을 막는지 확인 |
+| S4-2 | 2 | 50개씩 | 2회 | 새 파일 1회, 이미 존재함 1회 |
+| S4-4 | 4 | 25개씩 | 4회 | 새 파일 1회, 이미 존재함 3회 |
 
-S3의 retained workload는 총 100개를 hot key 90개와 unrelated key 10개로 고정합니다. 같은 fixture와 640×640 cover를 유지하되 hot key는 WebP quality 80, unrelated key는 quality 79를 사용해 source content 차이 없이 derivative-key coordination만 분리합니다. `S3-COLD-CONTROL`, `S3-COLD`, `S3-WARM-CONTROL`, `S3-WARM`을 각각 독립 cold process에서 10회 실행합니다. Cold mixed에서는 key별 transform이 한 번이고 두 transform이 동시에 in-flight가 될 수 있어야 합니다. Warm mixed에서는 unrelated 요청 10개가 모두 derivative hit이고 추가 transform을 만들지 않아야 합니다. Latency는 hot/unrelated request class별로 control과 mixed를 나누어 표시합니다.
+각 프로세스 안에서는 요청이 한 번의 변환으로 합쳐졌지만 프로세스 사이는 합쳐지지 않았습니다. 그 결과 프로세스 수만큼 같은 이미지가 중복 변환됐습니다. 저장할 때는 파일이 없을 때만 새로 만드는 방식을 사용해 완성된 결과 하나만 남겼지만, 이미 끝난 중복 변환의 계산 비용까지 없애지는 못했습니다.
 
-### 여러 프로세스 또는 ECS Task
+같은 1 vCPU 제한에서 프로세스를 2개에서 4개로 늘리자 평균 p99는 646.041ms에서 1,339.364ms로, CPU 사용 시간은 674.17ms에서 1,380.54ms로 늘었습니다. 이는 여러 프로세스가 하나의 CPU 제한을 공유하는 로컬 실험 결과이며, 프로세스마다 별도 CPU를 받는 ECS 결과로 해석하지 않습니다.
 
-| ID | 프로세스 또는 ECS Task 수 | 전체 동시 요청 | 요청 합치기 | S3 저장 | 목적 |
-| --- | ---: | ---: | --- | --- | --- |
-| S4-2 | 2 | 100 | 각 프로세스 내부 | conditional write | 프로세스가 둘일 때 변환 수와 저장 시도 수 |
-| S4-4 | 4 | 100 | 각 프로세스 내부 | conditional write | 프로세스 또는 ECS Task 수에 따라 중복 변환이 얼마나 늘어나는지 확인 |
-| S5-2 | 2 | 100 | 프로세스 사이에서도 조정 | conditional write | 외부 조정으로 실제 변환이 전체 한 번이 되는지 확인 |
-| S5-4 | 4 | 100 | 프로세스 사이에서도 조정 | conditional write | 프로세스 또는 ECS Task 수가 늘어도 한 번으로 유지되는지 확인 |
+### 여러 프로세스의 변환을 하나로 합칠 것인가?
 
-먼저 local S4에서 독립 service process 2개와 4개를 실행하고 같은 local derivative directory의 atomic create를 공유합니다. 총 100개 요청을 재현 가능한 round-robin으로 보내 process별 실제 요청 수, transform과 publish metric을 기록합니다. 이는 coordination scope와 local atomic publish를 검증하는 harness이며 S3의 동작이나 ALB 분배를 재현한다고 간주하지 않습니다. 이후 ECS를 실행할 때는 ALB가 요청을 Task마다 똑같이 나눈다고 가정하지 않고 각 Task가 받은 요청 수를 기록합니다.
+Redis나 DynamoDB 같은 외부 저장소를 사용하면 여러 프로세스 중 하나만 변환하도록 조정할 수 있습니다. 이 문서에서는 이 방식을 S5라고 부릅니다. 그러나 외부 조정에는 요청 지연, 운영 비용, 잠금 만료와 장애 복구라는 새 문제가 생깁니다.
 
-S5는 S4에서 발생한 중복 변환이 실제로 CPU·메모리 포화, 오류 또는 받아들이기 어려운 비용으로 이어진 경우에 구현합니다.
+로컬 S4는 중복 변환이 생긴다는 사실만 확인했습니다. 실제 환경에서 그 비용이 외부 조정보다 큰지는 아직 알 수 없으므로 S5는 구현하지 않았습니다. 다음 단계에서는 ECS Task 2개와 4개에 실제로 요청을 보내 다음 값을 먼저 측정합니다.
 
-## 실패 시나리오
+- 로드밸런서가 각 Task에 나눈 실제 요청 수
+- Task별 이미지 변환 횟수와 CPU·메모리 사용량
+- S3에서 새 결과를 저장한 횟수와 이미 존재한 결과를 만난 횟수
+- 중복 변환이 응답 시간, 오류와 비용에 미친 영향
 
-호출 횟수와 실패 처리를 확인할 때는 설정한 시간 뒤 정해진 성공 또는 오류를 반환하는 테스트용 변환기를 사용합니다. 예를 들어 leader가 200ms 뒤 실패하는 상황을 반복해서 만들어 waiter의 종료와 진행 중 항목의 정리를 확인합니다. 실제 이미지 변환기는 성능과 이미지 결과를 측정하는 실행에 사용합니다.
+이 값이 받아들이기 어려운 수준일 때만 프로세스 사이의 요청 합치기인 S5를 검토합니다.
+
+## 실패와 취소 시나리오
+
+실패와 취소 동작은 매번 같은 시점에 성공하거나 실패하도록 만든 테스트용 변환기로 확인합니다. 그래야 우연한 실행 시간 차이가 아니라 요청 처리 규칙 자체를 반복해서 검사할 수 있습니다. 실제 이미지 변환기는 정상 시나리오의 성능과 결과 이미지 확인에 사용합니다.
 
 | ID | 단계 | 만들 상황 | 확인할 것 |
 | --- | --- | --- | --- |
-| F0 | Phase A | 실패 없음 | 모든 요청이 같은 이미지와 키를 받는가 |
-| F1 | Phase A | leader가 오류 반환 | 모든 waiter가 끝나고 다음 요청이 다시 진행되는가 |
-| F2 | Phase B 후보 | leader 요청을 보낸 클라이언트의 연결 종료 | waiter의 작업까지 취소할지 정한 규칙대로 동작하는가 |
-| F3 | Phase B 후보 | 변환 제한 시간 초과 | waiter의 종료와 재시도 폭주를 막을 방법이 필요한가 |
-| F4 | Phase B 후보 | 여러 프로세스가 같은 파생 이미지 저장 | 완성된 파일 하나만 보이고 일부만 저장된 파일은 없는가 |
-| F5 | Phase B 후보 | leader의 변환을 수행하던 프로세스 종료 | 다른 프로세스가 복구하고 재시도가 다시 폭주하지 않는가 |
+| F0 | Phase A 완료 | 실패 없음 | 모든 요청이 같은 이미지와 키를 받는가 |
+| F1 | Phase A 완료 | 실제 변환을 맡은 작업이 오류 반환 | 기다리던 요청이 모두 끝나고 다음 요청이 다시 진행되는가 |
+| F2 | Phase B 완료 | 최초 클라이언트가 요청 취소 | 기다리던 다른 요청과 이미지 변환은 계속되는가 |
+| F3 | 후속 후보 | 서버의 변환 제한 시간 초과 | 기다리던 요청을 끝내고 재시도 폭주를 막을 수 있는가 |
+| F4 | Phase B 로컬 완료 | 여러 프로세스가 같은 파생 이미지 저장 | 완성된 파일 하나만 남고 불완전한 파일은 보이지 않는가 |
+| F5 | 후속 후보 | 변환 중인 프로세스 종료 | 다른 프로세스가 복구하고 재시도가 다시 폭주하지 않는가 |
 
 실패 시나리오에서 모든 요청이 성공할 필요는 없습니다. 다만 정한 시간 안에 끝나야 하며, 계속 남는 작업이나 제한 없는 재시도가 없어야 합니다.
 
-F2는 leader transform 시작과 waiter 9개의 in-flight 합류를 관찰한 뒤 leader request context를 취소합니다. Leader client만 canceled로 끝나고 waiter 9개는 같은 결과로 성공해야 합니다. Transform, original read와 publish-created는 각각 한 번이고 inflight는 0으로 돌아오며 follow-up request는 새 transform 없이 derivative hit여야 합니다. 이 순서는 임의의 sleep이 아니라 관찰 가능한 event로 제어하고 10회 반복합니다.
+F2의 실행 순서와 결과는 위의 [최초 요청이 취소되면 나머지 요청도 취소되는가?](#f2--최초-요청이-취소되면-나머지-요청도-취소되는가)에서 설명합니다. F3과 F5는 아직 실행하지 않았습니다.
 
-### Phase B 완료 조건
+## Phase B 완료 확인
 
-- Phase A의 기존 CLI, `e1-v1` raw 검증과 retained report가 그대로 재현됩니다.
-- S3 네 scenario, F2와 local S4-2/S4-4를 각각 유효 trial 10회 측정합니다.
-- Request class, request role, target/actual process와 cancellation event가 raw에 남습니다.
-- Analyzer가 request, trial과 process metric을 교차 검증하고 세 chart를 raw에서 다시 만듭니다.
-- S3에서 unrelated key가 coordinator의 global serialization을 받지 않고 warm hit가 추가 transform을 만들지 않습니다.
-- F2에서 leader cancellation이 shared work나 waiter를 취소하지 않고 후속 hit까지 완료됩니다.
-- S4에서 모든 응답 hash가 같고 transform 수가 active process 수 이하이며 하나의 완성된 derivative만 publish됩니다.
-- S4 결과로 S5 distributed coordination을 구현할지 보류할지 결정합니다.
+- Phase A의 기존 실행 명령, 원자료 검증과 결과 보고서를 그대로 다시 만들 수 있습니다.
+- S3의 네 가지 비교, F2, S4-2와 S4-4를 각각 유효하게 10회 측정했습니다.
+- 각 요청이 인기/비교 이미지 중 무엇인지, 최초/대기 요청 중 무엇인지, 어느 프로세스로 보내고 실제 어디서 처리했는지를 원자료에 기록했습니다.
+- 분석 명령이 요청별 결과, 실행별 요약과 프로세스별 계측값이 서로 맞는지 자동으로 검사합니다.
+- S3에서 서로 다른 변환은 각각 시작됐고, 이미 저장된 비교 이미지는 추가 변환 없이 응답했습니다.
+- F2에서 최초 요청의 취소는 이미지 변환과 다른 요청을 취소하지 않았고, 후속 요청도 저장된 결과를 받았습니다.
+- S4에서 모든 프로세스가 같은 완성 이미지를 응답했고 새 결과 파일은 하나만 만들어졌습니다.
+- 로컬 결과만으로 여러 프로세스 사이의 요청 합치기를 도입하지 않고, 실제 ECS/S3 측정을 먼저 하기로 결정했습니다.
+
+위 항목은 [Phase B 결과 리포트](../../reports/e1-cache-stampede/PHASE-B.md)와 최종 원자료에서 모두 확인했습니다. 7개 시나리오를 10회씩 실행한 총 70회가 모두 유효했고 원자료 교차검증도 통과했습니다.
 
 ## 기록할 메트릭
 
@@ -292,9 +348,9 @@ docker run --rm \
 
 Docker build 단계가 `go test ./...`와 `go vet ./...`를 실행합니다. 결과의 `run.json`에는 commit, image 식별자, fixture/library/resource/timeout 조건과 실제 실행 명령이 들어갑니다. `analysis.json`의 `raw_validation`이 `passed`가 아니거나 invalid trial이 있으면 대표 결과로 사용하지 않습니다.
 
-### Phase B 로컬 재현
+### Phase B 다시 실행하기
 
-Phase B는 별도 binary, schema와 result root를 사용합니다. 아래 명령은 S3의 cold/warm control과 mixed workload, F2, local S4-2/S4-4를 각각 10회 실행하고 raw 검증과 세 SVG를 생성합니다. Phase A의 `e1-runner` 명령이나 `results/` 파일은 변경하지 않습니다.
+Phase B는 Phase A 결과를 덮어쓰지 않도록 별도 실행 파일과 결과 디렉터리를 사용합니다. 아래 명령은 S3의 네 가지 비교, 최초 요청 취소 F2, 프로세스 2/4개의 S4를 각각 10회 실행합니다. 실행이 끝나면 원자료가 서로 맞는지 검사하고 결과 그래프 세 장을 만듭니다.
 
 ```bash
 commit="$(git rev-parse HEAD)"
@@ -310,7 +366,7 @@ docker run --rm --cpus=1 --memory=2g \
   --container-image "${image}#${image_id}"
 ```
 
-기존 Phase B raw만 다시 검증하고 chart를 재생성할 수 있습니다.
+이미 저장한 Phase B 원자료만 다시 검사하고 그래프를 만들 수도 있습니다.
 
 ```bash
 docker run --rm \
@@ -318,7 +374,7 @@ docker run --rm \
   "${image}" analyze --run-dir "/results-phase-b/retained-${commit}"
 ```
 
-Phase B 결과는 `run.json`, `trials.csv`, `requests.csv`, `resources.csv`, process별 `metrics.csv`, 순서 제어 근거인 `events.csv`와 `analysis/` 아래의 `analysis.json`, `summary.csv`, `unrelated-latency.svg`, `cancellation-timeline.svg`, `multiprocess-work.svg`로 구성됩니다. 미커밋 build 또는 `--calibration` 실행은 retained 근거로 사용하지 않습니다.
+Phase B 결과에는 실행 조건을 담은 `run.json`, 반복별 요약 `trials.csv`, 요청별 결과 `requests.csv`, 자원 사용량 `resources.csv`, 프로세스별 계측값 `metrics.csv`와 취소 순서를 기록한 `events.csv`가 들어갑니다. `analysis/`에는 교차검증 결과, 집계 표와 그래프 세 장이 만들어집니다. 개발 중 시험 실행이나 calibration 값은 최종 결과 근거로 사용하지 않습니다.
 
 ## 결과에서 보여줄 것
 
@@ -335,7 +391,7 @@ Phase B 결과는 `run.json`, `trials.csv`, `requests.csv`, `resources.csv`, pro
 
 프로세스 내부의 요청 합치기는 다음 조건을 모두 만족하면 사용합니다.
 
-- 성공한 실행에서 같은 키의 실제 변환이 한 프로세스 안에서 한 번으로 줄어듭니다. ECS Task별 동작은 Phase B에서 별도로 확인합니다.
+- 성공한 실행에서 같은 키의 실제 변환이 한 프로세스 안에서 한 번으로 줄어듭니다. 로컬 다중 프로세스의 경계는 Phase B에서 확인했으며 실제 ECS Task는 아직 측정하지 않았습니다.
 - 동시 요청이 하나일 때 반복해서 눈에 띄는 성능 저하가 생기지 않습니다.
 - 다른 이미지 키를 하나의 잠금으로 막지 않습니다.
 - 실패 시나리오가 요청 제한 시간 안에 끝나고 다음 요청이 진행됩니다.
@@ -365,4 +421,4 @@ Phase B 결과는 `run.json`, `trials.csv`, `requests.csv`, `resources.csv`, pro
 - 프로세스 내부 동일 요청 합치기의 채택 여부와 적용 범위를 수치로 결정합니다.
 - Invalid trial, 합성 환경의 한계와 확인하지 못한 범위를 공개합니다.
 
-위 조건은 [Phase A 결과 리포트](../../reports/e1-cache-stampede/README.md)와 retained raw에서 모두 충족했습니다. S3/F2 이후와 multi-process/ECS는 Phase B의 독립된 완료 조건을 정한 뒤 시작합니다.
+위 조건은 [Phase A 결과 리포트](../../reports/e1-cache-stampede/README.md)와 retained raw에서 모두 충족했습니다. Phase A 재현 경로는 Phase B와 분리해 유지하며 후속 경계는 [Phase B 결과](../../reports/e1-cache-stampede/PHASE-B.md)에 기록했습니다.

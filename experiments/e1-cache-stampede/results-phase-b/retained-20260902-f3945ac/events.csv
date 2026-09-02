@@ -1,0 +1,121 @@
+run_id,trial_id,scenario,name,request_id,timestamp,detail
+retained-20260902-f3945ac,F2-r01,F2,leader_transform_started,request-001,2026-09-02T07:51:56.465589289Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r01,F2,waiters_joined,,2026-09-02T07:51:56.467118575Z,9
+retained-20260902-f3945ac,F2-r01,F2,leader_cancel_sent,request-001,2026-09-02T07:51:56.467119663Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r01,F2,leader_finished,request-001,2026-09-02T07:51:56.467164227Z,canceled
+retained-20260902-f3945ac,F2-r01,F2,waiters_finished,,2026-09-02T07:51:56.968031002Z,9
+retained-20260902-f3945ac,F2-r01,F2,follow_up_finished,follow-up-001,2026-09-02T07:51:56.968159705Z,derivative
+retained-20260902-f3945ac,S4-2-r01,S4-2,task_ready,,2026-09-02T07:51:57.182672982Z,process-01
+retained-20260902-f3945ac,S4-2-r01,S4-2,task_ready,,2026-09-02T07:51:57.385554111Z,process-02
+retained-20260902-f3945ac,S4-4-r01,S4-4,task_ready,,2026-09-02T07:51:58.312537631Z,process-01
+retained-20260902-f3945ac,S4-4-r01,S4-4,task_ready,,2026-09-02T07:51:58.515380813Z,process-02
+retained-20260902-f3945ac,S4-4-r01,S4-4,task_ready,,2026-09-02T07:51:58.718261302Z,process-03
+retained-20260902-f3945ac,S4-4-r01,S4-4,task_ready,,2026-09-02T07:51:58.941550376Z,process-04
+retained-20260902-f3945ac,F2-r02,F2,leader_transform_started,request-001,2026-09-02T07:52:03.353093884Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r02,F2,waiters_joined,,2026-09-02T07:52:03.354658437Z,9
+retained-20260902-f3945ac,F2-r02,F2,leader_cancel_sent,request-001,2026-09-02T07:52:03.3546596Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r02,F2,leader_finished,request-001,2026-09-02T07:52:03.354691147Z,canceled
+retained-20260902-f3945ac,F2-r02,F2,waiters_finished,,2026-09-02T07:52:03.858240758Z,9
+retained-20260902-f3945ac,F2-r02,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:03.858385301Z,derivative
+retained-20260902-f3945ac,S4-4-r02,S4-4,task_ready,,2026-09-02T07:52:04.094657383Z,process-01
+retained-20260902-f3945ac,S4-4-r02,S4-4,task_ready,,2026-09-02T07:52:04.297682993Z,process-02
+retained-20260902-f3945ac,S4-4-r02,S4-4,task_ready,,2026-09-02T07:52:04.511037419Z,process-03
+retained-20260902-f3945ac,S4-4-r02,S4-4,task_ready,,2026-09-02T07:52:04.744590397Z,process-04
+retained-20260902-f3945ac,S4-2-r02,S4-2,task_ready,,2026-09-02T07:52:06.438100374Z,process-01
+retained-20260902-f3945ac,S4-2-r02,S4-2,task_ready,,2026-09-02T07:52:06.651648151Z,process-02
+retained-20260902-f3945ac,F2-r03,F2,leader_transform_started,request-001,2026-09-02T07:52:13.190421102Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r03,F2,waiters_joined,,2026-09-02T07:52:13.191873794Z,9
+retained-20260902-f3945ac,F2-r03,F2,leader_cancel_sent,request-001,2026-09-02T07:52:13.191875358Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r03,F2,leader_finished,request-001,2026-09-02T07:52:13.191934445Z,canceled
+retained-20260902-f3945ac,F2-r03,F2,waiters_finished,,2026-09-02T07:52:13.693993744Z,9
+retained-20260902-f3945ac,F2-r03,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:13.694140955Z,derivative
+retained-20260902-f3945ac,S4-2-r03,S4-2,task_ready,,2026-09-02T07:52:13.92950641Z,process-01
+retained-20260902-f3945ac,S4-2-r03,S4-2,task_ready,,2026-09-02T07:52:14.132043597Z,process-02
+retained-20260902-f3945ac,S4-4-r03,S4-4,task_ready,,2026-09-02T07:52:15.056384747Z,process-01
+retained-20260902-f3945ac,S4-4-r03,S4-4,task_ready,,2026-09-02T07:52:15.259219993Z,process-02
+retained-20260902-f3945ac,S4-4-r03,S4-4,task_ready,,2026-09-02T07:52:15.46219992Z,process-03
+retained-20260902-f3945ac,S4-4-r03,S4-4,task_ready,,2026-09-02T07:52:15.675585885Z,process-04
+retained-20260902-f3945ac,F2-r04,F2,leader_transform_started,request-001,2026-09-02T07:52:20.024826494Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r04,F2,waiters_joined,,2026-09-02T07:52:20.026394123Z,9
+retained-20260902-f3945ac,F2-r04,F2,leader_cancel_sent,request-001,2026-09-02T07:52:20.026395822Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r04,F2,leader_finished,request-001,2026-09-02T07:52:20.026437852Z,canceled
+retained-20260902-f3945ac,F2-r04,F2,waiters_finished,,2026-09-02T07:52:20.527184577Z,9
+retained-20260902-f3945ac,F2-r04,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:20.527310946Z,derivative
+retained-20260902-f3945ac,S4-4-r04,S4-4,task_ready,,2026-09-02T07:52:20.751075405Z,process-01
+retained-20260902-f3945ac,S4-4-r04,S4-4,task_ready,,2026-09-02T07:52:20.959320159Z,process-02
+retained-20260902-f3945ac,S4-4-r04,S4-4,task_ready,,2026-09-02T07:52:21.173030704Z,process-03
+retained-20260902-f3945ac,S4-4-r04,S4-4,task_ready,,2026-09-02T07:52:21.376100591Z,process-04
+retained-20260902-f3945ac,S4-2-r04,S4-2,task_ready,,2026-09-02T07:52:23.008943456Z,process-01
+retained-20260902-f3945ac,S4-2-r04,S4-2,task_ready,,2026-09-02T07:52:23.232325684Z,process-02
+retained-20260902-f3945ac,F2-r05,F2,leader_transform_started,request-001,2026-09-02T07:52:26.840381732Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r05,F2,waiters_joined,,2026-09-02T07:52:26.841834373Z,9
+retained-20260902-f3945ac,F2-r05,F2,leader_cancel_sent,request-001,2026-09-02T07:52:26.841835838Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r05,F2,leader_finished,request-001,2026-09-02T07:52:26.841868286Z,canceled
+retained-20260902-f3945ac,F2-r05,F2,waiters_finished,,2026-09-02T07:52:27.344090054Z,9
+retained-20260902-f3945ac,F2-r05,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:27.344216669Z,derivative
+retained-20260902-f3945ac,S4-2-r05,S4-2,task_ready,,2026-09-02T07:52:27.559094548Z,process-01
+retained-20260902-f3945ac,S4-2-r05,S4-2,task_ready,,2026-09-02T07:52:27.772081438Z,process-02
+retained-20260902-f3945ac,S4-4-r05,S4-4,task_ready,,2026-09-02T07:52:28.690947781Z,process-01
+retained-20260902-f3945ac,S4-4-r05,S4-4,task_ready,,2026-09-02T07:52:28.894058823Z,process-02
+retained-20260902-f3945ac,S4-4-r05,S4-4,task_ready,,2026-09-02T07:52:29.107211272Z,process-03
+retained-20260902-f3945ac,S4-4-r05,S4-4,task_ready,,2026-09-02T07:52:29.310202376Z,process-04
+retained-20260902-f3945ac,F2-r06,F2,leader_transform_started,request-001,2026-09-02T07:52:33.606383464Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r06,F2,waiters_joined,,2026-09-02T07:52:33.607940408Z,9
+retained-20260902-f3945ac,F2-r06,F2,leader_cancel_sent,request-001,2026-09-02T07:52:33.607941814Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r06,F2,leader_finished,request-001,2026-09-02T07:52:33.607991026Z,canceled
+retained-20260902-f3945ac,F2-r06,F2,waiters_finished,,2026-09-02T07:52:34.109565452Z,9
+retained-20260902-f3945ac,F2-r06,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:34.109702499Z,derivative
+retained-20260902-f3945ac,S4-4-r06,S4-4,task_ready,,2026-09-02T07:52:34.335057682Z,process-01
+retained-20260902-f3945ac,S4-4-r06,S4-4,task_ready,,2026-09-02T07:52:34.548116723Z,process-02
+retained-20260902-f3945ac,S4-4-r06,S4-4,task_ready,,2026-09-02T07:52:34.751064916Z,process-03
+retained-20260902-f3945ac,S4-4-r06,S4-4,task_ready,,2026-09-02T07:52:34.954401311Z,process-04
+retained-20260902-f3945ac,S4-2-r06,S4-2,task_ready,,2026-09-02T07:52:36.579363261Z,process-01
+retained-20260902-f3945ac,S4-2-r06,S4-2,task_ready,,2026-09-02T07:52:36.782267312Z,process-02
+retained-20260902-f3945ac,F2-r07,F2,leader_transform_started,request-001,2026-09-02T07:52:40.341684727Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r07,F2,waiters_joined,,2026-09-02T07:52:40.34321801Z,9
+retained-20260902-f3945ac,F2-r07,F2,leader_cancel_sent,request-001,2026-09-02T07:52:40.343219526Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r07,F2,leader_finished,request-001,2026-09-02T07:52:40.343255991Z,canceled
+retained-20260902-f3945ac,F2-r07,F2,waiters_finished,,2026-09-02T07:52:40.844183621Z,9
+retained-20260902-f3945ac,F2-r07,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:40.844253576Z,derivative
+retained-20260902-f3945ac,S4-2-r07,S4-2,task_ready,,2026-09-02T07:52:41.06996166Z,process-01
+retained-20260902-f3945ac,S4-2-r07,S4-2,task_ready,,2026-09-02T07:52:41.273312119Z,process-02
+retained-20260902-f3945ac,S4-4-r07,S4-4,task_ready,,2026-09-02T07:52:42.186842733Z,process-01
+retained-20260902-f3945ac,S4-4-r07,S4-4,task_ready,,2026-09-02T07:52:42.400119989Z,process-02
+retained-20260902-f3945ac,S4-4-r07,S4-4,task_ready,,2026-09-02T07:52:43.684401869Z,process-03
+retained-20260902-f3945ac,S4-4-r07,S4-4,task_ready,,2026-09-02T07:52:45.955853959Z,process-04
+retained-20260902-f3945ac,F2-r08,F2,leader_transform_started,request-001,2026-09-02T07:52:50.206021425Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r08,F2,waiters_joined,,2026-09-02T07:52:50.207442099Z,9
+retained-20260902-f3945ac,F2-r08,F2,leader_cancel_sent,request-001,2026-09-02T07:52:50.207443296Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r08,F2,leader_finished,request-001,2026-09-02T07:52:50.207480463Z,canceled
+retained-20260902-f3945ac,F2-r08,F2,waiters_finished,,2026-09-02T07:52:50.708969177Z,9
+retained-20260902-f3945ac,F2-r08,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:50.709115022Z,derivative
+retained-20260902-f3945ac,S4-4-r08,S4-4,task_ready,,2026-09-02T07:52:50.933741814Z,process-01
+retained-20260902-f3945ac,S4-4-r08,S4-4,task_ready,,2026-09-02T07:52:51.136931917Z,process-02
+retained-20260902-f3945ac,S4-4-r08,S4-4,task_ready,,2026-09-02T07:52:51.360082456Z,process-03
+retained-20260902-f3945ac,S4-4-r08,S4-4,task_ready,,2026-09-02T07:52:51.562930237Z,process-04
+retained-20260902-f3945ac,S4-2-r08,S4-2,task_ready,,2026-09-02T07:52:53.192361138Z,process-01
+retained-20260902-f3945ac,S4-2-r08,S4-2,task_ready,,2026-09-02T07:52:53.396021074Z,process-02
+retained-20260902-f3945ac,F2-r09,F2,leader_transform_started,request-001,2026-09-02T07:52:56.975701861Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r09,F2,waiters_joined,,2026-09-02T07:52:56.977114661Z,9
+retained-20260902-f3945ac,F2-r09,F2,leader_cancel_sent,request-001,2026-09-02T07:52:56.977115876Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r09,F2,leader_finished,request-001,2026-09-02T07:52:56.977144598Z,canceled
+retained-20260902-f3945ac,F2-r09,F2,waiters_finished,,2026-09-02T07:52:57.477619322Z,9
+retained-20260902-f3945ac,F2-r09,F2,follow_up_finished,follow-up-001,2026-09-02T07:52:57.477739492Z,derivative
+retained-20260902-f3945ac,S4-2-r09,S4-2,task_ready,,2026-09-02T07:52:57.69630108Z,process-01
+retained-20260902-f3945ac,S4-2-r09,S4-2,task_ready,,2026-09-02T07:52:57.899308799Z,process-02
+retained-20260902-f3945ac,S4-4-r09,S4-4,task_ready,,2026-09-02T07:52:58.804082509Z,process-01
+retained-20260902-f3945ac,S4-4-r09,S4-4,task_ready,,2026-09-02T07:52:59.017160105Z,process-02
+retained-20260902-f3945ac,S4-4-r09,S4-4,task_ready,,2026-09-02T07:52:59.220219869Z,process-03
+retained-20260902-f3945ac,S4-4-r09,S4-4,task_ready,,2026-09-02T07:52:59.423571076Z,process-04
+retained-20260902-f3945ac,F2-r10,F2,leader_transform_started,request-001,2026-09-02T07:53:03.708122345Z,deterministic transformer call 1
+retained-20260902-f3945ac,F2-r10,F2,waiters_joined,,2026-09-02T07:53:03.70953023Z,9
+retained-20260902-f3945ac,F2-r10,F2,leader_cancel_sent,request-001,2026-09-02T07:53:03.709531431Z,request context canceled after all waiters joined
+retained-20260902-f3945ac,F2-r10,F2,leader_finished,request-001,2026-09-02T07:53:03.709578949Z,canceled
+retained-20260902-f3945ac,F2-r10,F2,waiters_finished,,2026-09-02T07:53:04.210395935Z,9
+retained-20260902-f3945ac,F2-r10,F2,follow_up_finished,follow-up-001,2026-09-02T07:53:04.210572692Z,derivative
+retained-20260902-f3945ac,S4-4-r10,S4-4,task_ready,,2026-09-02T07:53:04.437312631Z,process-01
+retained-20260902-f3945ac,S4-4-r10,S4-4,task_ready,,2026-09-02T07:53:04.65034519Z,process-02
+retained-20260902-f3945ac,S4-4-r10,S4-4,task_ready,,2026-09-02T07:53:04.855825181Z,process-03
+retained-20260902-f3945ac,S4-4-r10,S4-4,task_ready,,2026-09-02T07:53:05.058613238Z,process-04
+retained-20260902-f3945ac,S4-2-r10,S4-2,task_ready,,2026-09-02T07:53:06.701173458Z,process-01
+retained-20260902-f3945ac,S4-2-r10,S4-2,task_ready,,2026-09-02T07:53:06.904594467Z,process-02

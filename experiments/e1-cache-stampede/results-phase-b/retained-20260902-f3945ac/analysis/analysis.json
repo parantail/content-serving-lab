@@ -1,0 +1,22 @@
+{
+  "schema_version": "e1-phase-b-v1",
+  "run_id": "retained-20260902-f3945ac",
+  "raw_validation": "passed",
+  "valid_trials": 70,
+  "invalid_trials": 0,
+  "expected_scenarios": [
+    "S3-COLD-CONTROL",
+    "S3-COLD",
+    "S3-WARM-CONTROL",
+    "S3-WARM",
+    "F2",
+    "S4-2",
+    "S4-4"
+  ],
+  "files": [
+    "summary.csv",
+    "unrelated-latency.svg",
+    "cancellation-timeline.svg",
+    "multiprocess-work.svg"
+  ]
+}

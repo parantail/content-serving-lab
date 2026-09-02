@@ -107,7 +107,7 @@ Phase A 완료 뒤에는 `COORDINATOR_MODE=process-singleflight`를 기본 후�
 - ECS Task 수에 따른 중복 변환 비용이 process-local 합치기만으로 감당되지 않습니다.
 - 실제 workload에서 변환 비용이 coordination/관측 복잡성보다 작습니다.
 
-여러 프로세스 사이의 lock은 아직 선택하지 않습니다. Phase B에 착수한다면 먼저 local multi-process와 ECS Task 2/4개에서 process당 중복 변환, conditional publish와 비용을 측정합니다.
+여러 프로세스 사이의 lock은 아직 선택하지 않습니다. 후속 [Phase B local 결과](PHASE-B.md)에서 process 2/4개가 각각 2/4회 변환하는 것을 확인했지만, S5 전에 실제 ECS Task와 S3 conditional write 조건을 측정하기로 했습니다.
 
 ## 한계
 
@@ -116,7 +116,7 @@ Phase A 완료 뒤에는 `COORDINATOR_MODE=process-singleflight`를 기본 후�
 - 한 장의 JPEG와 한 가지 640×640 WebP transform만 사용했습니다.
 - Local filesystem atomic publish를 사용했으며 S3 latency, conditional write와 network 비용은 포함하지 않았습니다.
 - 단일 프로세스 결과이므로 여러 ECS Task 전체의 transform이 한 번이라는 결론을 내릴 수 없습니다.
-- S3 unrelated-key isolation, F2 client cancellation retained scenario와 retry storm은 아직 측정하지 않았습니다.
+- S3 unrelated-key isolation과 F2 client cancellation은 [Phase B](PHASE-B.md)에서 측정했습니다. Retry storm, native transform timeout과 process 종료 복구는 아직 측정하지 않았습니다.
 - S0는 `none`만 실행했으므로 concurrency 1에서 두 coordinator mode의 overhead를 직접 A/B한 결과는 아닙니다.
 
 ## 원자료와 다시 실행하는 방법
