@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4의 S3 store·Task 계측 구현 완료**
+상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4 workload/analyzer 구현 완료, Terraform 전**
 
 대표 결과와 결정은 [Phase A: 동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)와 [Phase B: 서로 다른 변환 요청과 여러 프로세스에서는 어디까지 합칠 수 있는가?](../../reports/e1-cache-stampede/PHASE-B.md)에서 확인할 수 있습니다.
 
@@ -103,6 +103,16 @@ Task identity에는 account ID와 전체 ARN을 넣지 않고 다음 값만 유�
 같은 Task에 같은 trial의 prepare/finish를 다시 호출해도 같은 상태나 완료 report를 반환합니다. 제어 응답은 `Cache-Control: no-store`를 사용하며 report schema는 `e1-aws-s4-task-v1`입니다. Report에는 Task별 이미지 요청 수, 파생/원본 S3 GET 결과와 byte, 변환 시도·성공·실패·시간·최대 동시 실행 수, coalesced 요청 수, S3 publish의 created/existing/conflict/error와 시도 byte, 첫/마지막 요청 시각, 종료 시점의 진행 중 요청·변환·coordinator 상태가 들어갑니다.
 
 Resource sample은 ECS metadata v4의 `/task/stats`에서 Task 안의 container CPU 누적값과 memory 사용량을 합산합니다. Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는 50ms를 첫 후보 간격으로 사용합니다. Report는 첫 sample과 마지막 유효 sample의 CPU 누적값 차이, 구간 최대 memory와 sampling 오류 수를 함께 반환합니다. 50ms 간격은 개발 calibration에서 overhead와 peak 누락 가능성을 확인한 뒤 최종 측정 전에 고정합니다.
+
+### AWS S4 workload와 원자료 검증 계약
+
+`e1-aws-s4 run`은 한 Fargate 부하 생성기에서 세 Service를 홀수 반복 `1→2→4`, 짝수 반복 `4→2→1` 순서로 실행합니다. 각 trial은 ECS deployment와 target group의 정확한 healthy Task 집합을 확인하고, ALB를 통해 모든 Task의 prepare report를 모은 뒤 정확한 파생 object를 삭제합니다. `HEAD` miss가 확인되어야 start channel 하나로 이미지 요청 100개를 풀며, 응답별 Task ID·AZ·시각·status·hash를 기록합니다. 종료 report를 모든 Task에서 모은 뒤 S3의 저장 object와 응답 hash 및 WebP 구조가 일치해야 다음 trial로 넘어갑니다.
+
+별도 schema `e1-aws-s4-v1`은 `run.json`, `infrastructure.json`, `trials.csv`, `requests.csv`, `tasks.csv`, `resources.csv`, `storage.csv`, `events.csv`, `cost.json`을 기록합니다. Analyzer는 실행 순서와 Task 집합, 요청 100개, Task별 요청/변환/S3 counter, resource sample의 CPU delta·peak memory, event 순서, 저장 hash와 usage-only 비용 합계를 원자료에서 다시 계산합니다. 일치할 때만 trial 경계를 보존한 `analysis/summary.csv`와 Task 분배·중복 작업·latency/CPU SVG 세 장을 만듭니다.
+
+공개 가능한 원자료에는 Region·AZ·Task definition·image digest를 유지하지만 account ID, 전체 Task ARN, cluster/service/target group ARN, bucket 이름과 ALB DNS를 쓰지 않습니다. 실행 전 image digest, source hash와 canonical transform에서 계산한 파생 key가 서로 맞지 않으면 중단합니다. Retained run에는 calibration에서 미리 고정한 양수 start-skew 한계가 필수이고, calibration만 `0`으로 검증을 잠시 끌 수 있습니다.
+
+원격 동작은 실제 제어 endpoint와 같은 report 계약을 구현한 1/2/4 Task 모사 통합 test로 300-request round trip을 확인합니다. 요청 행 삭제, Task counter·resource sample·Task ID 변조는 재분석 단계에서 거부합니다. ECS `DescribeServices`·`ListTasks`·`DescribeTasks`와 ELB `DescribeTargetHealth`·`DescribeTargetGroupAttributes`를 조합한 probe도 exact healthy target 집합, round robin·stickiness off와 sanitized Task ID mapping을 단위 test로 고정했습니다. 이는 실제 AWS 측정 결과가 아니며, Terraform과 개발 calibration 이후에만 retained 결과를 만듭니다.
 
 여러 프로세스 사이의 요청 조정은 Redis나 DynamoDB 같은 외부 저장소를 이용해 실제 변환 담당을 하나로 정합니다. 이 경우에도 lock(잠금) 만료나 담당 프로세스 교체 중 두 작업이 겹칠 수 있으므로 S3 conditional write를 마지막 안전장치로 사용합니다.
 
@@ -267,7 +277,7 @@ Cold 상태의 S3에서는 인기 이미지와 비교 이미지가 각각 한 �
 
 Redis나 DynamoDB 같은 외부 저장소를 사용하면 여러 프로세스 중 하나만 변환하도록 조정할 수 있습니다. 이 문서에서는 이 방식을 S5라고 부릅니다. 그러나 외부 조정에는 요청 지연, 운영 비용, 잠금 만료와 장애 복구라는 새 문제가 생깁니다.
 
-로컬 S4는 중복 변환이 생긴다는 사실만 확인했습니다. 실제 환경에서 그 비용이 외부 조정보다 큰지는 아직 알 수 없으므로 S5는 구현하지 않았습니다. 다음 단계에서는 ECS Task 2개와 4개에 실제로 요청을 보내 다음 값을 먼저 측정합니다.
+로컬 S4는 중복 변환이 생긴다는 사실만 확인했습니다. 실제 환경에서 그 비용이 외부 조정보다 큰지는 아직 알 수 없으므로 S5는 구현하지 않았습니다. AWS workload/analyzer는 준비됐지만 Terraform과 실제 실행 전이므로, 다음 단계에서는 ECS Task 2개와 4개에 실제로 요청을 보내 다음 값을 먼저 측정합니다.
 
 - 로드밸런서가 각 Task에 나눈 실제 요청 수
 - Task별 이미지 변환 횟수와 CPU·메모리 사용량
@@ -412,6 +422,31 @@ docker run --rm \
 ```
 
 Phase B 결과에는 실행 조건을 담은 `run.json`, 반복별 요약 `trials.csv`, 요청별 결과 `requests.csv`, 자원 사용량 `resources.csv`, 프로세스별 계측값 `metrics.csv`와 취소 순서를 기록한 `events.csv`가 들어갑니다. `analysis/`에는 교차검증 결과, 집계 표와 그래프 세 장이 만들어집니다. 개발 중 시험 실행이나 calibration 값은 최종 결과 근거로 사용하지 않습니다.
+
+### AWS S4 부하 생성기
+
+Terraform이 만든 일회성 Fargate Task는 `experiment-aws-s4` target의 `/app/e1-aws-s4 run`을 실행합니다. Task role의 AWS credential chain을 사용하므로 credential flag나 파일을 받지 않습니다. 실행에는 세 ALB endpoint, 공통 ECS cluster, 세 Service와 target group, Derivative/Result bucket, 배포한 Media Service의 `sha256:` image digest를 전달합니다. 기본값은 Region `ap-northeast-2`, scenario별 10회, 요청 timeout 90초, control timeout 30초, listener 8081/8082/8084입니다.
+
+```bash
+commit="$(git rev-parse HEAD)"
+docker build --target experiment-aws-s4 --build-arg "GIT_COMMIT=${commit}" -t "content-serving-e1-aws-s4:${commit}" .
+
+/app/e1-aws-s4 run \
+  --run-id "retained-${commit}" \
+  --container-digest "sha256:<media-service-image-digest>" \
+  --cluster "<ecs-cluster>" \
+  --endpoint-1 "http://<internal-alb>:8081" --service-1 "<service-1>" --target-group-1 "<target-group-1-arn>" \
+  --endpoint-2 "http://<internal-alb>:8082" --service-2 "<service-2>" --target-group-2 "<target-group-2-arn>" \
+  --endpoint-4 "http://<internal-alb>:8084" --service-4 "<service-4>" --target-group-4 "<target-group-4-arn>" \
+  --derivative-bucket "<derivative-bucket>" --result-bucket "<result-bucket>" \
+  --start-skew-limit "<calibrated-limit>"
+```
+
+S3에서 내려받은 원자료는 AWS 연결 없이 다시 검증하고 그래프를 생성할 수 있습니다.
+
+```bash
+/app/e1-aws-s4 analyze --run-dir "/results-aws-s4/<run-id>"
+```
 
 ## 결과에서 보여줄 것
 

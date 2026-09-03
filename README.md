@@ -2,13 +2,13 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측 기반입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 ECS/S3 workload 실행과 분산 조정은 아직 구현 전입니다.
+현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측·원격 workload/analyzer입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 AWS 인프라와 측정, 분산 조정은 아직 구현 전입니다.
 
 ## 실험
 
 | 실험 | 확인하려는 것 | 주요 지표 | 상태 |
 | --- | --- | --- | --- |
-| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B: local 2/4 process에서 변환 2/4회](reports/e1-cache-stampede/PHASE-B.md) | Phase A/B local 완료, AWS S4 계측 구현 |
+| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B: local 2/4 process에서 변환 2/4회](reports/e1-cache-stampede/PHASE-B.md) | Phase A/B local 완료, AWS S4 workload 준비 |
 | E2. 이미지 변환기 비교 | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, 최대 메모리, 파일 크기와 품질 | 준비 중 |
 | E3. 멀티 리전 장애 | 한 리전의 응답이 느려지거나 끊겼을 때 사용자에게 얼마나 오래 영향을 주는가? | 리전별 p95/p99, 오류율, 복구 시간 | 준비 중 |
 | E4. 장애 격리 | 변환기나 저장소 장애가 캐시에 있는 이미지 요청까지 번지는 것을 막을 수 있는가? | 영향받은 요청 범위, 탐지·완화·복구 시간 | 준비 중 |
@@ -18,7 +18,7 @@
 
 ## AWS 구성안
 
-아래 구성은 아직 구현 전입니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
+아래 구성의 서비스·부하 생성기 코드까지 구현했으며 Terraform과 실제 측정은 아직 구현 전입니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
 
 ```mermaid
 flowchart LR
@@ -99,6 +99,7 @@ GET  /i/{content_hash}/{transform_spec}.{format}
 - `GET /i/{content_hash}/{transform_spec}.{format}`의 canonical key, WebP 변환과 atomic local publish
 - AWS SDK for Go v2 기반 S3 원본 조회와 `If-None-Match: *` 파생 이미지 조건부 저장
 - ECS metadata v4 기반 Task 식별·자원 sampling과 opt-in AWS S4 trial 제어 endpoint
+- ECS/ALB 안정 상태를 확인하고 1/2/4 Task에 100-request cold burst를 보내는 AWS S4 workload와 strict raw analyzer
 - `none`/`process-singleflight` coordinator와 요청별 cancellation/server-side timeout 계약
 - govips/libvips transformer와 deterministic failure transformer
 - E1 S0/S1/S2/F1 barrier workload, raw CSV/Prometheus/log/resource output
@@ -134,6 +135,7 @@ curl http://localhost:8080/health/ready
 cmd/content-serving/     실행 프로그램
 cmd/e1-runner/           E1 실행·분석 CLI
 cmd/e1-phase-b/          E1 Phase B 격리·취소·local multi-process CLI
+cmd/e1-aws-s4/           E1 AWS S4 원격 workload·분석 CLI
 internal/                서비스, workload와 분석 코드
 api/                     OpenAPI와 API 동작 테스트 (예정)
 deploy/                  Docker와 Terraform (예정)

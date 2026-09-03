@@ -23,7 +23,8 @@ RUN go test ./... \
     && go vet ./... \
     && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/content-serving ./cmd/content-serving \
     && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-runner ./cmd/e1-runner \
-    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-phase-b ./cmd/e1-phase-b
+    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-phase-b ./cmd/e1-phase-b \
+    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w -X main.gitCommit=${GIT_COMMIT}" -o /out/e1-aws-s4 ./cmd/e1-aws-s4
 
 FROM ${RUNTIME_IMAGE} AS runtime-base
 ARG LIBVIPS_VERSION
@@ -62,3 +63,8 @@ ENTRYPOINT ["/app/e1-runner"]
 
 FROM experiment AS experiment-phase-b
 ENTRYPOINT ["/app/e1-phase-b"]
+
+FROM runtime-base AS experiment-aws-s4
+COPY --from=build /out/e1-aws-s4 /app/e1-aws-s4
+
+ENTRYPOINT ["/app/e1-aws-s4"]
