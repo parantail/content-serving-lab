@@ -14,6 +14,8 @@ import (
 	"syscall"
 	"time"
 
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/parantail/content-serving-lab/internal/e1awss4"
 	"github.com/parantail/content-serving-lab/internal/httpapi"
 	"github.com/parantail/content-serving-lab/internal/media"
@@ -34,11 +36,11 @@ func run() error {
 		port = "8080"
 	}
 
-	processor, err := newProcessor()
+	storageMetrics := &media.S3Metrics{}
+	processor, err := newProcessor(storageMetrics)
 	if err != nil {
 		return err
 	}
-	storageMetrics := &media.S3Metrics{}
 	experiment, err := newExperimentController(processor, storageMetrics)
 	if err != nil {
 		return err
@@ -121,27 +123,11 @@ func newExperimentController(processor *media.Processor, storageMetrics *media.S
 	return e1awss4.NewController(identity, processor, storageMetrics, metadataClient, 50*time.Millisecond)
 }
 
-func newProcessor() (*media.Processor, error) {
-	sourceFile := os.Getenv("SOURCE_FILE")
-	if sourceFile == "" {
-		sourceFile = filepath.FromSlash("experiments/e1-cache-stampede/fixtures/landscape-4928x3264.jpg")
-	}
-	original, err := os.ReadFile(sourceFile)
-	if err != nil {
-		return nil, fmt.Errorf("read SOURCE_FILE: %w", err)
-	}
-	sourceDigest := sha256.Sum256(original)
-	sourceHash := fmt.Sprintf("%x", sourceDigest)
-
-	derivativeDirectory := os.Getenv("DERIVATIVE_DIR")
-	if derivativeDirectory == "" {
-		derivativeDirectory = filepath.Join(os.TempDir(), "content-serving", "derivatives")
-	}
-	derivatives, err := media.NewLocalDerivativeStore(derivativeDirectory)
+func newProcessor(storageMetrics *media.S3Metrics) (*media.Processor, error) {
+	originals, derivatives, err := newStores(storageMetrics)
 	if err != nil {
 		return nil, err
 	}
-
 	mode := os.Getenv("COORDINATOR_MODE")
 	if mode == "" {
 		mode = media.CoordinatorNone
@@ -166,10 +152,63 @@ func newProcessor() (*media.Processor, error) {
 	}
 
 	return media.NewProcessor(
-		media.NewFileOriginalStore(map[string]string{sourceHash: sourceFile}),
+		originals,
 		derivatives,
 		media.NewVipsTransformerWithConcurrency(transformConcurrency),
 		coordinator,
 		&media.Metrics{},
 	), nil
+}
+
+func newStores(storageMetrics *media.S3Metrics) (media.OriginalStore, media.DerivativeStore, error) {
+	backend := os.Getenv("STORAGE_BACKEND")
+	if backend == "" {
+		backend = "local"
+	}
+	switch backend {
+	case "local":
+		sourceFile := os.Getenv("SOURCE_FILE")
+		if sourceFile == "" {
+			sourceFile = filepath.FromSlash("experiments/e1-cache-stampede/fixtures/landscape-4928x3264.jpg")
+		}
+		original, err := os.ReadFile(sourceFile)
+		if err != nil {
+			return nil, nil, fmt.Errorf("read SOURCE_FILE: %w", err)
+		}
+		sourceDigest := sha256.Sum256(original)
+		sourceHash := fmt.Sprintf("%x", sourceDigest)
+		derivativeDirectory := os.Getenv("DERIVATIVE_DIR")
+		if derivativeDirectory == "" {
+			derivativeDirectory = filepath.Join(os.TempDir(), "content-serving", "derivatives")
+		}
+		derivatives, err := media.NewLocalDerivativeStore(derivativeDirectory)
+		if err != nil {
+			return nil, nil, err
+		}
+		return media.NewFileOriginalStore(map[string]string{sourceHash: sourceFile}), derivatives, nil
+	case "s3":
+		originalBucket := os.Getenv("ORIGINAL_BUCKET")
+		derivativeBucket := os.Getenv("DERIVATIVE_BUCKET")
+		if originalBucket == "" || derivativeBucket == "" {
+			return nil, nil, errors.New("ORIGINAL_BUCKET and DERIVATIVE_BUCKET are required for STORAGE_BACKEND=s3")
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		configuration, err := awsconfig.LoadDefaultConfig(ctx)
+		if err != nil {
+			return nil, nil, fmt.Errorf("load AWS configuration: %w", err)
+		}
+		client := s3.NewFromConfig(configuration)
+		originals, err := media.NewS3OriginalStore(client, originalBucket, storageMetrics)
+		if err != nil {
+			return nil, nil, err
+		}
+		derivatives, err := media.NewS3DerivativeStore(client, derivativeBucket, storageMetrics)
+		if err != nil {
+			return nil, nil, err
+		}
+		return originals, derivatives, nil
+	default:
+		return nil, nil, fmt.Errorf("invalid STORAGE_BACKEND %q", backend)
+	}
 }

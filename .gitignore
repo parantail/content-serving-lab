@@ -26,3 +26,14 @@ experiments/e1-cache-stampede/results/calibration-*/
 
 # Phase B development/calibration runs are excluded until selected as public evidence.
 experiments/e1-cache-stampede/results-phase-b/calibration-*/
+
+# Terraform local state, generated plans, and timed AWS S4 run metadata
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+deploy/e1-aws-s4/runtime.auto.tfvars.json
+deploy/e1-aws-s4/deadline.json
+deploy/e1-aws-s4/watchdog.pid
+deploy/e1-aws-s4/watchdog.log
+deploy/e1-aws-s4/recovered-results/

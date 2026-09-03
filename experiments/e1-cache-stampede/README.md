@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4 workload/analyzer 구현 완료, Terraform 전**
+상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4 Terraform까지 구현, 개발 calibration 전**
 
 대표 결과와 결정은 [Phase A: 동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)와 [Phase B: 서로 다른 변환 요청과 여러 프로세스에서는 어디까지 합칠 수 있는가?](../../reports/e1-cache-stampede/PHASE-B.md)에서 확인할 수 있습니다.
 
@@ -80,7 +80,7 @@ Derivative bucket: derivatives/{derivative_key}.webp
 
 파생 이미지 조회는 `404 Not Found` 또는 `NoSuchKey`만 miss로 처리하고 `403 Access Denied`를 비롯한 다른 응답은 저장소 오류로 반환합니다. S3는 호출자에게 `s3:ListBucket` 권한이 없으면 존재하지 않는 key의 `GetObject`에도 403을 반환할 수 있으므로, AWS IAM에서는 파생 이미지만 담는 전용 Derivative bucket 하나에 `s3:ListBucket`을 허용합니다. 이 bucket 단위 권한은 cold miss와 권한 오류를 구분하기 위한 절충이며 Original/Result bucket이나 account의 다른 bucket에는 적용하지 않습니다.
 
-현재 완료된 범위는 store 구현과 SDK request 단위 test입니다. 실행 중인 Media Service가 환경 설정에 따라 S3 store를 선택하는 wiring과 IAM/Terraform은 후속 AWS S4 단계에서 추가합니다.
+Media Service는 기본 `STORAGE_BACKEND=local`을 유지하고 AWS Task에서만 `STORAGE_BACKEND=s3`, `ORIGINAL_BUCKET`, `DERIVATIVE_BUCKET`으로 두 store를 연결합니다. Terraform은 Media Service role에 고정 Original GET, 정확한 Derivative GET/conditional PUT과 Derivative bucket의 `ListBucket`만 허용하고, bucket policy에서도 `If-None-Match: *` 없는 write를 거부합니다. 부하 생성기 role도 정확한 HEAD miss와 권한 오류를 구분해야 하므로 같은 Derivative bucket 하나의 `ListBucket`만 추가로 가집니다.
 
 ### AWS S4 Task 식별과 trial 계측 계약
 
@@ -112,7 +112,7 @@ Resource sample은 ECS metadata v4의 `/task/stats`에서 Task 안의 container 
 
 공개 가능한 원자료에는 Region·AZ·Task definition·image digest를 유지하지만 account ID, 전체 Task ARN, cluster/service/target group ARN, bucket 이름과 ALB DNS를 쓰지 않습니다. 실행 전 image digest, source hash와 canonical transform에서 계산한 파생 key가 서로 맞지 않으면 중단합니다. Retained run에는 calibration에서 미리 고정한 양수 start-skew 한계가 필수이고, calibration만 `0`으로 검증을 잠시 끌 수 있습니다.
 
-원격 동작은 실제 제어 endpoint와 같은 report 계약을 구현한 1/2/4 Task 모사 통합 test로 300-request round trip을 확인합니다. 요청 행 삭제, Task counter·resource sample·Task ID 변조는 재분석 단계에서 거부합니다. ECS `DescribeServices`·`ListTasks`·`DescribeTasks`와 ELB `DescribeTargetHealth`·`DescribeTargetGroupAttributes`를 조합한 probe도 exact healthy target 집합, round robin·stickiness off와 sanitized Task ID mapping을 단위 test로 고정했습니다. 이는 실제 AWS 측정 결과가 아니며, Terraform과 개발 calibration 이후에만 retained 결과를 만듭니다.
+원격 동작은 실제 제어 endpoint와 같은 report 계약을 구현한 1/2/4 Task 모사 통합 test로 300-request round trip을 확인합니다. 요청 행 삭제, Task counter·resource sample·Task ID 변조는 재분석 단계에서 거부합니다. ECS `DescribeServices`·`ListTasks`·`DescribeTasks`와 ELB `DescribeTargetHealth`·`DescribeTargetGroupAttributes`를 조합한 probe도 exact healthy target 집합, round robin·stickiness off와 sanitized Task ID mapping을 단위 test로 고정했습니다. [Terraform 환경](../../deploy/e1-aws-s4/README.md)은 mock provider plan/apply 계약까지 검증했지만 아직 실제 AWS 측정 결과가 아니며, 개발 calibration 이후에만 retained 결과를 만듭니다.
 
 여러 프로세스 사이의 요청 조정은 Redis나 DynamoDB 같은 외부 저장소를 이용해 실제 변환 담당을 하나로 정합니다. 이 경우에도 lock(잠금) 만료나 담당 프로세스 교체 중 두 작업이 겹칠 수 있으므로 S3 conditional write를 마지막 안전장치로 사용합니다.
 
@@ -277,7 +277,7 @@ Cold 상태의 S3에서는 인기 이미지와 비교 이미지가 각각 한 �
 
 Redis나 DynamoDB 같은 외부 저장소를 사용하면 여러 프로세스 중 하나만 변환하도록 조정할 수 있습니다. 이 문서에서는 이 방식을 S5라고 부릅니다. 그러나 외부 조정에는 요청 지연, 운영 비용, 잠금 만료와 장애 복구라는 새 문제가 생깁니다.
 
-로컬 S4는 중복 변환이 생긴다는 사실만 확인했습니다. 실제 환경에서 그 비용이 외부 조정보다 큰지는 아직 알 수 없으므로 S5는 구현하지 않았습니다. AWS workload/analyzer는 준비됐지만 Terraform과 실제 실행 전이므로, 다음 단계에서는 ECS Task 2개와 4개에 실제로 요청을 보내 다음 값을 먼저 측정합니다.
+로컬 S4는 중복 변환이 생긴다는 사실만 확인했습니다. 실제 환경에서 그 비용이 외부 조정보다 큰지는 아직 알 수 없으므로 S5는 구현하지 않았습니다. AWS workload/analyzer와 Terraform은 준비됐지만 실제 calibration 전이므로, 다음 단계에서는 ECS Task 2개와 4개에 실제로 요청을 보내 다음 값을 먼저 측정합니다.
 
 - 로드밸런서가 각 Task에 나눈 실제 요청 수
 - Task별 이미지 변환 횟수와 CPU·메모리 사용량
@@ -426,6 +426,8 @@ Phase B 결과에는 실행 조건을 담은 `run.json`, 반복별 요약 `trial
 ### AWS S4 부하 생성기
 
 Terraform이 만든 일회성 Fargate Task는 `experiment-aws-s4` target의 `/app/e1-aws-s4 run`을 실행합니다. Task role의 AWS credential chain을 사용하므로 credential flag나 파일을 받지 않습니다. 실행에는 세 ALB endpoint, 공통 ECS cluster, 세 Service와 target group, Derivative/Result bucket, 배포한 Media Service의 `sha256:` image digest를 전달합니다. 기본값은 Region `ap-northeast-2`, scenario별 10회, 요청 timeout 90초, control timeout 30초, listener 8081/8082/8084입니다.
+
+ECR bootstrap, digest 고정, 사전 Budget/quota 검사, 2시간 watchdog, 적용과 제거의 전체 순서는 [E1 AWS S4 Terraform 문서](../../deploy/e1-aws-s4/README.md)를 따릅니다.
 
 ```bash
 commit="$(git rev-parse HEAD)"
