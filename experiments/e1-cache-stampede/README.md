@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A와 로컬 Phase B 측정 완료 — 다음 단계는 실제 ECS/S3 환경 확인**
+상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4의 S3 store·Task 계측 구현 완료**
 
 대표 결과와 결정은 [Phase A: 동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)와 [Phase B: 서로 다른 변환 요청과 여러 프로세스에서는 어디까지 합칠 수 있는가?](../../reports/e1-cache-stampede/PHASE-B.md)에서 확인할 수 있습니다.
 
@@ -66,6 +66,43 @@ GET /i/{source_hash}/{transform_spec}.{format}
 | 여러 프로세스 | 프로세스 사이에서도 조정 | S3 conditional write를 안전장치로 유지 | 전체 1회 목표 | 한 프로세스만 새 파일 생성 |
 
 S3 conditional write는 `If-None-Match: *` 조건을 사용해 해당 키가 없을 때만 객체를 만드는 방식입니다. 먼저 저장한 프로세스만 성공하고 나머지는 이미 객체가 있다는 응답을 받습니다. 나머지 프로세스가 수행한 이미지 변환까지 없애 주지는 않습니다.
+
+### AWS S4 S3 store 계약
+
+AWS S4에서 사용할 원본과 파생 이미지 store는 AWS SDK for Go v2의 `GetObject`와 `PutObject`를 사용합니다. 객체 key는 bucket 안에서 다음처럼 고정합니다.
+
+```text
+Original bucket:   originals/{source_hash}
+Derivative bucket: derivatives/{derivative_key}.webp
+```
+
+파생 이미지 저장 request에는 `If-None-Match: *`와 `Content-Type: image/webp`를 직접 설정합니다. `200 OK`는 `created`, `412 Precondition Failed`는 다른 Task가 먼저 저장한 정상 경쟁 결과인 `existing`으로 처리합니다. `409 ConditionalRequestConflict`는 store 계층에서 최대 두 번 더 호출한 뒤에도 계속되면 별도 오류로 반환합니다. `existing`을 받은 뒤 winner object를 다시 읽는 처리는 기존 media processor 계약을 그대로 사용합니다.
+
+파생 이미지 조회는 `404 Not Found` 또는 `NoSuchKey`만 miss로 처리하고 `403 Access Denied`를 비롯한 다른 응답은 저장소 오류로 반환합니다. S3는 호출자에게 `s3:ListBucket` 권한이 없으면 존재하지 않는 key의 `GetObject`에도 403을 반환할 수 있으므로, AWS IAM에서는 파생 이미지만 담는 전용 Derivative bucket 하나에 `s3:ListBucket`을 허용합니다. 이 bucket 단위 권한은 cold miss와 권한 오류를 구분하기 위한 절충이며 Original/Result bucket이나 account의 다른 bucket에는 적용하지 않습니다.
+
+현재 완료된 범위는 store 구현과 SDK request 단위 test입니다. 실행 중인 Media Service가 환경 설정에 따라 S3 store를 선택하는 wiring과 IAM/Terraform은 후속 AWS S4 단계에서 추가합니다.
+
+### AWS S4 Task 식별과 trial 계측 계약
+
+AWS S4 실험 모드는 기본적으로 꺼져 있습니다. `E1_EXPERIMENT_MODE=true`일 때만 시작 과정에서 `ECS_CONTAINER_METADATA_URI_V4`의 `/task`를 한 번 읽고 내부 제어 endpoint를 등록합니다. `E1_CONTAINER_NAME`으로 지정한 container를 찾으며 기본 이름은 `media-service`입니다. 필요한 metadata를 읽지 못하거나 container image digest가 `sha256:` digest 형식이 아니면 실험 모드로 기동하지 않습니다.
+
+Task identity에는 account ID와 전체 ARN을 넣지 않고 다음 값만 유지합니다.
+
+- Task ID, Task definition family와 revision
+- Availability Zone과 launch type
+- Task CPU·memory limit
+- Media Service container image digest
+
+실험 모드의 이미지 응답은 `X-E1-Task-ID`와 요청에서 받은 `X-E1-Trial-ID`를 반환합니다. 이미지 요청에는 준비된 trial ID가 반드시 있어야 하며, 다른 trial이 준비되어 있거나 진행 중인 요청·변환·coordinator 항목이 남아 있으면 trial 경계를 넘기지 않습니다.
+
+| Method와 path | 역할 |
+| --- | --- |
+| `POST /internal/e1/trials/{trial_id}/prepare` | Task를 trial에 등록하고 counter baseline과 resource sampling을 시작 |
+| `POST /internal/e1/trials/{trial_id}/finish` | 요청과 공유 작업이 모두 끝난 뒤 Task report와 resource sample을 반환 |
+
+같은 Task에 같은 trial의 prepare/finish를 다시 호출해도 같은 상태나 완료 report를 반환합니다. 제어 응답은 `Cache-Control: no-store`를 사용하며 report schema는 `e1-aws-s4-task-v1`입니다. Report에는 Task별 이미지 요청 수, 파생/원본 S3 GET 결과와 byte, 변환 시도·성공·실패·시간·최대 동시 실행 수, coalesced 요청 수, S3 publish의 created/existing/conflict/error와 시도 byte, 첫/마지막 요청 시각, 종료 시점의 진행 중 요청·변환·coordinator 상태가 들어갑니다.
+
+Resource sample은 ECS metadata v4의 `/task/stats`에서 Task 안의 container CPU 누적값과 memory 사용량을 합산합니다. Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는 50ms를 첫 후보 간격으로 사용합니다. Report는 첫 sample과 마지막 유효 sample의 CPU 누적값 차이, 구간 최대 memory와 sampling 오류 수를 함께 반환합니다. 50ms 간격은 개발 calibration에서 overhead와 peak 누락 가능성을 확인한 뒤 최종 측정 전에 고정합니다.
 
 여러 프로세스 사이의 요청 조정은 Redis나 DynamoDB 같은 외부 저장소를 이용해 실제 변환 담당을 하나로 정합니다. 이 경우에도 lock(잠금) 만료나 담당 프로세스 교체 중 두 작업이 겹칠 수 있으므로 S3 conditional write를 마지막 안전장치로 사용합니다.
 

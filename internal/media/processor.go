@@ -22,6 +22,12 @@ type DerivativeResult struct {
 	Coalesced bool
 }
 
+type ProcessorState struct {
+	TransformInflight  int64
+	CoordinatorKeys    int
+	CoordinatorWaiters int
+}
+
 func NewProcessor(
 	originals OriginalStore,
 	derivatives DerivativeStore,
@@ -128,4 +134,16 @@ func (p *Processor) Metrics() *Metrics {
 
 func (p *Processor) CoordinatorMode() string {
 	return p.coordinator.Mode()
+}
+
+func (p *Processor) State() ProcessorState {
+	state := ProcessorState{TransformInflight: p.metrics.Snapshot().TransformInflight}
+	if coordinator, ok := p.coordinator.(interface {
+		Snapshot() ProcessCoordinatorSnapshot
+	}); ok {
+		snapshot := coordinator.Snapshot()
+		state.CoordinatorKeys = snapshot.Keys
+		state.CoordinatorWaiters = snapshot.Waiters
+	}
+	return state
 }

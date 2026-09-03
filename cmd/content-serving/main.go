@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/parantail/content-serving-lab/internal/e1awss4"
 	"github.com/parantail/content-serving-lab/internal/httpapi"
 	"github.com/parantail/content-serving-lab/internal/media"
 )
@@ -37,10 +38,15 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	storageMetrics := &media.S3Metrics{}
+	experiment, err := newExperimentController(processor, storageMetrics)
+	if err != nil {
+		return err
+	}
 
 	server := &http.Server{
 		Addr:              ":" + port,
-		Handler:           httpapi.NewHandler(processor),
+		Handler:           httpapi.NewHandlerWithExperiment(processor, experiment),
 		ReadHeaderTimeout: 5 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
@@ -62,11 +68,57 @@ func run() error {
 		"address", server.Addr,
 		"git_commit", gitCommit,
 		"coordinator", processor.CoordinatorMode(),
+		"experiment_mode", experiment != nil,
 	)
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
 	return nil
+}
+
+func newExperimentController(processor *media.Processor, storageMetrics *media.S3Metrics) (*e1awss4.Controller, error) {
+	rawMode := os.Getenv("E1_EXPERIMENT_MODE")
+	if rawMode == "" {
+		return nil, nil
+	}
+	enabled, err := strconv.ParseBool(rawMode)
+	if err != nil {
+		return nil, fmt.Errorf("invalid E1_EXPERIMENT_MODE %q", rawMode)
+	}
+	if !enabled {
+		return nil, nil
+	}
+
+	metadataURI := os.Getenv("ECS_CONTAINER_METADATA_URI_V4")
+	if metadataURI == "" {
+		return nil, errors.New("ECS_CONTAINER_METADATA_URI_V4 is required in experiment mode")
+	}
+	containerName := os.Getenv("E1_CONTAINER_NAME")
+	if containerName == "" {
+		containerName = "media-service"
+	}
+	metadataClient, err := e1awss4.NewMetadataClient(metadataURI, containerName, &http.Client{Timeout: 2 * time.Second})
+	if err != nil {
+		return nil, err
+	}
+	metadataCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	identity, err := metadataClient.LoadTaskIdentity(metadataCtx)
+	if err != nil {
+		return nil, err
+	}
+	slog.Info(
+		"experiment task metadata loaded",
+		"task_id", identity.TaskID,
+		"task_definition_family", identity.TaskDefinitionFamily,
+		"task_definition_revision", identity.TaskDefinitionRevision,
+		"availability_zone", identity.AvailabilityZone,
+		"launch_type", identity.LaunchType,
+		"cpu_vcpu", identity.CPUVCpu,
+		"memory_mib", identity.MemoryMiB,
+		"image_digest", identity.ImageDigest,
+	)
+	return e1awss4.NewController(identity, processor, storageMetrics, metadataClient, 50*time.Millisecond)
 }
 
 func newProcessor() (*media.Processor, error) {

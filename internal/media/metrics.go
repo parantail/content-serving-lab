@@ -1,6 +1,7 @@
 package media
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"sync/atomic"
@@ -81,6 +82,14 @@ func (m *Metrics) Snapshot() MetricsSnapshot {
 		PublishExisting:         m.publishExisting.Load(),
 		PublishError:            m.publishError.Load(),
 	}
+}
+
+func (m *Metrics) ResetTransformMaxInflight() error {
+	if m.transformInflight.Load() != 0 {
+		return errors.New("cannot reset transform maximum while transforms are in flight")
+	}
+	m.transformMaxInflight.Store(0)
+	return nil
 }
 
 func (m *Metrics) WritePrometheus(w io.Writer) error {

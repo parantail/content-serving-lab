@@ -102,13 +102,20 @@ func (s *LocalDerivativeStore) PutIfAbsent(ctx context.Context, derivativeKey st
 }
 
 func (s *LocalDerivativeStore) path(derivativeKey string) (string, error) {
-	if len(derivativeKey) != 64 {
-		return "", fmt.Errorf("invalid derivative key %q", derivativeKey)
-	}
-	for _, char := range derivativeKey {
-		if (char < '0' || char > '9') && (char < 'a' || char > 'f') {
-			return "", fmt.Errorf("invalid derivative key %q", derivativeKey)
-		}
+	if err := validateSHA256Key(derivativeKey, "derivative"); err != nil {
+		return "", err
 	}
 	return filepath.Join(s.directory, derivativeKey+".webp"), nil
+}
+
+func validateSHA256Key(key, kind string) error {
+	if len(key) != 64 {
+		return fmt.Errorf("invalid %s key %q", kind, key)
+	}
+	for _, char := range key {
+		if (char < '0' || char > '9') && (char < 'a' || char > 'f') {
+			return fmt.Errorf("invalid %s key %q", kind, key)
+		}
+	}
+	return nil
 }
