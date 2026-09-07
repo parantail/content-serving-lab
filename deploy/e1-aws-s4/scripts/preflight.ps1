@@ -91,7 +91,7 @@ $budget = @($budgets.Budgets | Where-Object {
     $_.BudgetType -eq "COST" -and $_.BudgetLimit.Unit -eq "USD" -and [double]$_.BudgetLimit.Amount -eq 10.0
 }) | Select-Object -First 1
 if ($null -eq $budget) {
-    throw "A monthly US$10 COST budget is required for the sandbox account."
+    throw "A monthly US`$10 COST budget is required for the sandbox account."
 }
 
 $notifications = Invoke-AwsJson -Profile $Profile -Region $Region -Arguments @(
@@ -101,14 +101,25 @@ $notifications = Invoke-AwsJson -Profile $Profile -Region $Region -Arguments @(
 )
 foreach ($threshold in @(50, 80, 100)) {
     $notification = @($notifications.Notifications | Where-Object {
+        $thresholdTypeProperty = $_.PSObject.Properties["ThresholdType"]
+        $usesPercentageThreshold = $null -eq $thresholdTypeProperty -or $thresholdTypeProperty.Value -eq "PERCENTAGE"
         $_.NotificationType -eq "ACTUAL" -and
-        $_.ThresholdType -eq "PERCENTAGE" -and
+        $usesPercentageThreshold -and
         [double]$_.Threshold -eq $threshold
     }) | Select-Object -First 1
     if ($null -eq $notification) {
-        throw "The US$10 budget is missing its ACTUAL $threshold% notification."
+        throw "The US`$10 budget is missing its ACTUAL $threshold% notification."
     }
-    $notificationKey = "NotificationType=$($notification.NotificationType),ComparisonOperator=$($notification.ComparisonOperator),Threshold=$($notification.Threshold),ThresholdType=$($notification.ThresholdType)"
+    $notificationFields = @(
+        "NotificationType=$($notification.NotificationType)"
+        "ComparisonOperator=$($notification.ComparisonOperator)"
+        "Threshold=$($notification.Threshold)"
+    )
+    $thresholdTypeProperty = $notification.PSObject.Properties["ThresholdType"]
+    if ($null -ne $thresholdTypeProperty) {
+        $notificationFields += "ThresholdType=$($thresholdTypeProperty.Value)"
+    }
+    $notificationKey = $notificationFields -join ","
     $subscribers = Invoke-AwsJson -Profile $Profile -Region $Region -Arguments @(
         "budgets", "describe-subscribers-for-notification",
         "--account-id", [string]$identity.Account,
@@ -116,7 +127,7 @@ foreach ($threshold in @(50, 80, 100)) {
         "--notification", $notificationKey
     )
     if (@($subscribers.Subscribers).Count -lt 1) {
-        throw "The US$10 budget's ACTUAL $threshold% notification has no subscriber."
+        throw "The US`$10 budget's ACTUAL $threshold% notification has no subscriber."
     }
 }
 
