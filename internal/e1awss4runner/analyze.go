@@ -111,6 +111,20 @@ func Analyze(runDirectory string) (AnalysisOutput, error) {
 }
 
 func validateRaw(metadata RunMetadata, infrastructure Infrastructure, cost CostDocument, trials []TrialRecord, requests []RequestRecord, tasks []TaskRecord, resources []ResourceRecord, storage []StorageRecord, events []EventRecord) error {
+	if !metadata.Calibration {
+		if metadata.MeasurementContract != MeasurementContract || metadata.ResourceSampleGapMS != 50 {
+			return errors.New("retained measurement contract metadata missing or invalid")
+		}
+		if err := validateRetainedConfig(Config{RunID: metadata.RunID, GitCommit: metadata.GitCommit, Region: metadata.Region, Repetitions: metadata.Repetitions, SourceHash: metadata.SourceHash, CanonicalSpec: metadata.CanonicalSpec,
+			StartSkewLimit: time.Duration(metadata.StartSkewLimitMS * float64(time.Millisecond)), RequestTimeout: time.Duration(metadata.RequestTimeoutMS * float64(time.Millisecond)), ControlTimeout: time.Duration(metadata.ControlTimeoutMS * float64(time.Millisecond)), ControlPollGap: time.Duration(metadata.ControlPollGapMS * float64(time.Millisecond))}); err != nil {
+			return err
+		}
+		for _, task := range tasks {
+			if err := validateRetainedTask(task.Task); err != nil {
+				return err
+			}
+		}
+	}
 	if infrastructure.SchemaVersion != SchemaVersion || infrastructure.RunID != metadata.RunID || infrastructure.Region != metadata.Region {
 		return errors.New("infrastructure metadata does not match run metadata")
 	}
@@ -576,6 +590,9 @@ func readTasks(path string) ([]TaskRecord, error) {
 				CoordinatorKeys: p.i("coordinator_keys"), CoordinatorWaiters: p.i("coordinator_waiters"), CPUUsageNanos: p.u64("cpu_usage_nanos"),
 				PeakMemoryBytes: p.u64("peak_memory_bytes"), ResourceErrors: p.i64("resource_errors"),
 			},
+		}
+		if _, present := row["resource_sample_gap_ms"]; present {
+			record.Task.ResourceSampleGapMS = p.f("resource_sample_gap_ms")
 		}
 		if p.err != nil {
 			return nil, p.err

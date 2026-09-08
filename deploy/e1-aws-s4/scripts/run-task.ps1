@@ -1,7 +1,8 @@
 [CmdletBinding()]
-param()
+param([ValidateSet("calibration", "retained")][string]$RunMode = "calibration")
 
 . (Join-Path $PSScriptRoot "common.ps1")
+. (Join-Path $PSScriptRoot "retained-contract.ps1")
 
 $moduleRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $runtime = Read-RuntimeConfiguration -ModuleRoot $moduleRoot
@@ -22,6 +23,15 @@ $configuration = $configurationJson | ConvertFrom-Json
 if ($null -eq $configuration) {
     throw "The full environment has not been applied."
 }
+if ($configuration.run_mode -ne $RunMode -or $configuration.run_id -ne "$RunMode-$($runtime.deployment_id)") { throw "Requested run mode does not match the applied task definition." }
+if (($deadline - [DateTimeOffset]::UtcNow).TotalMinutes -lt 15) { throw "At least fifteen minutes must remain for measurement and cleanup." }
+$recoveryRoot = Join-Path $moduleRoot "recovered-results\$($runtime.deployment_id)"
+if (Test-Path -LiteralPath (Join-Path $recoveryRoot $configuration.run_id)) { throw "Local run results already exist; refusing to overwrite." }
+if ($RunMode -eq 'retained') {
+    Assert-RetainedDiagnostic -Directory (Join-Path $recoveryRoot 'resource-diagnostic') -DeploymentId $runtime.deployment_id -ImageDigest $configuration.media_digest
+}
+$stored = Invoke-AwsJson -Profile $runtime.aws_profile -Region $runtime.region -Arguments @('s3api','list-objects-v2','--bucket',$configuration.result_bucket,'--prefix',"$($configuration.result_prefix)/$($configuration.run_id)/",'--max-keys','1')
+if ([int]$stored.KeyCount -ne 0) { throw "Remote run results or reservation already exist; refusing to overwrite." }
 
 $subnets = @($configuration.subnets) -join ","
 $network = "awsvpcConfiguration={subnets=[$subnets],securityGroups=[$($configuration.security_group)],assignPublicIp=ENABLED}"

@@ -2,6 +2,7 @@
 param(
     [Parameter(Mandatory)][ValidatePattern("^[a-z0-9][a-z0-9-]{7,15}$")][string]$DeploymentId,
     [Parameter(Mandatory)][ValidateRange(0.01, 9.99)][double]$ExpectedCostUsd,
+    [ValidateSet("calibration", "retained")][string]$RunMode = "calibration",
     [string]$Profile = "content-serving-lab-sandbox",
     [ValidateSet("ap-northeast-2")][string]$Region = "ap-northeast-2"
 )
@@ -44,6 +45,7 @@ $bootstrapRuntime = [ordered]@{
     aws_profile         = $Profile
     region              = $Region
     enable_environment  = $false
+    run_mode            = $RunMode
     media_image_digest  = $null
     runner_image_digest = $null
     apply_started_at    = $startedText
@@ -126,6 +128,7 @@ $runtime = [ordered]@{
     aws_profile         = $Profile
     region              = $Region
     enable_environment  = $true
+    run_mode            = $RunMode
     media_image_digest  = $mediaDigest
     runner_image_digest = $runnerDigest
     apply_started_at    = $startedText

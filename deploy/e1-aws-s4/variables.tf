@@ -142,6 +142,16 @@ variable "canonical_spec" {
   }
 }
 
+variable "run_mode" {
+  description = "Explicit calibration or retained workload; defaults to calibration."
+  type        = string
+  default     = "calibration"
+  validation {
+    condition     = contains(["calibration", "retained"], var.run_mode)
+    error_message = "run_mode must be calibration or retained."
+  }
+}
+
 variable "result_prefix" {
   description = "Result bucket object prefix used by e1-aws-s4."
   type        = string

@@ -21,6 +21,7 @@ import (
 )
 
 type Storage interface {
+	ReserveRun(ctx context.Context, bucket, key string) error
 	DeleteDerivative(ctx context.Context, bucket, key string) error
 	DerivativeExists(ctx context.Context, bucket, key string) (bool, error)
 	ReadDerivative(ctx context.Context, bucket, key string) ([]byte, error)
@@ -116,6 +117,16 @@ func (s *AWSStorage) ReadDerivative(ctx context.Context, bucket, key string) ([]
 		return nil, fmt.Errorf("read derivative object: response exceeds %d bytes", responseBodyLimit)
 	}
 	return data, nil
+}
+
+func (s *AWSStorage) ReserveRun(ctx context.Context, bucket, key string) error {
+	_, err := s.client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucket), Key: aws.String(key), Body: strings.NewReader(`{"reserved":true}`), IfNoneMatch: aws.String("*"),
+	})
+	if err != nil {
+		return errors.New("run reservation failed; existing or uncertain runs must not be retried")
+	}
+	return nil
 }
 
 func (s *AWSStorage) PutResult(ctx context.Context, bucket, key string, data []byte) error {

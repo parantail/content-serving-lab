@@ -104,6 +104,7 @@ func NewController(identity TaskIdentity, processor *media.Processor, storageMet
 	if sampleGap <= 0 {
 		return nil, errors.New("experiment resource sample interval must be positive")
 	}
+	identity.ResourceSampleGapMS = float64(sampleGap) / float64(time.Millisecond)
 	return &Controller{
 		identity: identity, processor: processor, storageMetrics: storageMetrics,
 		resourceSource: resourceSource, sampleGap: sampleGap,

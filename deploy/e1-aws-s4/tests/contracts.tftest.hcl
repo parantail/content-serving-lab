@@ -62,6 +62,11 @@ run "full_environment_matches_fixed_contract" {
   command = apply
 
   assert {
+    condition     = contains(local.runner_base_command, "--calibration=true") && local.workload_run_id == "calibration-deadbeef1234"
+    error_message = "Default execution must remain calibration."
+  }
+
+  assert {
     condition = length([for statement in jsondecode(aws_vpc_endpoint.s3[0].policy).Statement : statement if
       statement.Sid == "ECRImageLayers" &&
       statement.Effect == "Allow" && statement.Principal == "*" &&
@@ -169,5 +174,27 @@ run "full_environment_matches_fixed_contract" {
   assert {
     condition     = aws_cloudwatch_log_group.media[0].retention_in_days == 1 && aws_cloudwatch_log_group.runner[0].retention_in_days == 1
     error_message = "Disposable experiment logs must expire after one day."
+  }
+}
+
+run "retained_command_contract" {
+  command = apply
+  variables {
+    deployment_id       = "deadbeef1234"
+    enable_environment  = true
+    run_mode            = "retained"
+    media_image_digest  = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    runner_image_digest = "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    apply_started_at    = "2026-09-03T00:00:00Z"
+    expires_at          = "2026-09-03T02:00:00Z"
+    expected_cost_usd   = 3
+  }
+  assert {
+    condition     = local.workload_run_id == "retained-deadbeef1234" && contains(local.runner_base_command, "--calibration=false") && local.runner_base_command[index(local.runner_base_command, "--start-skew-limit") + 1] == "50ms" && local.runner_base_command[index(local.runner_base_command, "--repetitions") + 1] == "10"
+    error_message = "Retained mode must fix its separate run ID, repetitions and skew."
+  }
+  assert {
+    condition     = output.run_task_configuration.run_mode == "retained" && output.run_task_configuration.run_id == local.workload_run_id && output.run_task_configuration.media_digest == var.media_image_digest
+    error_message = "Run-task mode and diagnostic image gate must match Terraform."
   }
 }

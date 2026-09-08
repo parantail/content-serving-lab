@@ -119,11 +119,16 @@ resource "aws_ecs_service" "media" {
 }
 
 locals {
-  calibration_run_id = "calibration-${var.deployment_id}"
+  workload_run_id = "${var.run_mode}-${var.deployment_id}"
   runner_base_command = var.enable_environment ? [
     "run",
-    "--run-id", local.calibration_run_id,
-    "--calibration",
+    "--run-id", local.workload_run_id,
+    "--calibration=${var.run_mode == "calibration"}",
+    "--repetitions", "10",
+    "--start-skew-limit", var.run_mode == "retained" ? "50ms" : "0s",
+    "--request-timeout", "90s",
+    "--control-timeout", "30s",
+    "--control-poll-gap", "100ms",
     "--region", var.region,
     "--container-digest", local.media_digest,
     "--cluster", aws_ecs_cluster.experiment[0].arn,

@@ -66,6 +66,23 @@ A5 calibration부터 일회성 runner를 다음처럼 시작합니다. 종료한
 
 ## 로컬 검증
 
+### 본 실험 모드
+
+기본값은 calibration이다. [계측 계약](../../experiments/e1-cache-stampede/AWS-S4-MEASUREMENT.md)의 retained는 bootstrap부터 `-RunMode retained`를 지정한다. Clean public commit의 앞 12자가 deployment ID여야 한다.
+
+```powershell
+.\scripts\bootstrap-images.ps1 -DeploymentId $deploymentId -ExpectedCostUsd 3 -RunMode retained
+.\scripts\plan.ps1
+.\scripts\apply.ps1
+.\scripts\resource-diagnostic.ps1
+.\scripts\run-task.ps1 -RunMode retained
+.\scripts\destroy.ps1
+```
+
+각 단계 성공을 확인한 뒤 다음 명령을 실행한다. 실패하면 본 실험을 반복하지 말고 회수 가능한 원자료를 확보한 뒤 destroy한다. 모드 불일치·진단 누락/불일치·기존 로컬/원격 결과·예약 충돌은 차단된다. 실패 run의 예약은 삭제해 재사용하지 않는다. 새 run은 새 checkpoint와 별도 배포에서 검토한다.
+
+### 검증 명령
+
 AWS credential이나 실제 resource 없이 provider schema와 고정 구성을 검증할 수 있습니다.
 
 ```powershell
@@ -74,6 +91,9 @@ terraform fmt -check -recursive
 terraform validate
 terraform test
 pwsh -NoProfile -File .\tests\tagged-resources.ps1
+pwsh -NoProfile -File .\tests\resource-diagnostic.ps1
+pwsh -NoProfile -File .\tests\retained-contract.ps1
+pwsh -NoProfile -File .\tests\run-task.ps1
 ```
 
 `terraform test`는 mock provider로 ECR-only bootstrap과 전체 1/2/4 환경의 plan/apply 계약을 검사합니다. 이는 실제 account의 권한, quota, 생성 가능 여부나 ECS/ALB/S3 runtime 동작을 증명하지 않습니다.

@@ -31,6 +31,9 @@ output "run_task_configuration" {
     security_group  = aws_security_group.runner[0].id
     result_bucket   = aws_s3_bucket.result[0].bucket
     result_prefix   = var.result_prefix
+    run_mode        = var.run_mode
+    run_id          = local.workload_run_id
+    media_digest    = local.media_digest
     expires_at      = var.expires_at
   } : null
   sensitive = true

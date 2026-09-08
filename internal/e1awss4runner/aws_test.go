@@ -9,7 +9,27 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	elbtypes "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
+
+type reservationClient struct {
+	s3API
+	t   *testing.T
+	err error
+}
+
+func (c reservationClient) PutObject(_ context.Context, input *s3.PutObjectInput, _ ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
+	if aws.ToString(input.IfNoneMatch) != "*" || aws.ToString(input.Bucket) != "results" || aws.ToString(input.Key) != "run/_reservation.json" {
+		c.t.Fatal("reservation must be conditional and exactly scoped")
+	}
+	return &s3.PutObjectOutput{}, c.err
+}
+func TestRunReservationIsConditional(t *testing.T) {
+	s := &AWSStorage{client: reservationClient{t: t}}
+	if err := s.ReserveRun(context.Background(), "results", "run/_reservation.json"); err != nil {
+		t.Fatal(err)
+	}
+}
 
 func TestAWSProbeMapsHealthyTargetIPsToSanitizedTaskIDs(t *testing.T) {
 	ecsClient := &fakeECSClient{

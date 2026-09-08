@@ -50,6 +50,8 @@ type ServiceTarget struct {
 }
 
 type RunMetadata struct {
+	MeasurementContract string   `json:"measurement_contract,omitempty"`
+	ResourceSampleGapMS float64  `json:"resource_sample_gap_ms,omitempty"`
 	SchemaVersion       string   `json:"schema_version"`
 	RunID               string   `json:"run_id"`
 	CreatedAt           string   `json:"created_at"`

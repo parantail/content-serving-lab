@@ -107,7 +107,7 @@ func writeTasks(path string, records []TaskRecord) error {
 		"transform_failure", "transform_error", "transform_timeout", "transform_duration_nanos", "transform_inflight", "transform_max_inflight",
 		"coalesced_requests", "publish_created", "publish_existing", "publish_conflict", "publish_error", "publish_attempt_bytes",
 		"coordinator_keys", "coordinator_waiters", "cpu_usage_nanos", "peak_memory_bytes", "resource_errors",
-		"resource_source",
+		"resource_source", "resource_sample_gap_ms",
 	}}
 	for _, record := range records {
 		task, counter := record.Task, record.Counters
@@ -129,7 +129,7 @@ func writeTasks(path string, records []TaskRecord) error {
 			strconv.FormatInt(counter.PublishError, 10), strconv.FormatInt(counter.PublishAttemptBytes, 10),
 			strconv.Itoa(counter.CoordinatorKeys), strconv.Itoa(counter.CoordinatorWaiters), strconv.FormatUint(counter.CPUUsageNanos, 10),
 			strconv.FormatUint(counter.PeakMemoryBytes, 10), strconv.FormatInt(counter.ResourceErrors, 10),
-			task.ResourceSource,
+			task.ResourceSource, formatFloat(task.ResourceSampleGapMS),
 		})
 	}
 	return writeCSV(path, rows)

@@ -46,6 +46,9 @@ func Execute(ctx context.Context, config Config, dependencies Dependencies) (Run
 	if err := os.Mkdir(directory, 0o755); err != nil {
 		return RunOutput{}, AnalysisOutput{}, fmt.Errorf("create result directory: %w", err)
 	}
+	if err := dependencies.Storage.ReserveRun(ctx, config.ResultBucket, strings.Trim(config.ResultPrefix, "/")+"/"+config.RunID+"/_reservation.json"); err != nil {
+		return RunOutput{}, AnalysisOutput{}, fmt.Errorf("reserve remote run: %w", err)
+	}
 	output := RunOutput{
 		Directory: directory,
 		Metadata: RunMetadata{
@@ -67,6 +70,10 @@ func Execute(ctx context.Context, config Config, dependencies Dependencies) (Run
 			SchemaVersion: SchemaVersion, RunID: config.RunID, Status: "usage-only",
 			Note: "Pricing, ALB LCU, Fargate duration, log bytes, public IPv4 time, ECR storage and confirmed billing are added after AWS measurement.",
 		},
+	}
+	if !config.Calibration {
+		output.Metadata.MeasurementContract = MeasurementContract
+		output.Metadata.ResourceSampleGapMS = 50
 	}
 	for _, target := range config.Services {
 		output.Infrastructure.Services = append(output.Infrastructure.Services, InfrastructureService{
@@ -119,6 +126,9 @@ func Execute(ctx context.Context, config Config, dependencies Dependencies) (Run
 	if err := uploadDirectory(ctx, config, dependencies.Storage, output.Directory); err != nil {
 		return output, analysis, err
 	}
+	if !config.Calibration && (analysis.InvalidTrials != 0 || analysis.ValidTrials != 30) {
+		return output, analysis, errors.New("retained run incomplete: all 30 trials must be valid; raw results preserved")
+	}
 	return output, analysis, nil
 }
 
@@ -159,6 +169,11 @@ func executeTrial(ctx context.Context, config Config, target ServiceTarget, depe
 	}
 	preparedIDs := sortedReportIDs(prepared)
 	for _, report := range prepared {
+		if !config.Calibration {
+			if err := validateRetainedTask(report.Task); err != nil {
+				return TrialRecord{}, nil, nil, nil, nil, events, err
+			}
+		}
 		if err := validateTaskIdentity(config, report.Task); err != nil {
 			return TrialRecord{}, nil, nil, nil, nil, events, err
 		}
@@ -717,6 +732,9 @@ func validateConfig(config Config) error {
 	}
 	if !config.Calibration && config.StartSkewLimit == 0 {
 		return errors.New("retained runs require a positive start skew limit fixed by calibration")
+	}
+	if err := validateRetainedConfig(config); err != nil {
+		return err
 	}
 	if !strings.HasPrefix(config.ContainerDigest, "sha256:") || validateSHA256(strings.TrimPrefix(config.ContainerDigest, "sha256:"), "container image") != nil {
 		return errors.New("container image digest must be sha256 followed by 64 lowercase hexadecimal characters")

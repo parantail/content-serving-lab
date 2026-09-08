@@ -44,6 +44,7 @@ func TestBuildScheduleAlternatesScenarioOrder(t *testing.T) {
 func TestValidateConfigRequiresCalibratedSkewAndMatchingKey(t *testing.T) {
 	config := testConfig(t.TempDir(), 1)
 	config.StartSkewLimit = 0
+	config.Calibration = false
 	if err := validateConfig(config); err == nil || !strings.Contains(err.Error(), "start skew") {
 		t.Fatalf("validateConfig error = %v, want start skew rejection", err)
 	}
@@ -196,7 +197,7 @@ func testConfig(root string, repetitions int) Config {
 	}
 	return Config{
 		RunID: "test-run", ResultsRoot: root, Region: "ap-northeast-2", GitCommit: strings.Repeat("2", 40),
-		ContainerDigest: testContainerDigest, Repetitions: repetitions, SourceHash: testSourceHash,
+		ContainerDigest: testContainerDigest, Calibration: true, Repetitions: repetitions, SourceHash: testSourceHash,
 		CanonicalSpec: spec.Canonical(), DerivativeKey: key, DerivativeBucket: "private-derivative-bucket",
 		ResultBucket: "private-results-bucket", ResultPrefix: "test-results", RequestTimeout: 5 * time.Second,
 		ControlTimeout: 5 * time.Second, ControlPollGap: time.Microsecond, StartSkewLimit: 5 * time.Second,
@@ -234,6 +235,8 @@ func (s *fakeStorage) ReadDerivative(context.Context, string, string) ([]byte, e
 	s.exists = true
 	return append([]byte(nil), s.derivative...), nil
 }
+
+func (s *fakeStorage) ReserveRun(_ context.Context, _, _ string) error { return nil }
 
 func (s *fakeStorage) PutResult(_ context.Context, _, key string, _ []byte) error {
 	s.mu.Lock()
