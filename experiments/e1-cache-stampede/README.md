@@ -102,7 +102,11 @@ Task identity에는 account ID와 전체 ARN을 넣지 않고 다음 값만 유�
 
 같은 Task에 같은 trial의 prepare/finish를 다시 호출해도 같은 상태나 완료 report를 반환합니다. 제어 응답은 `Cache-Control: no-store`를 사용하며 report schema는 `e1-aws-s4-task-v1`입니다. Report에는 Task별 이미지 요청 수, 파생/원본 S3 GET 결과와 byte, 변환 시도·성공·실패·시간·최대 동시 실행 수, coalesced 요청 수, S3 publish의 created/existing/conflict/error와 시도 byte, 첫/마지막 요청 시각, 종료 시점의 진행 중 요청·변환·coordinator 상태가 들어갑니다.
 
-Resource sample은 ECS metadata v4의 `/task/stats`에서 Task 안의 container CPU 누적값과 memory 사용량을 합산합니다. Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는 50ms를 첫 후보 간격으로 사용합니다. Report는 첫 sample과 마지막 유효 sample의 CPU 누적값 차이, 구간 최대 memory와 sampling 오류 수를 함께 반환합니다. 50ms 간격은 개발 calibration에서 overhead와 peak 누락 가능성을 확인한 뒤 최종 측정 전에 고정합니다.
+Resource sample은 container 내부에서 보이는 Linux cgroup counter를 직접 읽습니다. v1은 `cpuacct.usage`(ns)와 `memory.usage_in_bytes`, v2는 `cpu.stat`의 `usage_usec`(ns로 변환)와 `memory.current`를 사용합니다. 지원 counter를 읽을 수 없으면 실험 모드 기동을 실패시키며 ECS stats로 대체하지 않습니다. Task identity는 계속 ECS metadata로 확인합니다. `resource_source`를 Task identity와 `tasks.csv`에 기록하여 container-visible 범위를 명시하며, Task 전체 container 합계라고 해석하지 않습니다. 실제 Fargate의 counter 접근성과 범위는 재calibration에서 확인해야 합니다.
+
+Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는 50ms를 첫 후보 간격으로 사용합니다. Report의 CPU는 사용률(%)이 아니라 첫 sample과 마지막 유효 sample의 누적 CPU 시간 차이(ns)입니다. Memory는 관측 sample 중 최댓값이며 정확한 순간 peak가 아닙니다. Sampling 오류 수도 함께 반환합니다. 50ms 간격은 개발 calibration에서 overhead와 peak 누락 가능성을 확인한 뒤 최종 측정 전에 고정합니다.
+
+이전 구현은 ECS `/task/stats`의 container 통계를 합산했지만 HTTP를 50ms마다 조회해도 원본 통계의 갱신 간격은 보장되지 않습니다. 짧은 trial의 시작·종료 누적값이 같아 CPU delta가 0인 calibration이 관측되어 직접 counter로 변경했습니다. 새 source의 변환 성공 Task에서 CPU delta가 0이면 trial을 invalid 처리하고, analyzer는 누적 CPU 역행도 거부합니다. Source가 없는 legacy raw의 산술 검증 통과는 자원 계측 정확성을 보장하지 않으며, 이전 CPU·memory 수치는 retained 근거로 사용하지 않습니다.
 
 ### AWS S4 workload와 원자료 검증 계약
 

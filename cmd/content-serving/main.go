@@ -120,7 +120,12 @@ func newExperimentController(processor *media.Processor, storageMetrics *media.S
 		"memory_mib", identity.MemoryMiB,
 		"image_digest", identity.ImageDigest,
 	)
-	return e1awss4.NewController(identity, processor, storageMetrics, metadataClient, 50*time.Millisecond)
+	resourceSource, err := e1awss4.NewCgroupSource("/sys/fs/cgroup")
+	if err != nil {
+		return nil, fmt.Errorf("initialize direct resource counters: %w", err)
+	}
+	identity.ResourceSource = resourceSource.Name()
+	return e1awss4.NewController(identity, processor, storageMetrics, resourceSource, 50*time.Millisecond)
 }
 
 func newProcessor(storageMetrics *media.S3Metrics) (*media.Processor, error) {

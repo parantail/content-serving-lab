@@ -15,6 +15,7 @@ import (
 const metadataResponseLimit = 2 << 20
 
 type TaskIdentity struct {
+	ResourceSource         string  `json:"resource_source,omitempty"`
 	TaskID                 string  `json:"task_id"`
 	TaskDefinitionFamily   string  `json:"task_definition_family"`
 	TaskDefinitionRevision string  `json:"task_definition_revision"`

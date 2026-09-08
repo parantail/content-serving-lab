@@ -386,6 +386,8 @@ func validateResourceRows(trial TrialRecord, tasks []TaskRecord, grouped map[str
 			}
 			if !haveCPU {
 				firstCPU, haveCPU = row.CPUUsageNanos, true
+			} else if row.CPUUsageNanos < lastCPU {
+				return fmt.Errorf("trial %s task %s CPU counter moved backwards", trial.TrialID, task.Task.TaskID)
 			}
 			lastCPU = row.CPUUsageNanos
 			peak = max(peak, row.MemoryUsageBytes)
@@ -559,6 +561,7 @@ func readTasks(path string) ([]TaskRecord, error) {
 				TaskID: p.s("task_id"), TaskDefinitionFamily: p.s("task_definition_family"), TaskDefinitionRevision: p.s("task_definition_revision"),
 				AvailabilityZone: p.s("availability_zone"), LaunchType: p.s("launch_type"), CPUVCpu: p.f("cpu_vcpu"),
 				MemoryMiB: p.i64("memory_mib"), ImageDigest: p.s("image_digest"),
+				ResourceSource: p.row["resource_source"], // absent in legacy metadata-stat runs
 			},
 			PreparedAt: p.s("prepared_at"), FinishedAt: p.s("finished_at"), FirstRequestAt: p.s("first_request_at"), LastRequestAt: p.s("last_request_at"),
 			Counters: e1awss4.TrialCounters{

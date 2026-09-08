@@ -58,7 +58,7 @@ func Execute(ctx context.Context, config Config, dependencies Dependencies) (Run
 			ExpectedWebPBytes: config.ExpectedWebPBytes, SanitizationApplied: true,
 			KnownLimitations: []string{
 				"synthetic traffic sent from one Fargate load-generator task",
-				"50 ms service resource sampling remains subject to calibration",
+				"resource_source identifies the container-visible cgroup; 50 ms sampled memory is not an exact peak or total Task memory",
 				"cost.json contains measured usage only until pricing and AWS billing data are added",
 			},
 		},
@@ -545,6 +545,9 @@ func validateTrial(config Config, target ServiceTarget, requests []RequestRecord
 	for _, task := range tasks {
 		if task.Counters.ImageRequests != requestCounts[task.Task.TaskID] {
 			invalidate(trial, "task_request_counter_mismatch")
+		}
+		if task.Task.ResourceSource != "" && task.Counters.TransformSuccess > 0 && task.Counters.CPUUsageNanos == 0 {
+			invalidate(trial, "resource_cpu_did_not_advance")
 		}
 	}
 	if trial.TransformAttempts < 1 || trial.TransformAttempts > int64(target.ExpectedTasks) || trial.TransformSuccess != trial.TransformAttempts || trial.TransformFailure != 0 || trial.OriginalGetCount != trial.TransformAttempts {

@@ -167,6 +167,24 @@ func TestAnalysisFailurePreservesRawInResultStorage(t *testing.T) {
 	}
 }
 
+func TestZeroCPUWithTransformIsInvalid(t *testing.T) {
+	config := testConfig(t.TempDir(), 1)
+	remote := newFakeRemote(config)
+	remote.zeroCPU = true
+	output, analysis, err := Execute(context.Background(), config, Dependencies{Storage: &fakeStorage{derivative: testWebP()}, Probe: remote, HTTPClient: remote})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if analysis.ValidTrials != 0 || analysis.InvalidTrials != 3 {
+		t.Fatalf("analysis = %+v", analysis)
+	}
+	for _, trial := range output.Trials {
+		if !strings.Contains(trial.InvalidReason, "resource_cpu_did_not_advance") {
+			t.Fatalf("missing CPU quality gate: %+v", trial)
+		}
+	}
+}
+
 func testConfig(root string, repetitions int) Config {
 	spec, err := media.ParseTransformSpec("width=640,height=640,fit=cover,quality=80", media.FormatWebP)
 	if err != nil {
@@ -228,6 +246,7 @@ func (s *fakeStorage) PutResult(_ context.Context, _, key string, _ []byte) erro
 }
 
 type fakeRemote struct {
+	zeroCPU         bool
 	corruptCounters bool
 	mu              sync.Mutex
 	config          Config
@@ -242,7 +261,8 @@ func newFakeRemote(config Config) *fakeRemote {
 	for _, target := range config.Services {
 		for index := range target.ExpectedTasks {
 			remote.tasks[target.Scenario] = append(remote.tasks[target.Scenario], e1awss4.TaskIdentity{
-				TaskID: fmt.Sprintf("task-%d-%d", target.ExpectedTasks, index+1), TaskDefinitionFamily: "e1-media",
+				ResourceSource: "cgroup-v2-container-visible",
+				TaskID:         fmt.Sprintf("task-%d-%d", target.ExpectedTasks, index+1), TaskDefinitionFamily: "e1-media",
 				TaskDefinitionRevision: "7", AvailabilityZone: fmt.Sprintf("ap-northeast-2%c", 'a'+rune(index%2)),
 				LaunchType: "FARGATE", CPUVCpu: 1, MemoryMiB: 2048, ImageDigest: config.ContainerDigest,
 			})
@@ -307,6 +327,10 @@ func (r *fakeRemote) controlResponse(request *http.Request, scenario string) (*h
 		}
 		if r.corruptCounters {
 			report.Counters.DerivativeGetMiss++
+		}
+		if r.zeroCPU {
+			report.Counters.CPUUsageNanos = 0
+			report.Resources[1].CPUUsageNanos = report.Resources[0].CPUUsageNanos
 		}
 	}
 	data, err := json.Marshal(report)
