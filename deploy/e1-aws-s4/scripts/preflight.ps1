@@ -162,11 +162,12 @@ $tagged = Invoke-AwsJson -Profile $Profile -Region $Region -Arguments @(
     "--tag-filters", "Key=Project,Values=content-serving-lab", "Key=Experiment,Values=e1-aws-s4"
 )
 $currentMarker = "$NamePrefix-$DeploymentId"
-$unrelated = @($tagged.ResourceTagMappingList | Where-Object { $_.ResourceARN -notlike "*$currentMarker*" })
+$liveTagged = @(Get-LiveTaggedResources -Resources @($tagged.ResourceTagMappingList) -Profile $Profile -Region $Region)
+$unrelated = @($liveTagged | Where-Object { $_.ResourceARN -notlike "*$currentMarker*" })
 if ($unrelated.Count -gt 0) {
     throw "Unrelated resources already use the E1 AWS S4 experiment tags. Remove or retag them before deploying."
 }
-$currentTaggedCount = @($tagged.ResourceTagMappingList).Count
+$currentTaggedCount = $liveTagged.Count
 if ($currentTaggedCount -ne $ExpectedTaggedResources) {
     throw "Expected $ExpectedTaggedResources tagged resources at this workflow stage; found $currentTaggedCount. Refusing stale or partial infrastructure."
 }

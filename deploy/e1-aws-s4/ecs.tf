@@ -115,7 +115,7 @@ resource "aws_ecs_service" "media" {
 
   tags = { Scenario = each.value.id }
 
-  depends_on = [aws_lb_listener.scenario]
+  depends_on = [aws_lb_listener.scenario, aws_vpc_endpoint.s3]
 }
 
 locals {

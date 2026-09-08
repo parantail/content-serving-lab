@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -286,6 +287,8 @@ func validateTaskAndRequestRows(metadata RunMetadata, trial TrialRecord, request
 		taskByID[task.Task.TaskID] = task
 	}
 	counts := make(map[string]int64)
+	cacheHits := make(map[string]int64)
+	failed := make(map[string]bool)
 	for _, request := range requests {
 		if request.RunID != metadata.RunID || request.TrialID != trial.TrialID || request.Scenario != trial.Scenario || request.RequestID == "" || requestIDs[request.RequestID] {
 			return fmt.Errorf("trial %s has duplicate or mismatched request rows", trial.TrialID)
@@ -304,10 +307,28 @@ func validateTaskAndRequestRows(metadata RunMetadata, trial TrialRecord, request
 			return fmt.Errorf("trial %s request %s cache result is invalid", trial.TrialID, request.RequestID)
 		}
 		counts[request.TaskID]++
+		if request.Cache == "derivative" {
+			cacheHits[request.TaskID]++
+		}
+		if request.HTTPStatus != http.StatusOK || request.ErrorType != "" {
+			failed[request.TaskID] = true
+		}
 	}
 	for taskID, task := range taskByID {
 		if counts[taskID] != task.Counters.ImageRequests {
 			return fmt.Errorf("trial %s task %s request counter mismatch", trial.TrialID, taskID)
+		}
+		if !failed[taskID] {
+			c := task.Counters
+			// Initial misses enter coordination. Each leader rechecks S3; a
+			// recheck miss reads the original, and a lost publish reads the winner.
+			misses := counts[taskID] - cacheHits[taskID]
+			leaders := misses - c.CoalescedRequests
+			wantMiss := misses + c.OriginalGetCount
+			wantHit := cacheHits[taskID] + leaders - c.OriginalGetCount + c.PublishExisting
+			if leaders < c.OriginalGetCount || c.DerivativeGetError != 0 || c.DerivativeGetMiss != wantMiss || c.DerivativeGetHit != wantHit {
+				return fmt.Errorf("trial %s task %s derivative GET equations do not balance: hit=%d want=%d miss=%d want=%d", trial.TrialID, taskID, c.DerivativeGetHit, wantHit, c.DerivativeGetMiss, wantMiss)
+			}
 		}
 	}
 	return nil
@@ -329,7 +350,6 @@ func validateTaskCounters(trial TrialRecord, task TaskRecord) error {
 		}
 	}
 	if counter.CoordinatorKeys < 0 || counter.CoordinatorWaiters < 0 ||
-		counter.DerivativeGetHit+counter.DerivativeGetMiss+counter.DerivativeGetError != counter.ImageRequests ||
 		counter.OriginalGetCount != counter.OriginalGetSuccess+counter.OriginalGetError ||
 		counter.TransformAttempts != counter.TransformSuccess+counter.TransformFailure ||
 		counter.TransformFailure != counter.TransformError+counter.TransformTimeout ||

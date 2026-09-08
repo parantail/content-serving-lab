@@ -2,7 +2,7 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 AWS 배포·calibration·측정과 분산 조정은 아직 수행 전입니다.
+현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 AWS 배포와 제거는 확인했으며, AWS calibration은 분석 검증 통과 전입니다. AWS retained 측정과 분산 조정은 아직 수행 전입니다.
 
 ## 실험
 

@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4 Terraform까지 구현, 개발 calibration 전**
+상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4 배포·제거 확인, 개발 calibration 분석 검증 통과 전**
 
 대표 결과와 결정은 [Phase A: 동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)와 [Phase B: 서로 다른 변환 요청과 여러 프로세스에서는 어디까지 합칠 수 있는가?](../../reports/e1-cache-stampede/PHASE-B.md)에서 확인할 수 있습니다.
 
@@ -424,6 +424,8 @@ docker run --rm \
 Phase B 결과에는 실행 조건을 담은 `run.json`, 반복별 요약 `trials.csv`, 요청별 결과 `requests.csv`, 자원 사용량 `resources.csv`, 프로세스별 계측값 `metrics.csv`와 취소 순서를 기록한 `events.csv`가 들어갑니다. `analysis/`에는 교차검증 결과, 집계 표와 그래프 세 장이 만들어집니다. 개발 중 시험 실행이나 calibration 값은 최종 결과 근거로 사용하지 않습니다.
 
 ### AWS S4 부하 생성기
+
+S3 파생 이미지 GET 계측은 HTTP 요청의 최초 조회 외에 coordinator leader의 변환 전 재조회와 조건부 저장 경쟁에서 진 Task의 winner 조회를 포함합니다. Analyzer는 성공 요청의 cache 응답, 합쳐진 요청 수, 원본 조회와 publish-existing 계측을 함께 사용해 GET hit/miss를 교차검증합니다. 원자료는 분석 전에 Result bucket에 업로드하므로 분석 검증이 실패해도 회수할 수 있으며, 검증 성공 문서는 통과한 경우에만 생성됩니다.
 
 Terraform이 만든 일회성 Fargate Task는 `experiment-aws-s4` target의 `/app/e1-aws-s4 run`을 실행합니다. Task role의 AWS credential chain을 사용하므로 credential flag나 파일을 받지 않습니다. 실행에는 세 ALB endpoint, 공통 ECS cluster, 세 Service와 target group, Derivative/Result bucket, 배포한 Media Service의 `sha256:` image digest를 전달합니다. 기본값은 Region `ap-northeast-2`, scenario별 10회, 요청 timeout 90초, control timeout 30초, listener 8081/8082/8084입니다.
 

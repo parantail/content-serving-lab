@@ -61,6 +61,16 @@ run "bootstrap_creates_only_ecr" {
 run "full_environment_matches_fixed_contract" {
   command = apply
 
+  assert {
+    condition = length([for statement in jsondecode(aws_vpc_endpoint.s3[0].policy).Statement : statement if
+      statement.Sid == "ECRImageLayers" &&
+      statement.Effect == "Allow" && statement.Principal == "*" &&
+      statement.Action == ["s3:GetObject"] &&
+      statement.Resource == ["arn:aws:s3:::prod-ap-northeast-2-starport-layer-bucket/*"]
+    ]) == 1
+    error_message = "The S3 endpoint must allow read-only access to this region's ECR image layers."
+  }
+
   variables {
     deployment_id       = "deadbeef1234"
     enable_environment  = true

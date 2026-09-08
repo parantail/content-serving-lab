@@ -107,6 +107,11 @@ func Execute(ctx context.Context, config Config, dependencies Dependencies) (Run
 	if err := writeRunOutput(output); err != nil {
 		return output, AnalysisOutput{}, err
 	}
+	// Preserve raw evidence before analysis can reject it. Failed analysis
+	// must not strand the only copy in a stopped Fargate task.
+	if err := uploadDirectory(ctx, config, dependencies.Storage, output.Directory); err != nil {
+		return output, AnalysisOutput{}, err
+	}
 	analysis, err := Analyze(output.Directory)
 	if err != nil {
 		return output, AnalysisOutput{}, fmt.Errorf("analyze AWS S4 result: %w", err)

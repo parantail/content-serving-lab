@@ -41,7 +41,7 @@ $run = Invoke-AwsJson -Profile $runtime.aws_profile -Region $runtime.region -Arg
     "--launch-type", "FARGATE",
     "--network-configuration", $network,
     "--started-by", "e1-s4-$($runtime.deployment_id)",
-    "--enable-managed-tags",
+    "--enable-ecs-managed-tags",
     "--propagate-tags", "TASK_DEFINITION",
     "--count", "1"
 )
@@ -73,7 +73,11 @@ Invoke-CheckedCommand -FilePath "aws" -Arguments @(
     "--only-show-errors"
 ) | Out-Null
 
+$recoveredFiles = @(Get-ChildItem -LiteralPath $recoveryRoot -File -Recurse)
 if ([int]$container.exitCode -ne 0) {
-    throw "The load-generator task exited with code $($container.exitCode); its available raw results were recovered locally."
+    throw "The load-generator task exited with code $($container.exitCode); result sync completed and $($recoveredFiles.Count) local files are available. Check runner logs for the original failure."
+}
+if ($recoveredFiles.Count -eq 0) {
+    throw "The load-generator task exited successfully but no result files were recovered."
 }
 Write-Host "The load-generator task completed successfully and raw results were recovered locally."

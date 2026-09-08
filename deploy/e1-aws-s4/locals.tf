@@ -1,6 +1,12 @@
 locals {
   environment_count = var.enable_environment ? 1 : 0
-  resource_name     = substr("${var.name_prefix}-${var.deployment_id}", 0, 32)
+  # timeadd formats whole seconds; restore the input fraction for an exact limit.
+  deadline_limit = var.apply_started_at == null ? null : replace(
+    timeadd(var.apply_started_at, "2h"),
+    "Z",
+    "${try(regex("\\.[0-9]+", var.apply_started_at), "")}Z"
+  )
+  resource_name = substr("${var.name_prefix}-${var.deployment_id}", 0, 32)
   # S3 bucket names are global. A one-way account namespace prevents two
   # readers of the same public checkpoint from claiming the same names.
   account_namespace = substr(sha256(data.aws_caller_identity.current.account_id), 0, 8)
@@ -52,7 +58,7 @@ resource "terraform_data" "deadline_guard" {
       error_message = "The full environment requires timestamps, reviewed cost, and both image digests."
     }
     precondition {
-      condition     = var.apply_started_at == null || var.expires_at == null ? false : timecmp(var.expires_at, var.apply_started_at) > 0 && timecmp(var.expires_at, timeadd(var.apply_started_at, "2h")) <= 0
+      condition     = var.apply_started_at == null || var.expires_at == null ? false : timecmp(var.expires_at, var.apply_started_at) > 0 && timecmp(var.expires_at, local.deadline_limit) <= 0
       error_message = "expires_at must be after apply_started_at and no more than two hours later."
     }
   }

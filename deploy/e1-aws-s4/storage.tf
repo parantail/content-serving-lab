@@ -17,6 +17,12 @@ locals {
         aws_s3_bucket.result[0].arn,
         "${aws_s3_bucket.result[0].arn}/*",
       ]
+      }, {
+      Sid       = "ECRImageLayers"
+      Effect    = "Allow"
+      Principal = "*"
+      Action    = ["s3:GetObject"]
+      Resource  = ["arn:aws:s3:::prod-${var.region}-starport-layer-bucket/*"]
     }]
   }) : null
 }

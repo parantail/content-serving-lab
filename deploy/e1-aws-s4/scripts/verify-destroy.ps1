@@ -34,7 +34,7 @@ for ($attempt = 1; $attempt -le 6; $attempt++) {
         "resourcegroupstaggingapi", "get-resources",
         "--tag-filters", "Key=Project,Values=content-serving-lab", "Key=Experiment,Values=e1-aws-s4"
     )
-    $taggedCurrent = @($tagged.ResourceTagMappingList)
+    $taggedCurrent = @(Get-LiveTaggedResources -Resources @($tagged.ResourceTagMappingList) -Profile $Profile -Region $Region)
 
     $repositories = Invoke-AwsJson -Profile $Profile -Region $Region -Arguments @("ecr", "describe-repositories")
     $repositoryCurrent = @($repositories.repositories | Where-Object repositoryName -like "$resourceMarker/*")
@@ -86,4 +86,4 @@ for ($attempt = 1; $attempt -le 6; $attempt++) {
 if ($remainingCount -ne 0) {
     throw "AWS still reports $remainingCount matching resource records after destroy. Inspect the sandbox account without publishing IDs or ARNs."
 }
-Write-Host "Destroy verification passed: Terraform state is empty and AWS reports no matching E1 AWS S4 resources."
+Write-Host "Destroy verification passed: Terraform state is empty and no live matching resources remain; deleted/inactive records were verified through service APIs."

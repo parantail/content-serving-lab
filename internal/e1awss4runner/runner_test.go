@@ -122,6 +122,7 @@ func TestExecuteAndAnalyzeRemoteTaskBoundary(t *testing.T) {
 	}{
 		{name: "missing request", file: "requests.csv", edit: func(t *testing.T, rows [][]string) { rows[len(rows)-1] = nil }, want: "request rows"},
 		{name: "task counter", file: "tasks.csv", edit: setCSVValue("transform_success", "99"), want: "counter equations"},
+		{name: "missing recheck", file: "tasks.csv", edit: setCSVValue("derivative_get_miss", "100"), want: "derivative GET equations"},
 		{name: "resource sample", file: "resources.csv", edit: setCSVValue("memory_usage_bytes", "999999999"), want: "resource counters"},
 		{name: "request task", file: "requests.csv", edit: setCSVValue("task_id", "unknown-task"), want: "task or AZ"},
 	}
@@ -144,6 +145,25 @@ func TestExecuteAndAnalyzeRemoteTaskBoundary(t *testing.T) {
 				t.Fatalf("Analyze error = %v, want %q", err, test.want)
 			}
 		})
+	}
+}
+
+func TestAnalysisFailurePreservesRawInResultStorage(t *testing.T) {
+	config := testConfig(t.TempDir(), 1)
+	remote := newFakeRemote(config)
+	remote.corruptCounters = true
+	storage := &fakeStorage{derivative: testWebP()}
+	_, _, err := Execute(context.Background(), config, Dependencies{Storage: storage, Probe: remote, HTTPClient: remote})
+	if err == nil || !strings.Contains(err.Error(), "derivative GET equations") {
+		t.Fatalf("Execute error = %v, want analysis rejection", err)
+	}
+	for _, name := range []string{"run.json", "tasks.csv", "requests.csv", "resources.csv", "trials.csv"} {
+		if !storage.uploaded[config.ResultPrefix+"/"+config.RunID+"/"+name] {
+			t.Errorf("failed run did not preserve %s", name)
+		}
+	}
+	if storage.uploaded[config.ResultPrefix+"/"+config.RunID+"/analysis/analysis.json"] {
+		t.Fatal("failed analysis must not publish a success document")
 	}
 }
 
@@ -208,12 +228,13 @@ func (s *fakeStorage) PutResult(_ context.Context, _, key string, _ []byte) erro
 }
 
 type fakeRemote struct {
-	mu        sync.Mutex
-	config    Config
-	tasks     map[string][]e1awss4.TaskIdentity
-	controlRR map[string]int
-	requestRR map[string]int
-	counts    map[string]map[string]int64
+	corruptCounters bool
+	mu              sync.Mutex
+	config          Config
+	tasks           map[string][]e1awss4.TaskIdentity
+	controlRR       map[string]int
+	requestRR       map[string]int
+	counts          map[string]map[string]int64
 }
 
 func newFakeRemote(config Config) *fakeRemote {
@@ -275,7 +296,7 @@ func (r *fakeRemote) controlResponse(request *http.Request, scenario string) (*h
 		report.FirstRequestAt = now.Add(-time.Millisecond).Format(time.RFC3339Nano)
 		report.LastRequestAt = now.Format(time.RFC3339Nano)
 		report.Counters = e1awss4.TrialCounters{
-			ImageRequests: count, DerivativeGetMiss: count, OriginalGetCount: 1, OriginalGetSuccess: 1,
+			ImageRequests: count, DerivativeGetMiss: count + 1, DerivativeGetHit: 1 - created, OriginalGetCount: 1, OriginalGetSuccess: 1,
 			OriginalGetBytes: 1024, TransformAttempts: 1, TransformSuccess: 1, TransformDurationNanos: 1_000_000,
 			TransformMaxInflight: 1, CoalescedRequests: count - 1, PublishCreated: created, PublishExisting: 1 - created,
 			PublishAttemptBytes: int64(len(testWebP())), CPUUsageNanos: 100_000, PeakMemoryBytes: 2_000_000,
@@ -283,6 +304,9 @@ func (r *fakeRemote) controlResponse(request *http.Request, scenario string) (*h
 		report.Resources = []e1awss4.ResourceSample{
 			{Timestamp: now.Add(-time.Millisecond).Format(time.RFC3339Nano), CPUUsageNanos: 1_000_000, MemoryUsageBytes: 1_000_000},
 			{Timestamp: now.Format(time.RFC3339Nano), CPUUsageNanos: 1_100_000, MemoryUsageBytes: 2_000_000},
+		}
+		if r.corruptCounters {
+			report.Counters.DerivativeGetMiss++
 		}
 	}
 	data, err := json.Marshal(report)

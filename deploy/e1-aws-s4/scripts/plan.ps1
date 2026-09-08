@@ -20,7 +20,7 @@ Invoke-Terraform -ModuleRoot $moduleRoot -Arguments @("validate")
 $planPath = Join-Path $moduleRoot "e1-aws-s4.tfplan"
 Push-Location $moduleRoot
 try {
-    & terraform plan -input=false -out=$planPath -detailed-exitcode
+    & terraform plan -input=false "-out=$planPath" -detailed-exitcode
     $planExitCode = $LASTEXITCODE
     if ($planExitCode -eq 0) {
         throw "The full environment plan contains no changes. Refusing a stale or already-applied workflow."

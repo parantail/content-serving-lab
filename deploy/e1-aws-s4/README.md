@@ -1,10 +1,11 @@
 # E1 AWS S4 Terraform
 
-이 디렉터리는 E1에서 ECS Task 1/2/4개가 같은 cold image request를 받을 때 프로세스별 중복 변환과 S3 조건부 저장 경쟁을 측정하는 일회성 `ap-northeast-2` 환경을 만듭니다. A4에서는 provider schema와 mock plan/apply 계약까지 검증했으며, 실제 AWS 생성·삭제와 calibration은 다음 단계에서 수행합니다.
+이 디렉터리는 E1에서 ECS Task 1/2/4개가 같은 cold image request를 받을 때 프로세스별 중복 변환과 S3 조건부 저장 경쟁을 측정하는 일회성 `ap-northeast-2` 환경을 만듭니다. Provider schema와 mock plan/apply 계약, 실제 AWS 배포·제거 및 잔여 실행 자원 검사를 확인했습니다. Calibration은 분석 검증 통과 전이며 retained 측정 결과는 아직 없습니다.
 
 ## 고정 구성
 
 - 2개 public subnet, Internet Gateway, NAT Gateway 없음, 같은 Region S3 gateway endpoint
+- S3 endpoint policy는 실험 버킷 접근과 ECR 이미지 pull에 필요한 해당 Region의 `prod-<region>-starport-layer-bucket/*` 읽기를 허용합니다.
 - 내부 ALB와 8081/8082/8084 listener, non-sticky round robin target group 3개
 - 동일 Media Service image의 ECS Service 3개: desired count 1/2/4, Task마다 1 vCPU·2 GiB
 - 일회성 부하 생성기 Fargate Task 1개: 1 vCPU·2 GiB
@@ -72,6 +73,9 @@ terraform init -backend=false
 terraform fmt -check -recursive
 terraform validate
 terraform test
+pwsh -NoProfile -File .\tests\tagged-resources.ps1
 ```
 
 `terraform test`는 mock provider로 ECR-only bootstrap과 전체 1/2/4 환경의 plan/apply 계약을 검사합니다. 이는 실제 account의 권한, quota, 생성 가능 여부나 ECS/ALB/S3 runtime 동작을 증명하지 않습니다.
+
+태그 검색에는 삭제된 EC2 자원과 종료된 ECS 기록이 남을 수 있습니다. preflight와 제거 검증은 서비스 API로 EC2 규칙·endpoint의 존재 여부와 ECS 상태를 재확인합니다. 검증된 삭제 기록, `INACTIVE` cluster/service/task definition, `STOPPED` Task는 실행 자원으로 세지 않습니다. 알 수 없는 자원 유형이나 API 조회 실패는 검사를 차단합니다.
