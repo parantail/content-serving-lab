@@ -84,6 +84,8 @@ Media Service는 기본 `STORAGE_BACKEND=local`을 유지하고 AWS Task에서�
 
 ### AWS S4 Task 식별과 trial 계측 계약
 
+CPU 측정 경계, Task/Trial memory 집계 차이와 retained 전 남은 검증은 [자원 계측 계약 검토](AWS-S4-MEASUREMENT.md)를 따른다. 최종 조건 확정과 retained 실행은 아직 승인 전이다.
+
 AWS S4 실험 모드는 기본적으로 꺼져 있습니다. `E1_EXPERIMENT_MODE=true`일 때만 시작 과정에서 `ECS_CONTAINER_METADATA_URI_V4`의 `/task`를 한 번 읽고 내부 제어 endpoint를 등록합니다. `E1_CONTAINER_NAME`으로 지정한 container를 찾으며 기본 이름은 `media-service`입니다. 필요한 metadata를 읽지 못하거나 container image digest가 `sha256:` digest 형식이 아니면 실험 모드로 기동하지 않습니다.
 
 Task identity에는 account ID와 전체 ARN을 넣지 않고 다음 값만 유지합니다.

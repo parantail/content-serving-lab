@@ -27,7 +27,11 @@ if ($runtime.enable_environment) {
             "--family", [string]$configuration.runner_family,
             "--desired-status", "RUNNING"
         )
-        $taskArns = @($runningTasks.taskArns)
+        $diagnosticTasks = Invoke-AwsJson -Profile $runtime.aws_profile -Region $runtime.region -Arguments @(
+            "ecs", "list-tasks", "--cluster", [string]$configuration.cluster,
+            "--started-by", "e1-diag-$($runtime.deployment_id)"
+        )
+        $taskArns = @((@($runningTasks.taskArns) + @($diagnosticTasks.taskArns)) | Sort-Object -Unique)
         foreach ($taskArn in $taskArns) {
             Invoke-AwsJson -Profile $runtime.aws_profile -Region $runtime.region -Arguments @(
                 "ecs", "stop-task",

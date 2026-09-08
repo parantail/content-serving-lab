@@ -127,9 +127,9 @@ func latencyCostSVG(trials []TrialRecord) string {
 		y := 90 + index*90
 		p99 := value.p99 / float64(value.trials)
 		cpu := value.cpuMS / float64(value.trials)
-		fmt.Fprintf(&body, `<text x="10" y="%d" font-size="13">%s</text><text x="220" y="%d" font-size="12">mean p99 %.3f ms</text><text x="480" y="%d" font-size="12">mean measured Task CPU %.3f ms</text>`, y, scenario, y, p99, y, cpu)
+		fmt.Fprintf(&body, `<text x="10" y="%d" font-size="13">%s</text><text x="220" y="%d" font-size="12">mean p99 %.3f ms</text><text x="480" y="%d" font-size="12">mean sampled-window CPU %.3f ms</text>`, y, scenario, y, p99, y, cpu)
 	}
-	return svgDocument(900, 370, "Latency and measured Task CPU — valid trial means", body.String())
+	return svgDocument(900, 370, "Latency and sampled-window CPU — valid trial means", body.String())
 }
 
 func svgDocument(width, height int, title, body string) string {

@@ -2,7 +2,7 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 AWS 배포와 제거는 확인했으며, AWS calibration은 분석 검증 통과 전입니다. AWS retained 측정과 분산 조정은 아직 수행 전입니다.
+현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 AWS calibration의 원자료 검증과 배포·제거를 확인했으며, 자원 계측 최종 계약은 검토 중입니다. AWS retained 측정과 분산 조정은 아직 수행 전입니다.
 
 ## 실험
 
@@ -18,7 +18,7 @@
 
 ## AWS 구성안
 
-아래 장기 구성안과 별도로 E1 AWS S4에 필요한 [단일 Region 일회성 Terraform 환경](deploy/e1-aws-s4/README.md)을 구현했습니다. 실제 AWS 측정은 아직 수행하지 않았습니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
+아래 장기 구성안과 별도로 E1 AWS S4에 필요한 [단일 Region 일회성 Terraform 환경](deploy/e1-aws-s4/README.md)을 구현하고 AWS calibration을 실행했습니다. Retained 측정은 아직 수행하지 않았습니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
 
 ```mermaid
 flowchart LR
@@ -98,7 +98,7 @@ GET  /i/{content_hash}/{transform_spec}.{format}
 - `GET /health/live`, `GET /health/ready`
 - `GET /i/{content_hash}/{transform_spec}.{format}`의 canonical key, WebP 변환과 atomic local publish
 - AWS SDK for Go v2 기반 S3 원본 조회와 `If-None-Match: *` 파생 이미지 조건부 저장
-- ECS metadata v4 기반 Task 식별·자원 sampling과 opt-in AWS S4 trial 제어 endpoint
+- ECS metadata v4 기반 Task 식별, 직접 cgroup 자원 sampling과 opt-in AWS S4 trial 제어 endpoint
 - ECS/ALB 안정 상태를 확인하고 1/2/4 Task에 100-request cold burst를 보내는 AWS S4 workload와 strict raw analyzer
 - NAT 없이 public Fargate Task와 내부 ALB, S3 gateway endpoint를 쓰는 E1 AWS S4 Terraform 및 2시간 자동 정리 workflow
 - `none`/`process-singleflight` coordinator와 요청별 cancellation/server-side timeout 계약

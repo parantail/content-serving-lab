@@ -31,6 +31,13 @@ func main() {
 }
 
 func run() error {
+	if os.Getenv("E1_RESOURCE_DIAGNOSTIC") == "true" {
+		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer stop()
+		ctx, cancel := context.WithTimeout(ctx, time.Minute)
+		defer cancel()
+		return e1awss4.RunResourceDiagnostic(ctx, os.Stdout, gitCommit)
+	}
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
