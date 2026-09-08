@@ -18,6 +18,7 @@ import (
 // process command lines, container IDs or host identifiers.
 type ScopeDiagnostic struct {
 	Controller                string `json:"controller"`
+	PathAliasResolved         bool   `json:"path_alias_resolved"`
 	MountFound                bool   `json:"mount_found"`
 	MembershipFound           bool   `json:"membership_found"`
 	MembershipIsRoot          bool   `json:"membership_is_root"`
@@ -31,6 +32,12 @@ type ScopeDiagnostic struct {
 
 func describeScope(directory, controller, memberships, mounts string, pid int) (ScopeDiagnostic, error) {
 	scope := ScopeDiagnostic{Controller: controller}
+	resolved, err := filepath.EvalSymlinks(directory)
+	if err != nil {
+		return scope, errors.New("resolve diagnostic cgroup path failed")
+	}
+	scope.PathAliasResolved = resolved != filepath.Clean(directory)
+	directory = resolved
 	member := ""
 	for _, line := range strings.Split(memberships, "\n") {
 		fields := strings.SplitN(line, ":", 3)
@@ -41,16 +48,28 @@ func describeScope(directory, controller, memberships, mounts string, pid int) (
 	scope.MembershipIsRoot = scope.MembershipFound && member == "/"
 	best := 0
 	for _, line := range strings.Split(mounts, "\n") {
-		fields := strings.Fields(line)
-		if len(fields) < 10 {
+		parts := strings.SplitN(line, " - ", 2)
+		if len(parts) != 2 {
 			continue
 		}
-		mount := fields[4]
-		if (directory == mount || strings.HasPrefix(directory, mount+"/")) && len(mount) > best && strings.Contains(line, " - cgroup") {
+		fields, filesystem := strings.Fields(parts[0]), strings.Fields(parts[1])
+		if len(fields) < 6 || len(filesystem) < 3 {
+			continue
+		}
+		if controller == "unified" {
+			if filesystem[0] != "cgroup2" {
+				continue
+			}
+		} else if filesystem[0] != "cgroup" || !containsController(filesystem[2], controller) {
+			continue
+		}
+		mount := decodeMountInfoPath(fields[4])
+		mountRoot := decodeMountInfoPath(fields[3])
+		if (directory == mount || strings.HasPrefix(directory, strings.TrimSuffix(mount, "/")+"/")) && len(mount) > best {
 			best = len(mount)
 			scope.MountFound = true
-			scope.MountRootIsRoot = fields[3] == "/"
-			scope.MembershipEqualsMountRoot = scope.MembershipFound && fields[3] == member
+			scope.MountRootIsRoot = mountRoot == "/"
+			scope.MembershipEqualsMountRoot = scope.MembershipFound && mountRoot == member
 		}
 	}
 	data, err := os.ReadFile(filepath.Join(directory, "cgroup.procs"))
@@ -83,6 +102,10 @@ func describeScope(directory, controller, memberships, mounts string, pid int) (
 		}
 	}
 	return scope, nil
+}
+
+func decodeMountInfoPath(path string) string {
+	return strings.NewReplacer(`\040`, " ", `\011`, "\t", `\012`, "\n", `\134`, `\`).Replace(path)
 }
 
 func containsController(list, controller string) bool {

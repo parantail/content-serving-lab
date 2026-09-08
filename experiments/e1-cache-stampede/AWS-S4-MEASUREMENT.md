@@ -48,6 +48,8 @@ docker run --rm --network none --cpus=1 --memory=2g `
 
 로컬에서는 `service` image에 위 환경 변수와 `--cpus=1 --memory=2g --network none`을 지정해 같은 모드를 검증할 수 있다. AWS에서는 clean checkpoint의 기존 bootstrap/plan/apply 후 `deploy/e1-aws-s4`에서 다음을 실행한다.
 
+진단은 reader directory의 symbolic link를 해석한 뒤 mountinfo의 escape된 경로를 복원하여 가장 구체적인 mount와 비교한다. cgroup v1은 controller를, v2는 filesystem type을 확인한다. `path_alias_resolved`는 별칭 해석으로 경로가 달라졌는지만 나타내며 원본 경로는 노출하지 않는다. `mount_found=false`이면 mount root 관련 false 값은 범위 판정의 근거가 아니다. 경로 해석 실패는 경로를 숨긴 오류로 종료한다. 로컬 alias 회귀 test 통과와 실제 Fargate mount 대응 확인은 별개다.
+
 ```powershell
 .\scripts\resource-diagnostic.ps1
 .\scripts\destroy.ps1
