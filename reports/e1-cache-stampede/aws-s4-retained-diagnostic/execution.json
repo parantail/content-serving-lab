@@ -1,0 +1,9 @@
+{
+  "deployment_id": "ad80a58dee07",
+  "image": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8",
+  "runtime_image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8",
+  "platform_version": "1.4.0",
+  "cpu": "1024",
+  "memory": "2048",
+  "recovered_at": "2026-09-08T14:53:20.5666029+00:00"
+}

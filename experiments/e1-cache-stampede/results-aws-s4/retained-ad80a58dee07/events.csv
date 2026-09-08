@@ -1,0 +1,331 @@
+run_id,trial_id,scenario,name,timestamp,detail
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:06.890160394Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:07.125389516Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:07.13221855Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:07.18350532Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:07.197312302Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:07.197541841Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:07.197557634Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:08.452657206Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:08.45483922Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:08.485570923Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r01,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:08.695486946Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,trial_started,2026-09-08T14:54:08.711345953Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,health_before,2026-09-08T14:54:08.929465799Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,tasks_prepared,2026-09-08T14:54:09.040684203Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,derivative_deleted,2026-09-08T14:54:09.065549303Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,cold_checked,2026-09-08T14:54:09.078299274Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,burst_ready,2026-09-08T14:54:09.078538978Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,burst_released,2026-09-08T14:54:09.078549359Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,burst_finished,2026-09-08T14:54:10.277166632Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,tasks_finished,2026-09-08T14:54:10.381134346Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,derivative_verified,2026-09-08T14:54:10.407451169Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r01,S4-AWS-2,health_after,2026-09-08T14:54:10.635078426Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,trial_started,2026-09-08T14:54:10.651170448Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,health_before,2026-09-08T14:54:10.881257929Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,tasks_prepared,2026-09-08T14:54:11.199393447Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,derivative_deleted,2026-09-08T14:54:11.222295117Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,cold_checked,2026-09-08T14:54:11.234294133Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,burst_ready,2026-09-08T14:54:11.234549975Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,burst_released,2026-09-08T14:54:11.234561828Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,burst_finished,2026-09-08T14:54:12.347836635Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,tasks_finished,2026-09-08T14:54:12.655456007Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,derivative_verified,2026-09-08T14:54:12.678041088Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r01,S4-AWS-4,health_after,2026-09-08T14:54:12.913494965Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,trial_started,2026-09-08T14:54:12.93006924Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,health_before,2026-09-08T14:54:13.174927826Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,tasks_prepared,2026-09-08T14:54:13.482453109Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,derivative_deleted,2026-09-08T14:54:13.501843897Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,cold_checked,2026-09-08T14:54:13.515467163Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,burst_ready,2026-09-08T14:54:13.515666285Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,burst_released,2026-09-08T14:54:13.515696712Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,burst_finished,2026-09-08T14:54:14.514292202Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,tasks_finished,2026-09-08T14:54:14.924219335Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,derivative_verified,2026-09-08T14:54:14.949564227Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r02,S4-AWS-4,health_after,2026-09-08T14:54:15.18416624Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,trial_started,2026-09-08T14:54:15.200165539Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,health_before,2026-09-08T14:54:15.420962116Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,tasks_prepared,2026-09-08T14:54:15.524669804Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,derivative_deleted,2026-09-08T14:54:15.547911564Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,cold_checked,2026-09-08T14:54:15.560177763Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,burst_ready,2026-09-08T14:54:15.560387451Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,burst_released,2026-09-08T14:54:15.560401853Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,burst_finished,2026-09-08T14:54:16.638805848Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,tasks_finished,2026-09-08T14:54:16.847626364Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,derivative_verified,2026-09-08T14:54:16.873740646Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r02,S4-AWS-2,health_after,2026-09-08T14:54:17.107482472Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:17.123900687Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:17.33987318Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:17.341794287Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:17.366524679Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:17.378659024Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:17.378884102Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:17.378942969Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:18.544863224Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:18.546691354Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:18.568598122Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r02,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:18.777280709Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:18.794064971Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:19.004482571Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:19.006571475Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:19.030903887Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:19.044610775Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:19.044854131Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:19.044871853Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:20.141776104Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:20.143629975Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:20.164089826Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r03,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:20.383936216Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,trial_started,2026-09-08T14:54:20.401534059Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,health_before,2026-09-08T14:54:20.620681421Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,tasks_prepared,2026-09-08T14:54:20.72658569Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,derivative_deleted,2026-09-08T14:54:20.752307067Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,cold_checked,2026-09-08T14:54:20.763594557Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,burst_ready,2026-09-08T14:54:20.763825942Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,burst_released,2026-09-08T14:54:20.763837272Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,burst_finished,2026-09-08T14:54:21.829484478Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,tasks_finished,2026-09-08T14:54:21.933105124Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,derivative_verified,2026-09-08T14:54:21.959089976Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r03,S4-AWS-2,health_after,2026-09-08T14:54:22.184932616Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,trial_started,2026-09-08T14:54:22.202479104Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,health_before,2026-09-08T14:54:22.428102106Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,tasks_prepared,2026-09-08T14:54:22.746544147Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,derivative_deleted,2026-09-08T14:54:22.768483869Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,cold_checked,2026-09-08T14:54:22.781342312Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,burst_ready,2026-09-08T14:54:22.787287108Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,burst_released,2026-09-08T14:54:22.787316797Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,burst_finished,2026-09-08T14:54:23.820684749Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,tasks_finished,2026-09-08T14:54:24.230852213Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,derivative_verified,2026-09-08T14:54:24.260719159Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r03,S4-AWS-4,health_after,2026-09-08T14:54:24.479353317Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,trial_started,2026-09-08T14:54:24.500364852Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,health_before,2026-09-08T14:54:24.726913188Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,tasks_prepared,2026-09-08T14:54:25.035024552Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,derivative_deleted,2026-09-08T14:54:25.0589819Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,cold_checked,2026-09-08T14:54:25.07248527Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,burst_ready,2026-09-08T14:54:25.07292077Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,burst_released,2026-09-08T14:54:25.072933441Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,burst_finished,2026-09-08T14:54:26.065905943Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,tasks_finished,2026-09-08T14:54:26.374149395Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,derivative_verified,2026-09-08T14:54:26.402139733Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r04,S4-AWS-4,health_after,2026-09-08T14:54:26.627230232Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,trial_started,2026-09-08T14:54:26.646687778Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,health_before,2026-09-08T14:54:26.863515104Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,tasks_prepared,2026-09-08T14:54:26.966960152Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,derivative_deleted,2026-09-08T14:54:26.987518882Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,cold_checked,2026-09-08T14:54:27.001197885Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,burst_ready,2026-09-08T14:54:27.001508016Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,burst_released,2026-09-08T14:54:27.001524841Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,burst_finished,2026-09-08T14:54:28.116059433Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,tasks_finished,2026-09-08T14:54:28.219720615Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,derivative_verified,2026-09-08T14:54:28.24400434Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r04,S4-AWS-2,health_after,2026-09-08T14:54:28.463226978Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:28.483619834Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:28.688877044Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:28.690659209Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:28.712213207Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:28.727751453Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:28.728122532Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:28.728139819Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:29.912781372Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:29.915336524Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:29.940311369Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r04,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:30.15187452Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:30.170521861Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:30.396152799Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:30.39835704Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:30.420303204Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:30.434086909Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:30.434205604Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:30.434219787Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:31.502708463Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:31.505070032Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:31.531660209Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r05,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:31.748355369Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,trial_started,2026-09-08T14:54:31.767151926Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,health_before,2026-09-08T14:54:32.002028875Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,tasks_prepared,2026-09-08T14:54:32.107761541Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,derivative_deleted,2026-09-08T14:54:32.129245465Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,cold_checked,2026-09-08T14:54:32.141564802Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,burst_ready,2026-09-08T14:54:32.141840497Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,burst_released,2026-09-08T14:54:32.141861162Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,burst_finished,2026-09-08T14:54:33.215660233Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,tasks_finished,2026-09-08T14:54:33.319427535Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,derivative_verified,2026-09-08T14:54:33.345832801Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r05,S4-AWS-2,health_after,2026-09-08T14:54:33.564123683Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,trial_started,2026-09-08T14:54:33.588010398Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,health_before,2026-09-08T14:54:33.821367427Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,tasks_prepared,2026-09-08T14:54:34.135106805Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,derivative_deleted,2026-09-08T14:54:34.151685398Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,cold_checked,2026-09-08T14:54:34.164937199Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,burst_ready,2026-09-08T14:54:34.165156469Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,burst_released,2026-09-08T14:54:34.16517139Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,burst_finished,2026-09-08T14:54:35.21657174Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,tasks_finished,2026-09-08T14:54:35.525202902Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,derivative_verified,2026-09-08T14:54:35.554190368Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r05,S4-AWS-4,health_after,2026-09-08T14:54:35.794192991Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,trial_started,2026-09-08T14:54:35.815102536Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,health_before,2026-09-08T14:54:36.048128612Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,tasks_prepared,2026-09-08T14:54:36.355572957Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,derivative_deleted,2026-09-08T14:54:36.37909389Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,cold_checked,2026-09-08T14:54:36.392652164Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,burst_ready,2026-09-08T14:54:36.392938717Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,burst_released,2026-09-08T14:54:36.392949385Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,burst_finished,2026-09-08T14:54:37.42901045Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,tasks_finished,2026-09-08T14:54:37.838449389Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,derivative_verified,2026-09-08T14:54:37.864355138Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r06,S4-AWS-4,health_after,2026-09-08T14:54:38.086316349Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,trial_started,2026-09-08T14:54:38.109021298Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,health_before,2026-09-08T14:54:38.331599902Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,tasks_prepared,2026-09-08T14:54:38.434934822Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,derivative_deleted,2026-09-08T14:54:38.454861057Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,cold_checked,2026-09-08T14:54:38.46956471Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,burst_ready,2026-09-08T14:54:38.469866412Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,burst_released,2026-09-08T14:54:38.469882564Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,burst_finished,2026-09-08T14:54:39.493449973Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,tasks_finished,2026-09-08T14:54:39.597135249Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,derivative_verified,2026-09-08T14:54:39.623081388Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r06,S4-AWS-2,health_after,2026-09-08T14:54:39.842783523Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:39.864570041Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:40.076367849Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:40.080656052Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:40.102116538Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:40.11505316Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:40.115263894Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:40.115278384Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:41.21491526Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:41.217081235Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:41.244394177Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r06,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:41.473595963Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:41.497232014Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:41.705041091Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:41.707049558Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:41.726358303Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:41.739387721Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:41.739622221Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:41.739636118Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:42.800903725Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:42.802743034Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:42.823250088Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r07,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:43.042815838Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,trial_started,2026-09-08T14:54:43.066473041Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,health_before,2026-09-08T14:54:43.280712809Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,tasks_prepared,2026-09-08T14:54:43.38437369Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,derivative_deleted,2026-09-08T14:54:43.406089076Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,cold_checked,2026-09-08T14:54:43.418026482Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,burst_ready,2026-09-08T14:54:43.418234754Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,burst_released,2026-09-08T14:54:43.418244638Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,burst_finished,2026-09-08T14:54:44.419855754Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,tasks_finished,2026-09-08T14:54:44.625212618Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,derivative_verified,2026-09-08T14:54:44.649087493Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r07,S4-AWS-2,health_after,2026-09-08T14:54:44.884670976Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,trial_started,2026-09-08T14:54:44.911905217Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,health_before,2026-09-08T14:54:45.146754195Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,tasks_prepared,2026-09-08T14:54:45.45561633Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,derivative_deleted,2026-09-08T14:54:45.474338208Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,cold_checked,2026-09-08T14:54:45.488109866Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,burst_ready,2026-09-08T14:54:45.488376617Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,burst_released,2026-09-08T14:54:45.488393961Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,burst_finished,2026-09-08T14:54:46.488806285Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,tasks_finished,2026-09-08T14:54:46.800605933Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,derivative_verified,2026-09-08T14:54:46.828507563Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r07,S4-AWS-4,health_after,2026-09-08T14:54:47.049682742Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,trial_started,2026-09-08T14:54:47.106406998Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,health_before,2026-09-08T14:54:47.335680012Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,tasks_prepared,2026-09-08T14:54:47.647407726Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,derivative_deleted,2026-09-08T14:54:47.672031676Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,cold_checked,2026-09-08T14:54:47.684304839Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,burst_ready,2026-09-08T14:54:47.684529015Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,burst_released,2026-09-08T14:54:47.684541814Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,burst_finished,2026-09-08T14:54:48.65214254Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,tasks_finished,2026-09-08T14:54:48.964615367Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,derivative_verified,2026-09-08T14:54:48.990027076Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r08,S4-AWS-4,health_after,2026-09-08T14:54:49.213634109Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,trial_started,2026-09-08T14:54:49.24155587Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,health_before,2026-09-08T14:54:49.463715993Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,tasks_prepared,2026-09-08T14:54:49.567218008Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,derivative_deleted,2026-09-08T14:54:49.585322877Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,cold_checked,2026-09-08T14:54:49.597960902Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,burst_ready,2026-09-08T14:54:49.598181651Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,burst_released,2026-09-08T14:54:49.598198712Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,burst_finished,2026-09-08T14:54:50.67807827Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,tasks_finished,2026-09-08T14:54:50.781502312Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,derivative_verified,2026-09-08T14:54:50.810648078Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r08,S4-AWS-2,health_after,2026-09-08T14:54:51.024056459Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:51.051912256Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:51.283046342Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:51.28501092Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:51.302883781Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:51.315460802Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:51.315680782Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:51.315690689Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:52.413596026Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:52.416003957Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:52.438525948Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r08,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:52.661462077Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:54:52.686253762Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,health_before,2026-09-08T14:54:52.91457584Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:54:52.916978151Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:54:52.940248272Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:54:52.952620533Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:54:52.952977471Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:54:52.95298785Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:54:54.04492246Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:54:54.04725962Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:54:54.070046531Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r09,S4-AWS-1-CONTROL,health_after,2026-09-08T14:54:54.291710488Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,trial_started,2026-09-08T14:54:54.317043786Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,health_before,2026-09-08T14:54:54.55830369Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,tasks_prepared,2026-09-08T14:54:54.661804616Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,derivative_deleted,2026-09-08T14:54:54.68234677Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,cold_checked,2026-09-08T14:54:54.693995597Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,burst_ready,2026-09-08T14:54:54.694215431Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,burst_released,2026-09-08T14:54:54.694243957Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,burst_finished,2026-09-08T14:54:55.706003293Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,tasks_finished,2026-09-08T14:54:55.809740769Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,derivative_verified,2026-09-08T14:54:55.834947437Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r09,S4-AWS-2,health_after,2026-09-08T14:54:56.063628336Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,trial_started,2026-09-08T14:54:56.091283321Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,health_before,2026-09-08T14:54:56.318088898Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,tasks_prepared,2026-09-08T14:54:56.626531251Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,derivative_deleted,2026-09-08T14:54:56.64799448Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,cold_checked,2026-09-08T14:54:56.659879796Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,burst_ready,2026-09-08T14:54:56.660120217Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,burst_released,2026-09-08T14:54:56.660147132Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,burst_finished,2026-09-08T14:54:57.690786508Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,tasks_finished,2026-09-08T14:54:58.004113841Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,derivative_verified,2026-09-08T14:54:58.026501155Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r09,S4-AWS-4,health_after,2026-09-08T14:54:58.259820496Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,trial_started,2026-09-08T14:54:58.292078416Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,health_before,2026-09-08T14:54:58.514826122Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,tasks_prepared,2026-09-08T14:54:58.826610345Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,derivative_deleted,2026-09-08T14:54:58.850147743Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,cold_checked,2026-09-08T14:54:58.864538383Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,burst_ready,2026-09-08T14:54:58.864806194Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,burst_released,2026-09-08T14:54:58.864822432Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,burst_finished,2026-09-08T14:54:59.869180951Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,tasks_finished,2026-09-08T14:55:00.203109932Z,tasks=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,derivative_verified,2026-09-08T14:55:00.231190084Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-4-r10,S4-AWS-4,health_after,2026-09-08T14:55:00.537400188Z,stable=true healthy=4
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,trial_started,2026-09-08T14:55:00.578661423Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,health_before,2026-09-08T14:55:00.797934039Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,tasks_prepared,2026-09-08T14:55:00.901512661Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,derivative_deleted,2026-09-08T14:55:00.923552211Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,cold_checked,2026-09-08T14:55:00.936065974Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,burst_ready,2026-09-08T14:55:00.936274963Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,burst_released,2026-09-08T14:55:00.936289973Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,burst_finished,2026-09-08T14:55:02.71436358Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,tasks_finished,2026-09-08T14:55:02.824787071Z,tasks=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,derivative_verified,2026-09-08T14:55:02.851738632Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-2-r10,S4-AWS-2,health_after,2026-09-08T14:55:03.093812048Z,stable=true healthy=2
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,trial_started,2026-09-08T14:55:03.12635596Z,
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,health_before,2026-09-08T14:55:03.343590467Z,stable=true healthy=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,tasks_prepared,2026-09-08T14:55:03.34600132Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,derivative_deleted,2026-09-08T14:55:03.36558693Z,result=success
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,cold_checked,2026-09-08T14:55:03.377714084Z,missing=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,burst_ready,2026-09-08T14:55:03.377930289Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,burst_released,2026-09-08T14:55:03.377939452Z,start_channel=closed
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,burst_finished,2026-09-08T14:55:04.489074609Z,requests=100
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,tasks_finished,2026-09-08T14:55:04.491566904Z,tasks=1
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,derivative_verified,2026-09-08T14:55:04.514294114Z,bytes=67940 webp=true
+retained-ad80a58dee07,retained-ad80a58dee07-S4-AWS-1-CONTROL-r10,S4-AWS-1-CONTROL,health_after,2026-09-08T14:55:04.73608794Z,stable=true healthy=1

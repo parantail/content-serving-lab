@@ -1,6 +1,6 @@
 # E1 AWS S4 Terraform
 
-이 디렉터리는 E1에서 ECS Task 1/2/4개가 같은 cold image request를 받을 때 프로세스별 중복 변환과 S3 조건부 저장 경쟁을 측정하는 일회성 `ap-northeast-2` 환경을 만듭니다. Provider schema와 mock plan/apply 계약, 실제 AWS 배포·제거 및 잔여 실행 자원 검사를 확인했습니다. Calibration은 분석 검증 통과 전이며 retained 측정 결과는 아직 없습니다.
+이 디렉터리는 E1에서 ECS Task 1/2/4개가 같은 cold image request를 받을 때 프로세스별 중복 변환과 S3 조건부 저장 경쟁을 측정하는 일회성 `ap-northeast-2` 환경을 만듭니다. Provider schema와 mock plan/apply 계약, 실제 AWS 배포·제거 및 잔여 실행 자원 검사를 확인했습니다. [Retained 결과](../../reports/e1-cache-stampede/AWS-S4.md)는 30개 유효 trial과 재분석 근거를 포함합니다.
 
 ## 고정 구성
 

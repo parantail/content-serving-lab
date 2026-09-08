@@ -1,0 +1,114 @@
+{
+  "schema_version": "e1-aws-s4-v1",
+  "run_id": "retained-ad80a58dee07",
+  "region": "ap-northeast-2",
+  "services": [
+    {
+      "scenario": "S4-AWS-1-CONTROL",
+      "expected_tasks": 1,
+      "listener_port": 8081,
+      "target_algorithm": "round_robin",
+      "stickiness": false
+    },
+    {
+      "scenario": "S4-AWS-2",
+      "expected_tasks": 2,
+      "listener_port": 8082,
+      "target_algorithm": "round_robin",
+      "stickiness": false
+    },
+    {
+      "scenario": "S4-AWS-4",
+      "expected_tasks": 4,
+      "listener_port": 8084,
+      "target_algorithm": "round_robin",
+      "stickiness": false
+    }
+  ],
+  "tasks": [
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "02965b9adc1b4594a369a885d85b87a3",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2c",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    },
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "050220889959489bb6e4f9bfb1fc0f12",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2c",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    },
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "19c7928974ed4166b254fcce1564422a",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2a",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    },
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "7d2442d248464707a35dc83c0a8489f6",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2c",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    },
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "b971842de91943808ec3bbb899e282d1",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2a",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    },
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "fdc782ff6e304ef5951f52985b40078d",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2a",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    },
+    {
+      "resource_sample_gap_ms": 50,
+      "resource_source": "cgroup-v1-container-visible",
+      "task_id": "ff455c38fa774b599d4847691b63c291",
+      "task_definition_family": "content-serving-e1-s4-ad80a58dee-media",
+      "task_definition_revision": "1",
+      "availability_zone": "ap-northeast-2a",
+      "launch_type": "FARGATE",
+      "cpu_vcpu": 1,
+      "memory_mib": 2048,
+      "image_digest": "sha256:8d040bec83be619c647ea9b645eff965bceaae6100407cdaa719af050ba74ef8"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # AWS S4 자원 계측 계약
 
-상태: **측정 조건·retained 실행 경로 구현 — 실제 retained 수행 전**. 실제 Fargate 범위와 독립 CPU counter 대조는 [진단 원자료와 결과](../../reports/e1-cache-stampede/aws-s4-resource-diagnostic/README.md)로 확인했다. 기본 모드는 calibration이며 retained는 명시적으로 선택한다. 이 문서는 최종 측정 완료 기록이 아니다.
+상태: **측정 조건·retained 실행 경로 검증 완료**. [Retained 결과](../../reports/e1-cache-stampede/AWS-S4.md)는 본 계약에서 실행한 30회 유효 trial을 기록한다. 실제 Fargate 범위와 독립 CPU counter 대조는 [진단 원자료와 결과](../../reports/e1-cache-stampede/aws-s4-resource-diagnostic/README.md)로 확인했다. 기본 모드는 calibration이며 retained는 명시적으로 선택한다.
 
 ## 지표의 의미
 

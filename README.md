@@ -2,13 +2,13 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4 측정을 위한 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. 실제 AWS calibration의 원자료 검증과 배포·제거를 확인했으며, 자원 계측 최종 계약은 검토 중입니다. AWS retained 측정과 분산 조정은 아직 수행 전입니다.
+현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4의 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. [AWS S4 retained](reports/e1-cache-stampede/AWS-S4.md)는 30회 유효·3,000개 HTTP 200을 확인했으며 Task 1/2/4개에서 같은 이미지 변환이 1/2/4회 발생했습니다. 분산 조정 도입과 비용 손익분기 판단은 아직 보류합니다.
 
 ## 실험
 
 | 실험 | 확인하려는 것 | 주요 지표 | 상태 |
 | --- | --- | --- | --- |
-| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B: local 2/4 process에서 변환 2/4회](reports/e1-cache-stampede/PHASE-B.md) | Phase A/B local 완료, AWS S4 Terraform 준비 |
+| [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B](reports/e1-cache-stampede/PHASE-B.md), [AWS S4: Task 1/2/4개에서 변환 1/2/4회](reports/e1-cache-stampede/AWS-S4.md) | Phase A/B 및 AWS S4 retained 측정 완료 |
 | E2. 이미지 변환기 비교 | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, 최대 메모리, 파일 크기와 품질 | 준비 중 |
 | E3. 멀티 리전 장애 | 한 리전의 응답이 느려지거나 끊겼을 때 사용자에게 얼마나 오래 영향을 주는가? | 리전별 p95/p99, 오류율, 복구 시간 | 준비 중 |
 | E4. 장애 격리 | 변환기나 저장소 장애가 캐시에 있는 이미지 요청까지 번지는 것을 막을 수 있는가? | 영향받은 요청 범위, 탐지·완화·복구 시간 | 준비 중 |
@@ -18,7 +18,7 @@
 
 ## AWS 구성안
 
-아래 장기 구성안과 별도로 E1 AWS S4에 필요한 [단일 Region 일회성 Terraform 환경](deploy/e1-aws-s4/README.md)을 구현하고 AWS calibration을 실행했습니다. Retained 측정은 아직 수행하지 않았습니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
+아래 장기 구성안과 별도로 E1 AWS S4에 필요한 [단일 Region 일회성 Terraform 환경](deploy/e1-aws-s4/README.md)에서 AWS calibration과 retained 측정을 실행했습니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
 
 ```mermaid
 flowchart LR

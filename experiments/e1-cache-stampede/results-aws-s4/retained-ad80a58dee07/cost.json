@@ -1,0 +1,11 @@
+{
+  "schema_version": "e1-aws-s4-v1",
+  "run_id": "retained-ad80a58dee07",
+  "status": "usage-only",
+  "measured_task_cpu_seconds": 66.106413254,
+  "derivative_get_requests": 3110,
+  "original_get_requests": 70,
+  "conditional_put_requests": 70,
+  "publish_attempt_bytes": 4755800,
+  "note": "Pricing, ALB LCU, Fargate duration, log bytes, public IPv4 time, ECR storage and confirmed billing are added after AWS measurement."
+}

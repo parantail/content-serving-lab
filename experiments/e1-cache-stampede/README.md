@@ -1,6 +1,6 @@
 # E1 — 캐시 폭주와 동일 요청 합치기
 
-상태: **Phase A와 로컬 Phase B 측정 완료 — AWS S4 배포·제거 확인, 개발 calibration 분석 검증 통과 전**
+상태: **Phase A·로컬 Phase B 및 AWS S4 retained 측정 완료**. [AWS S4 결과·원자료](../../reports/e1-cache-stampede/AWS-S4.md)는 30회 유효 trial과 Task 간 중복 변환을 기록합니다. 비용 손익분기와 분산 조정 도입 판단은 보류합니다.
 
 대표 결과와 결정은 [Phase A: 동시 cold miss 100개를 이미지 변환 한 번으로 합칠 수 있는가?](../../reports/e1-cache-stampede/README.md)와 [Phase B: 서로 다른 변환 요청과 여러 프로세스에서는 어디까지 합칠 수 있는가?](../../reports/e1-cache-stampede/PHASE-B.md)에서 확인할 수 있습니다.
 
