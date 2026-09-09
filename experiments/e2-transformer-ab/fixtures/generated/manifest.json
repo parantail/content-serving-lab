@@ -1,0 +1,1047 @@
+{
+  "schema": "e2-corpus-v1",
+  "pillow": "11.1.0",
+  "avifenc": "Version: 1.2.1 (dav1d [dec]:1.5.1, libgav1 [dec]:0.19.0, aom [enc/dec]:v3.12.1, rav1e [enc]:0.7.1 (UNKNOWN), svt [enc]:v2.3.0)\nlibyuv : available (1904)",
+  "packages": [
+    "apt\t3.0.3",
+    "base-files\t13.8+deb13u6",
+    "base-passwd\t3.6.7",
+    "bash\t5.2.37-2+b9",
+    "blt\t2.5.3+dfsg-8",
+    "bsdutils\t1:2.41.5-0+deb13u1",
+    "ca-certificates\t20250419",
+    "coreutils\t9.7-3",
+    "dash\t0.5.12-12",
+    "debconf\t1.5.91",
+    "debian-archive-keyring\t2025.1",
+    "debianutils\t5.23.2",
+    "diffutils\t1:3.10-4",
+    "dpkg\t1.22.22",
+    "findutils\t4.10.0-3",
+    "fontconfig-config\t2.15.0-2.3",
+    "fonts-dejavu-core\t2.37-8",
+    "fonts-dejavu-mono\t2.37-8",
+    "fonts-lyx\t2.4.3-1",
+    "gcc-14-base:amd64\t14.2.0-19",
+    "grep\t3.11-4",
+    "gzip\t1.13-1",
+    "hostname\t3.25",
+    "init-system-helpers\t1.69~deb13u1",
+    "libabsl20240722:amd64\t20240722.0-4",
+    "libacl1:amd64\t2.3.2-2+b1",
+    "libaom3:amd64\t3.12.1-1+deb13u1",
+    "libapt-pkg7.0:amd64\t3.0.3",
+    "libatomic1:amd64\t14.2.0-19",
+    "libattr1:amd64\t1:2.5.2-3",
+    "libaudit-common\t1:4.0.2-2",
+    "libaudit1:amd64\t1:4.0.2-2+b2",
+    "libavif-bin\t1.2.1-1.2",
+    "libavif16:amd64\t1.2.1-1.2",
+    "libblas3:amd64\t3.12.1-6",
+    "libblkid1:amd64\t2.41.5-0+deb13u1",
+    "libbrotli1:amd64\t1.1.0-2+b7",
+    "libbsd0:amd64\t0.12.2-2",
+    "libbz2-1.0:amd64\t1.0.8-6",
+    "libc-bin\t2.41-12+deb13u3",
+    "libc6:amd64\t2.41-12+deb13u3",
+    "libcap-ng0:amd64\t0.8.5-4+b1",
+    "libcap2:amd64\t1:2.75-10+deb13u1+b1",
+    "libcrypt1:amd64\t1:4.4.38-1",
+    "libdav1d7:amd64\t1.5.1-1",
+    "libdb5.3t64:amd64\t5.3.28+dfsg2-9",
+    "libdebconfclient0:amd64\t0.280",
+    "libdeflate0:amd64\t1.23-2",
+    "libexpat1:amd64\t2.8.3-1~deb13u1",
+    "libffi8:amd64\t3.4.8-2",
+    "libfontconfig1:amd64\t2.15.0-2.3",
+    "libfreetype6:amd64\t2.13.3+dfsg-1+deb13u1",
+    "libfribidi0:amd64\t1.0.16-1",
+    "libgav1-1:amd64\t0.19.0-3+b1",
+    "libgcc-s1:amd64\t14.2.0-19",
+    "libgcrypt20:amd64\t1.11.0-7+deb13u1",
+    "libgfortran5:amd64\t14.2.0-19",
+    "libglib2.0-0t64:amd64\t2.84.4-3~deb13u3",
+    "libgmp10:amd64\t2:6.3.0+dfsg-3",
+    "libgomp1:amd64\t14.2.0-19",
+    "libgpg-error0:amd64\t1.51-4",
+    "libgraphite2-3:amd64\t1.3.14-2+deb13u1",
+    "libharfbuzz0b:amd64\t10.2.0-1+deb13u1",
+    "libhogweed6t64:amd64\t3.10.1-1",
+    "libimagequant0:amd64\t2.18.0-1+b2",
+    "libjbig0:amd64\t2.1-6.1+b2",
+    "libjpeg62-turbo:amd64\t1:2.1.5-4",
+    "libjs-jquery\t3.6.1+dfsg+~3.5.14-1",
+    "libjs-jquery-ui\t1.13.2+dfsg-1",
+    "liblapack3:amd64\t3.12.1-6",
+    "liblastlog2-2:amd64\t2.41.5-0+deb13u1",
+    "liblcms2-2:amd64\t2.16-2+deb13u2",
+    "liblerc4:amd64\t4.0.0+ds-5",
+    "liblz4-1:amd64\t1.10.0-4",
+    "liblzma5:amd64\t5.8.1-1+deb13u1",
+    "libmd0:amd64\t1.1.0-2+b1",
+    "libmount1:amd64\t2.41.5-0+deb13u1",
+    "libncursesw6:amd64\t6.5+20250216-2",
+    "libnettle8t64:amd64\t3.10.1-1",
+    "libopenjp2-7:amd64\t2.5.3-2.1~deb13u2",
+    "libpam-modules:amd64\t1.7.0-5",
+    "libpam-modules-bin\t1.7.0-5",
+    "libpam-runtime\t1.7.0-5",
+    "libpam0g:amd64\t1.7.0-5",
+    "libpcre2-8-0:amd64\t10.46-1~deb13u1",
+    "libpng16-16t64:amd64\t1.6.48-1+deb13u5",
+    "libpython3-stdlib:amd64\t3.13.5-1",
+    "libpython3.13-minimal:amd64\t3.13.5-2+deb13u4",
+    "libpython3.13-stdlib:amd64\t3.13.5-2+deb13u4",
+    "libqhull-r8.0:amd64\t2020.2-6+b2",
+    "libraqm0:amd64\t0.10.2-1",
+    "librav1e0.7:amd64\t0.7.1-9+b2",
+    "libreadline8t64:amd64\t8.2-6",
+    "libseccomp2:amd64\t2.6.0-2",
+    "libselinux1:amd64\t3.8.1-1",
+    "libsemanage-common\t3.8.1-1",
+    "libsemanage2:amd64\t3.8.1-1",
+    "libsepol2:amd64\t3.8.1-1",
+    "libsharpyuv0:amd64\t1.5.0-0.1",
+    "libsmartcols1:amd64\t2.41.5-0+deb13u1",
+    "libsqlite3-0:amd64\t3.46.1-7+deb13u1",
+    "libssl3t64:amd64\t3.5.7-1~deb13u2",
+    "libstdc++6:amd64\t14.2.0-19",
+    "libsvtav1enc2:amd64\t2.3.0+dfsg-1",
+    "libsystemd0:amd64\t257.13-1~deb13u1",
+    "libtcl8.6:amd64\t8.6.16+dfsg-1",
+    "libtiff6:amd64\t4.7.0-3+deb13u3",
+    "libtinfo6:amd64\t6.5+20250216-2",
+    "libtk8.6:amd64\t8.6.16-1",
+    "libudev1:amd64\t257.13-1~deb13u1",
+    "libuuid1:amd64\t2.41.5-0+deb13u1",
+    "libwebp7:amd64\t1.5.0-0.1",
+    "libwebpdemux2:amd64\t1.5.0-0.1",
+    "libwebpmux3:amd64\t1.5.0-0.1",
+    "libx11-6:amd64\t2:1.8.12-1",
+    "libx11-data\t2:1.8.12-1",
+    "libxau6:amd64\t1:1.0.11-1",
+    "libxcb1:amd64\t1.17.0-2+b1",
+    "libxdmcp6:amd64\t1:1.1.5-1",
+    "libxext6:amd64\t2:1.3.4-1+b3",
+    "libxft2:amd64\t2.3.6-1+b4",
+    "libxml2:amd64\t2.12.7+dfsg+really2.9.14-2.1+deb13u3",
+    "libxrender1:amd64\t1:0.9.12-1",
+    "libxslt1.1:amd64\t1.1.35-1.2+deb13u3",
+    "libxss1:amd64\t1:1.2.3-1+b3",
+    "libxxhash0:amd64\t0.8.3-2",
+    "libyuv0:amd64\t0.0.1904.20250204-1",
+    "libzopfli1\t1.0.3-3",
+    "libzstd1:amd64\t1.5.7+dfsg-1",
+    "login\t1:4.16.0-2+really2.41.5-0+deb13u1",
+    "login.defs\t1:4.17.4-2",
+    "mawk\t1.3.4.20250131-1",
+    "media-types\t13.0.0",
+    "mount\t2.41.5-0+deb13u1",
+    "ncurses-base\t6.5+20250216-2",
+    "ncurses-bin\t6.5+20250216-2",
+    "netbase\t6.5",
+    "openssl\t3.5.7-1~deb13u2",
+    "openssl-provider-legacy\t3.5.7-1~deb13u2",
+    "passwd\t1:4.17.4-2",
+    "perl-base\t5.40.1-6",
+    "python-matplotlib-data\t3.10.1+dfsg1-4",
+    "python3\t3.13.5-1",
+    "python3-attr\t25.3.0-1",
+    "python3-autocommand\t2.2.2-3",
+    "python3-brotli\t1.1.0-2+b7",
+    "python3-contourpy\t1.3.1-1+b1",
+    "python3-cycler\t0.12.1-1",
+    "python3-dateutil\t2.9.0-4",
+    "python3-decorator\t5.2.1-2",
+    "python3-fonttools\t4.57.0-1+deb13u1",
+    "python3-fs\t2.4.16-7",
+    "python3-imageio\t2.37.0-1",
+    "python3-inflect\t7.3.1-2",
+    "python3-jaraco.context\t6.0.1-1+deb13u1",
+    "python3-jaraco.functools\t4.1.0-1",
+    "python3-kiwisolver\t1.4.7-3+b1",
+    "python3-lazy-loader\t0.4-1",
+    "python3-lxml:amd64\t5.4.0-1",
+    "python3-lz4\t4.4.0+dfsg-2",
+    "python3-matplotlib\t3.10.1+dfsg1-4",
+    "python3-minimal\t3.13.5-1",
+    "python3-more-itertools\t10.7.0-1",
+    "python3-mpmath\t1.3.0-1",
+    "python3-networkx\t3.2.1-5",
+    "python3-numpy\t1:2.2.4+ds-1",
+    "python3-numpy-dev:amd64\t1:2.2.4+ds-1",
+    "python3-packaging\t25.0-1",
+    "python3-pil:amd64\t11.1.0-5+deb13u4",
+    "python3-pil.imagetk:amd64\t11.1.0-5+deb13u4",
+    "python3-pkg-resources\t78.1.1-0.1",
+    "python3-platformdirs\t4.3.7-1",
+    "python3-pyparsing\t3.1.2-1",
+    "python3-scipy\t1.15.3-1",
+    "python3-skimage\t0.25.2-2",
+    "python3-skimage-lib:amd64\t0.25.2-2",
+    "python3-sympy\t1.13.3-5",
+    "python3-tifffile\t20250330-1",
+    "python3-tk:amd64\t3.13.5-1",
+    "python3-typeguard\t4.4.2-1",
+    "python3-typing-extensions\t4.13.2-1",
+    "python3-ufolib2\t0.17.1+dfsg1-1",
+    "python3-unicodedata2\t15.1.0+ds-1+b4",
+    "python3-zopfli\t0.2.3.post1-1+b1",
+    "python3.13\t3.13.5-2+deb13u4",
+    "python3.13-minimal\t3.13.5-2+deb13u4",
+    "python3.13-tk\t3.13.5-2+deb13u4",
+    "readline-common\t8.2-6",
+    "sed\t4.9-2+deb13u1",
+    "sqv\t1.3.0-3+b2",
+    "sysvinit-utils\t3.14-4",
+    "tar\t1.35+dfsg-3.1",
+    "tk8.6-blt2.5\t2.5.3+dfsg-8",
+    "tzdata\t2026b-0+deb13u1",
+    "unicode-data\t15.1.0-1",
+    "util-linux\t2.41.5-0+deb13u1",
+    "x11-common\t1:7.7+24+deb13u1",
+    "zlib1g:amd64\t1:1.3.dfsg+really1.3.1-1+b1"
+  ],
+  "sources": [
+    {
+      "id": "landscape",
+      "sha256": "de206136ed0eeaa42499840f49fa35bd3d57745b8a9580b16f0d6e6393ac7f91"
+    },
+    {
+      "id": "fruit",
+      "sha256": "8f0186504ef5a225272692c7e3bfaf725a33f8bf7e4813eab37ce8d606bb1000"
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "landscape-small-jpeg",
+      "path": "landscape-small-jpeg.jpg",
+      "group": "landscape",
+      "size": "small",
+      "format": "jpeg",
+      "width": 1024,
+      "height": 678,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 378802,
+      "sha256": "e26b0abbb08a2c4171bea94d6372cc603842f205924444edb966d213c6857538",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/landscape-small-jpeg-resize.png",
+          "sha256": "79fa10553636834fc1ff4b0e85c8d435f39a9875a4524908d2b7aebd10fb6fb4",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-small-jpeg-contain.png",
+          "sha256": "79fa10553636834fc1ff4b0e85c8d435f39a9875a4524908d2b7aebd10fb6fb4",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-small-jpeg-cover.png",
+          "sha256": "1709a29678cc5a265ccd8e62b95133ea468041220903a420350e83e32d1c718a",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-small-png",
+      "path": "landscape-small-png.png",
+      "group": "landscape",
+      "size": "small",
+      "format": "png",
+      "width": 1024,
+      "height": 678,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 1171361,
+      "sha256": "1f6c4055f21fd8e61265977050464842ea083dcf7ed67a62ac7f0f3a4beb4fb4",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/landscape-small-png-resize.png",
+          "sha256": "ed953db5ab12574d1b89c88b6e26f58c0478a8b06b7f6809d2db2cd0a56d7897",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-small-png-contain.png",
+          "sha256": "ed953db5ab12574d1b89c88b6e26f58c0478a8b06b7f6809d2db2cd0a56d7897",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-small-png-cover.png",
+          "sha256": "8b18aacb444c374d3865634986553110334f5c49a284e18437995785129b8217",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-small-webp",
+      "path": "landscape-small-webp.webp",
+      "group": "landscape",
+      "size": "small",
+      "format": "webp",
+      "width": 1024,
+      "height": 678,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 185136,
+      "sha256": "64f9a22dbbf2acfae699b501ea7867304438ace47bc3700f5a1c751b1d5537d3",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/landscape-small-webp-resize.png",
+          "sha256": "08e115767ad2ffa17aee893130d036b058986927194ffadaafeeec45ee78497a",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-small-webp-contain.png",
+          "sha256": "08e115767ad2ffa17aee893130d036b058986927194ffadaafeeec45ee78497a",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-small-webp-cover.png",
+          "sha256": "2213bdf8d6e2036076d26f816dddb39d88af2cd9bb0fdac459a2ae0d07277d9c",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-small-avif",
+      "path": "landscape-small-avif.avif",
+      "group": "landscape",
+      "size": "small",
+      "format": "avif",
+      "width": 1024,
+      "height": 678,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 289789,
+      "sha256": "c9b8ffaeb11e71475bdcf248b44ce003c4ac5e75112c464d8533862f64bea919",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/landscape-small-avif-resize.png",
+          "sha256": "ee342de6f241780792d4fba464682916d0d959634467c26849a6742b8ae29545",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-small-avif-contain.png",
+          "sha256": "ee342de6f241780792d4fba464682916d0d959634467c26849a6742b8ae29545",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-small-avif-cover.png",
+          "sha256": "8c6b3fc83ddfdd78aac4201fa7f3da2497ca84c97c5bdc03394b5030d8575d6d",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-large-jpeg",
+      "path": "landscape-large-jpeg.jpg",
+      "group": "landscape",
+      "size": "large",
+      "format": "jpeg",
+      "width": 4096,
+      "height": 2713,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 4144799,
+      "sha256": "d4055e8895f57d198eb77dedeed89851c8069db79a2e368c31b618568d3dfa22",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/landscape-large-jpeg-resize.png",
+          "sha256": "44dbfbe11a8fd42527da0563ab59e5e1563d18486e9775a26314ff01d0f45ce2",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-large-jpeg-contain.png",
+          "sha256": "44dbfbe11a8fd42527da0563ab59e5e1563d18486e9775a26314ff01d0f45ce2",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-large-jpeg-cover.png",
+          "sha256": "66b54a5b419196af2246aa50ee675a19cc38d010f37a3467c25a8c57fa44bcd6",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-large-png",
+      "path": "landscape-large-png.png",
+      "group": "landscape",
+      "size": "large",
+      "format": "png",
+      "width": 4096,
+      "height": 2713,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 14669223,
+      "sha256": "edb769694dbaf9ce26779b6a3555b70c2c763698ecadcd4b65db0a814542cc55",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/landscape-large-png-resize.png",
+          "sha256": "bbbf56d03a1ee3cf098b8f366c3683f69f1722e51c656f09029b39ed7273a0c0",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-large-png-contain.png",
+          "sha256": "bbbf56d03a1ee3cf098b8f366c3683f69f1722e51c656f09029b39ed7273a0c0",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-large-png-cover.png",
+          "sha256": "e65226cc9122f897fad10472c7f2a1ccc284f2ef890cd70342fe88b259d53ac4",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-large-webp",
+      "path": "landscape-large-webp.webp",
+      "group": "landscape",
+      "size": "large",
+      "format": "webp",
+      "width": 4096,
+      "height": 2713,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 1729346,
+      "sha256": "a1f2af972c02a708a815de8ea8891b46f8056066f9c046f20b33ac13e9c20e69",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/landscape-large-webp-resize.png",
+          "sha256": "05d2c040e13961cf1e75032f1951c9e8b66e675868656c46e3f249c08b404275",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-large-webp-contain.png",
+          "sha256": "05d2c040e13961cf1e75032f1951c9e8b66e675868656c46e3f249c08b404275",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-large-webp-cover.png",
+          "sha256": "8aa8134e559b11c2a8069ceb86c3caf5db8b71cfc0676ba9af11798cd46347ac",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "landscape-large-avif",
+      "path": "landscape-large-avif.avif",
+      "group": "landscape",
+      "size": "large",
+      "format": "avif",
+      "width": 4096,
+      "height": 2713,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 2622199,
+      "sha256": "66fe96aa335f832cd445bb4defe528dc52d660b95b3016bb0d52eecfef9ce25a",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/landscape-large-avif-resize.png",
+          "sha256": "db9b623084231d8b9b3c9906d956d3d2c9224314db940196c7cc9b25da5e5a1b",
+          "width": 640,
+          "height": 424
+        },
+        "contain": {
+          "path": "references/landscape-large-avif-contain.png",
+          "sha256": "db9b623084231d8b9b3c9906d956d3d2c9224314db940196c7cc9b25da5e5a1b",
+          "width": 640,
+          "height": 424
+        },
+        "cover": {
+          "path": "references/landscape-large-avif-cover.png",
+          "sha256": "fbdb31e8ea869539d737a0613d37b30c7d8e0a2634b5bfe83bd2e1c3ff611e7c",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-small-jpeg",
+      "path": "fruit-small-jpeg.jpg",
+      "group": "fruit",
+      "size": "small",
+      "format": "jpeg",
+      "width": 1024,
+      "height": 657,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 185217,
+      "sha256": "e0cb33de661cbf9ed83c6a5aafdb90d56444438de7947d958df79dad6bc79d67",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/fruit-small-jpeg-resize.png",
+          "sha256": "7269f4216603a7f44a3f71ccb67b73d195e5d0bd75d9e4a3abb75887ede0be94",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-small-jpeg-contain.png",
+          "sha256": "7269f4216603a7f44a3f71ccb67b73d195e5d0bd75d9e4a3abb75887ede0be94",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-small-jpeg-cover.png",
+          "sha256": "d649f85466a56157236c802fe28b8dca09f29df6be18209c65b1b20ae7025d49",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-small-png",
+      "path": "fruit-small-png.png",
+      "group": "fruit",
+      "size": "small",
+      "format": "png",
+      "width": 1024,
+      "height": 657,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 799862,
+      "sha256": "355c87f4abc699f3c65703dba90e260ff237ff2c70ae9a4628aa504d644b05b1",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/fruit-small-png-resize.png",
+          "sha256": "61fb6f0d7fbc15af85d9a52e069217a117e1e7ad35b7e134c8d05b7ac3c2dd6e",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-small-png-contain.png",
+          "sha256": "61fb6f0d7fbc15af85d9a52e069217a117e1e7ad35b7e134c8d05b7ac3c2dd6e",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-small-png-cover.png",
+          "sha256": "b9b243f1875a271233521f53f29093f944ab1d35e2c7362cbe19d598ef215a80",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-small-webp",
+      "path": "fruit-small-webp.webp",
+      "group": "fruit",
+      "size": "small",
+      "format": "webp",
+      "width": 1024,
+      "height": 657,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 53648,
+      "sha256": "37506d27f221b16149b7ffbdafbb82fe6725cdeb5027cfd27b88ad0de2864ad6",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/fruit-small-webp-resize.png",
+          "sha256": "abe9b242e81002025da568b91c00f1edf41575fb529cfc5329d2a550e3e45818",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-small-webp-contain.png",
+          "sha256": "abe9b242e81002025da568b91c00f1edf41575fb529cfc5329d2a550e3e45818",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-small-webp-cover.png",
+          "sha256": "cb7714678306406448ce7559c688b29f706be71214c562860a1cf1ba09460a3e",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-small-avif",
+      "path": "fruit-small-avif.avif",
+      "group": "fruit",
+      "size": "small",
+      "format": "avif",
+      "width": 1024,
+      "height": 657,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 83073,
+      "sha256": "97aa59c0a9586bf03743802cefdb9a205521a062236cbd3eb197270ee1cf6435",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/fruit-small-avif-resize.png",
+          "sha256": "407dfae058c269e266dc06e018d1a3d128048346b52576ad3bae11ac2df83950",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-small-avif-contain.png",
+          "sha256": "407dfae058c269e266dc06e018d1a3d128048346b52576ad3bae11ac2df83950",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-small-avif-cover.png",
+          "sha256": "74c7e9c4150abe982bd5adf6cce4be37624b586aac845f87da52bbe1131e9f0c",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-large-jpeg",
+      "path": "fruit-large-jpeg.jpg",
+      "group": "fruit",
+      "size": "large",
+      "format": "jpeg",
+      "width": 4096,
+      "height": 2628,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 3262262,
+      "sha256": "d9e6cec6ba79af098a33b55327e710cd88e5e21e4be2df438c1484c5c4e83bb3",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/fruit-large-jpeg-resize.png",
+          "sha256": "6fc36df281b03f081dc18d4a012e356d76897c5ad55b603c942e270cfb58eb82",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-large-jpeg-contain.png",
+          "sha256": "6fc36df281b03f081dc18d4a012e356d76897c5ad55b603c942e270cfb58eb82",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-large-jpeg-cover.png",
+          "sha256": "ec05c607dd7225bff085ec2ea257c792ce62def65df9f9d09cd29ebb1877f4fc",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-large-png",
+      "path": "fruit-large-png.png",
+      "group": "fruit",
+      "size": "large",
+      "format": "png",
+      "width": 4096,
+      "height": 2628,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 13810250,
+      "sha256": "42e67fe737f05bd288a48b46b4a689460c71fb50c9cea1733ef02b6ce2b83bdb",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/fruit-large-png-resize.png",
+          "sha256": "278deb96e8549e9e938729061fb7615594049c89f3210cf7e53dceb37b34a160",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-large-png-contain.png",
+          "sha256": "278deb96e8549e9e938729061fb7615594049c89f3210cf7e53dceb37b34a160",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-large-png-cover.png",
+          "sha256": "2f48af7b29b66832fac32280a8643f7fc94c88f1e3378c7c10b208b0518c2b09",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-large-webp",
+      "path": "fruit-large-webp.webp",
+      "group": "fruit",
+      "size": "large",
+      "format": "webp",
+      "width": 4096,
+      "height": 2628,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 1199132,
+      "sha256": "7841748e615ed7b3e6d870587784604103a62d3044e4175111fcfb4ff5cac4db",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/fruit-large-webp-resize.png",
+          "sha256": "d482f552a4e192f30f295ebe1bc8281cfe4b884efbe29dfbe67ac7f9b03f6929",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-large-webp-contain.png",
+          "sha256": "d482f552a4e192f30f295ebe1bc8281cfe4b884efbe29dfbe67ac7f9b03f6929",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-large-webp-cover.png",
+          "sha256": "43321e90d74193681704422f20a26c15a164d338429595e571c234d862be7be5",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "fruit-large-avif",
+      "path": "fruit-large-avif.avif",
+      "group": "fruit",
+      "size": "large",
+      "format": "avif",
+      "width": 4096,
+      "height": 2628,
+      "orientation": 1,
+      "has_alpha": false,
+      "bytes": 2050265,
+      "sha256": "3616762b74a1258add5e7ecf71a57b0f795571833d1559ccec67ac3e46bab3b0",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/fruit-large-avif-resize.png",
+          "sha256": "4c8ce79d2ac8c03b501197849b28b0772e342f1ff411635168dec4d36d6655ac",
+          "width": 640,
+          "height": 411
+        },
+        "contain": {
+          "path": "references/fruit-large-avif-contain.png",
+          "sha256": "4c8ce79d2ac8c03b501197849b28b0772e342f1ff411635168dec4d36d6655ac",
+          "width": 640,
+          "height": 411
+        },
+        "cover": {
+          "path": "references/fruit-large-avif-cover.png",
+          "sha256": "fccb96fb8bce363a679dbd43c837526186b0800325d51d0729a40919421bced4",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "alpha-small-png",
+      "path": "alpha-small-png.png",
+      "group": "alpha",
+      "size": "small",
+      "format": "png",
+      "width": 1024,
+      "height": 768,
+      "orientation": 1,
+      "has_alpha": true,
+      "bytes": 12039,
+      "sha256": "a474c89e15752c74519066eda25f7feb328b28df8bdcf35a12e8b7f695441ab0",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/alpha-small-png-resize.png",
+          "sha256": "2c44064c3842513113c3c8d82e926104607525b6766977de53552dcc6a1cd43a",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/alpha-small-png-contain.png",
+          "sha256": "2c44064c3842513113c3c8d82e926104607525b6766977de53552dcc6a1cd43a",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/alpha-small-png-cover.png",
+          "sha256": "e9e817c7940cd0262a58e108793c64e14873e93f3b055a9deb56a0c5f8e4908e",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "alpha-small-webp",
+      "path": "alpha-small-webp.webp",
+      "group": "alpha",
+      "size": "small",
+      "format": "webp",
+      "width": 1024,
+      "height": 768,
+      "orientation": 1,
+      "has_alpha": true,
+      "bytes": 15596,
+      "sha256": "3822f4e8bcc1af416e38f1036102244c07c50bc26fd4f0aa56c1927e75099d46",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/alpha-small-webp-resize.png",
+          "sha256": "e5b19f059f610657464d0311c23b6d32a8ce32d5b0fa836262a7e6a8ad957f2a",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/alpha-small-webp-contain.png",
+          "sha256": "e5b19f059f610657464d0311c23b6d32a8ce32d5b0fa836262a7e6a8ad957f2a",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/alpha-small-webp-cover.png",
+          "sha256": "eeda6e7eb5a2a99359d64e6ce7a230a9bfc3e1526e7d083f6734fcbe73c15b99",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "alpha-small-avif",
+      "path": "alpha-small-avif.avif",
+      "group": "alpha",
+      "size": "small",
+      "format": "avif",
+      "width": 1024,
+      "height": 768,
+      "orientation": 1,
+      "has_alpha": true,
+      "bytes": 29071,
+      "sha256": "b6554bba53dbdb1c25d694fdfb04b44b15b189aec0b42fbac6784fc231019564",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/alpha-small-avif-resize.png",
+          "sha256": "e63b6f689a942f5cc67eb2a623fbd88b89505c2d53f46da4b3ac0c3af6a70f36",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/alpha-small-avif-contain.png",
+          "sha256": "e63b6f689a942f5cc67eb2a623fbd88b89505c2d53f46da4b3ac0c3af6a70f36",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/alpha-small-avif-cover.png",
+          "sha256": "1e043addc90fa09659cce6207ca3ec5ce60b2a6944143f28c7da05812cb411ab",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "alpha-large-png",
+      "path": "alpha-large-png.png",
+      "group": "alpha",
+      "size": "large",
+      "format": "png",
+      "width": 4096,
+      "height": 3072,
+      "orientation": 1,
+      "has_alpha": true,
+      "bytes": 81379,
+      "sha256": "a825fb7b21dd4be98c6453a7a445afecdaa5f96ca2bbc70ab985605d6965ae43",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/alpha-large-png-resize.png",
+          "sha256": "34e7f6d3c43db0125d6d6ddd97aebdbc0a94e1a08f088dcc2b6a26cda97114e9",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/alpha-large-png-contain.png",
+          "sha256": "34e7f6d3c43db0125d6d6ddd97aebdbc0a94e1a08f088dcc2b6a26cda97114e9",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/alpha-large-png-cover.png",
+          "sha256": "943bae1a41b51ba5b598c811623652aed6d4b6e0271f96204b2fe094f3b444a6",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "alpha-large-webp",
+      "path": "alpha-large-webp.webp",
+      "group": "alpha",
+      "size": "large",
+      "format": "webp",
+      "width": 4096,
+      "height": 3072,
+      "orientation": 1,
+      "has_alpha": true,
+      "bytes": 75332,
+      "sha256": "1f64da211f161df3e89fe84c52899a808e7416dd7dd341a327c87f4238785089",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/alpha-large-webp-resize.png",
+          "sha256": "9fb06db210896c4f013d3b22143e82e63e647382a1a00c134a5e0324493ff358",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/alpha-large-webp-contain.png",
+          "sha256": "9fb06db210896c4f013d3b22143e82e63e647382a1a00c134a5e0324493ff358",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/alpha-large-webp-cover.png",
+          "sha256": "bd065348e082c50146828a998c0bfb4209dbbe2bdc3df629084025d8eee540dd",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "alpha-large-avif",
+      "path": "alpha-large-avif.avif",
+      "group": "alpha",
+      "size": "large",
+      "format": "avif",
+      "width": 4096,
+      "height": 3072,
+      "orientation": 1,
+      "has_alpha": true,
+      "bytes": 127406,
+      "sha256": "aac113d0accbd14fcbd0a19dca208c2314cc187e4ea9067be8c672d4225b4f0f",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/alpha-large-avif-resize.png",
+          "sha256": "56bf64534fef7df98de87725b66ca01cb68e74170a5df7e840ee68f68012abec",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/alpha-large-avif-contain.png",
+          "sha256": "56bf64534fef7df98de87725b66ca01cb68e74170a5df7e840ee68f68012abec",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/alpha-large-avif-cover.png",
+          "sha256": "4231441fd0b9f6fc5a7bf3437993248e6a6b1775fe8b01df2b5c7e6caa786141",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "orientation-6-jpeg",
+      "path": "orientation-6-jpeg.jpg",
+      "group": "orientation",
+      "size": "small",
+      "format": "jpeg",
+      "width": 1024,
+      "height": 768,
+      "orientation": 6,
+      "has_alpha": false,
+      "bytes": 36143,
+      "sha256": "d81823e79fe9f69608e8b573af6587302d58d514be9eb06f2fef70a7a28bf827",
+      "quality_sample": true,
+      "references": {
+        "resize": {
+          "path": "references/orientation-6-jpeg-resize.png",
+          "sha256": "015fa9705c6015c73e76515a8e3011bfb654226b2e4fb917f53f95d10174c26b",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/orientation-6-jpeg-contain.png",
+          "sha256": "015fa9705c6015c73e76515a8e3011bfb654226b2e4fb917f53f95d10174c26b",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/orientation-6-jpeg-cover.png",
+          "sha256": "b7c055270a55179731fe4f49f771cfeb1fbacca400a5e743b4d12f5be6af9a33",
+          "width": 640,
+          "height": 640
+        }
+      }
+    },
+    {
+      "id": "orientation-8-jpeg",
+      "path": "orientation-8-jpeg.jpg",
+      "group": "orientation",
+      "size": "small",
+      "format": "jpeg",
+      "width": 1024,
+      "height": 768,
+      "orientation": 8,
+      "has_alpha": false,
+      "bytes": 36131,
+      "sha256": "113f2aebb8b3838b9cc3d6e7e5e9dae94705e92ef6eb71e7d3adc5b48e9d22dc",
+      "quality_sample": false,
+      "references": {
+        "resize": {
+          "path": "references/orientation-8-jpeg-resize.png",
+          "sha256": "ff006b0d522f5093d9fde44b48599a19320c23e3131744676fa91748e4a6a6ab",
+          "width": 640,
+          "height": 480
+        },
+        "contain": {
+          "path": "references/orientation-8-jpeg-contain.png",
+          "sha256": "ff006b0d522f5093d9fde44b48599a19320c23e3131744676fa91748e4a6a6ab",
+          "width": 640,
+          "height": 480
+        },
+        "cover": {
+          "path": "references/orientation-8-jpeg-cover.png",
+          "sha256": "8d338572ba81f4c6e228e58cc98ab9a9fd16b7ac3d8d3037b2cbf75390426a11",
+          "width": 640,
+          "height": 640
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "path": "invalid/oversize.png",
+      "sha256": "5b29474c910793517465627357a635993dbd1bd4c2216e8233b39d3c5c5a9d16"
+    },
+    {
+      "path": "invalid/truncated.jpg",
+      "sha256": "3e73a411824fb5918a6f3ac3c819d3e06ec6a00d0e85b1f6b93e166dc4e29a13"
+    },
+    {
+      "path": "invalid/unsupported.txt",
+      "sha256": "c04bee9d659201c6647cbc29f7c2e1556b8370c54f4a50a32d84ceab2fddf6cd"
+    }
+  ]
+}
