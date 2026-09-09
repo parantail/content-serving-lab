@@ -30,4 +30,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.48.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
+	gopkg.in/gographics/imagick.v3 v3.7.3
 )

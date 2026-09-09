@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:1.7
+ARG GO_IMAGE=golang:1.26.7@sha256:e30143be198ab04cf7ba25fba83ab3a692ca584c994aad0bf131fa0eb32dd8c1
+FROM ${GO_IMAGE} AS dev
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libvips-dev=8.16.1-1+deb13u1 \
+    libmagickwand-7.q16-dev=8:7.1.1.43+dfsg1-1+deb13u11 \
+    libheif-plugin-aomenc=1.19.8-1+deb13u1 pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download && go mod download gopkg.in/gographics/imagick.v3@v3.7.3

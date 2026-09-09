@@ -1,0 +1,31 @@
+{
+  "performance_evidence": false,
+  "query_error_codes": [
+    0,
+    0
+  ],
+  "schema": "e2-codec-thread-probe-v1",
+  "vips_log_sha256": "e93ac04966f04b693cc8552184f4f7f2599159637c33ab7c741f8550cb884ae5",
+  "magick_thread_limit": 1,
+  "omp_num_threads": 1,
+  "operation": "cover",
+  "output_format": "avif",
+  "input_count_per_engine": 8,
+  "magick_threads": 28,
+  "speed": 5,
+  "magick_log_sha256": "cbe1b95db375593ae8541a2f9c18ced56e45a6322ca3d7d2501d7d346d60116c",
+  "corpus_commit": "df85651651e91a90cc3ebbad883713e92247a498",
+  "environment": "Docker Desktop Linux amd64",
+  "corpus_sha256": "127390f507c0d3918b2097eb081511b2952715cc5ac1fbe17683c7745cf5a458",
+  "quality": 80,
+  "request_concurrency": 1,
+  "vips_threads": 1,
+  "libheif": "1.19.8-1+deb13u1",
+  "observed_date": "2026-09-09",
+  "aws_executed": false,
+  "cpu_limit": 1,
+  "native_thread_target": 1,
+  "memory_limit_bytes": 2147483648,
+  "encoder": "AOMedia Project AV1 Encoder v3.12.1",
+  "log_normalization": "CRLF to LF; content unchanged"
+}

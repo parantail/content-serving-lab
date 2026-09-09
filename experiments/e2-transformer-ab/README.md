@@ -2,11 +2,13 @@
 
 설계 확정일: 2026-09-09
 
-상태: **실험 설계·corpus 고정 · adapter/harness 구현 중 · 측정 미완료**.
+상태: **Corpus 고정 · native adapter/worker 구현 · AVIF thread 조건 확인으로 본 측정 대기**.
+
+[로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. 내부 thread 목표를 만족한 것으로 간주하지 않는다. 비교 조건 확정 전 본 측정·AWS 배포는 중단한다.
 
 > 같은 이미지 묶음과 1 vCPU·2 GiB 제한에서 두 배포 후보의 처리량, 메모리, 출력 품질과 파일 크기는 어떻게 달라지는가?
 
-이 문서는 구현할 실험의 기술 계약이다. 아래 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 측정용 codec 버전·실행 명령은 구현 단계에서 함께 고정한다. 아직 실행 가능한 E2 runner나 Terraform 환경은 없다.
+이 문서는 구현할 실험의 기술 계약이다. 아래 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter와 단일 batch worker를 구현했으며 [개발 이미지](../../Dockerfile.e2)에서 실행한다. 전체 실험 supervisor/analyzer와 E2 Terraform은 아직 미구현이다.
 
 ## 현재 기반과 구현 범위
 
