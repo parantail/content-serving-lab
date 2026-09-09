@@ -48,7 +48,7 @@ docker run --rm --network none --cpus=1 --memory=2g `
 
 진단은 측정 오류·CPU 역행·부하 구간에서 두 CPU counter가 증가하지 않는 경우 실패한다. 임의의 오버헤드 합격선을 실행 결과에 맞춰 만들지 않는다. 로컬 통과는 Fargate mount 범위나 오버헤드의 증명이 아니다.
 
-## 최종 checkpoint 전 남은 검증
+## 본 측정 전 진단과 실행 검증 절차
 
 ### Fargate 진단 실행
 

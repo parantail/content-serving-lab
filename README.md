@@ -2,7 +2,7 @@
 
 이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4의 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. [AWS S4 retained](reports/e1-cache-stampede/AWS-S4.md)는 30회 유효·3,000개 HTTP 200을 확인했으며 Task 1/2/4개에서 같은 이미지 변환이 1/2/4회 발생했습니다. 분산 조정 도입과 비용 손익분기 판단은 아직 보류합니다.
+현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4의 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. [AWS S4 retained](reports/e1-cache-stampede/AWS-S4.md)는 30회 유효·3,000개 HTTP 200을 확인했으며 Task 1/2/4개에서 같은 이미지 변환이 1/2/4회 발생했습니다. 서버 간 분산 조정(S5)은 이번 E1 범위에서 제외했습니다. 기술 측정·정리와 비용 기록을 완료했습니다. 여러 차례의 배포·진단·부하 실험을 포함한 E1 전체 AWS Usage 비용은 조회 시점 기준 약 US$0.68입니다.
 
 ## 실험
 

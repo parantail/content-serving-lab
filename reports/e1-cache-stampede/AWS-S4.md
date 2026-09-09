@@ -41,7 +41,47 @@ Resource sample 1,955개, 인접 간격 1,885개를 관측했다. Timestamp 간�
 
 프로세스 내부 요청 합치기는 각 Task 안에서 작동했지만 Task 간 중복 변환을 제거하지 못했다. S3 조건부 저장은 완성된 object 충돌을 해결했으며 중복 계산 자체를 막지는 않았다.
 
-이 결과만으로 Redis/DynamoDB 조정을 도입하지 않는다. 실제 service SLO·cold burst 빈도·조정 지연과 장애 복구 비용이 없으므로 S5 도입 판단은 보류한다. [cost.json](../../experiments/e1-cache-stampede/results-aws-s4/retained-ad80a58dee07/cost.json)은 측정 사용량만 담는다. 청구 확정액·월 비용 모델·외부 조정 손익분기는 아직 계산하지 않았다. US$3는 배포 전 예상 상한이지 실제 청구 금액이 아니다.
+서버 간 분산 조정(S5)은 이번 E1에서 진행하지 않는다. 현재 결과만으로 추가 시스템의 필요성이 충분히 입증되지 않았고, 잠금 만료·장애 복구·추가 지연 검증은 실험 범위를 크게 확대한다. 프로세스 내부 요청 합치기와 S3 조건부 저장의 효과·한계를 확인하는 범위로 기술 실험을 마친다. 실제 service SLO·cold burst 빈도·외부 조정 비교 측정이 없으므로 분산 조정의 일반적 불필요성이나 비용 열위를 주장하지 않는다. [cost.json](../../experiments/e1-cache-stampede/results-aws-s4/retained-ad80a58dee07/cost.json)은 측정 사용량만 담는다. 별도 Cost Explorer CSV의 E1 전체 Usage 합계는 US$0.6776208602이며 Bills 표시 US$0.68과 대조했다. 아래 실행 이력·비용 절을 참고한다. S5 도입을 위한 월 비용 모델·외부 조정 손익분기는 이번 산출물에서 제외하며 계산 완료로 간주하지 않는다. US$3는 배포 전 예상 상한이지 실제 청구 금액이 아니다.
+
+## 전체 AWS 실행 이력과 비용
+
+2026-09-09 확인한 E1 전용 계정의 전체 AWS Usage 비용은 **US$0.6776208602(약 US$0.68)**다. 단일 본 측정의 비용이 아니라 초기 실패·개발 calibration·계측 진단·본 측정과 배포 유지 시간을 포함한 E1 전체 AWS 사용료로 기록한다. 계정에 E1 외 사용이 없다는 운영자 확인을 집계 범위의 근거로 삼았다.
+
+### 실행 횟수의 기준
+
+| 배포 식별자 | 실행 내용 | 확인한 결과 |
+| --- | --- | --- |
+| `645bfa12ab2d` | 초기 배포 복구 후 개발 부하 실행 | 첫 CONTROL 분석 실패, 원자료 미회수. 당시 실행 기록으로만 확인 |
+| `ef0886d80ca2` | 개발 부하 시험 (calibration) | 30 trial 기록. CPU 0 문제로 자원 성능 근거에서는 제외 |
+| `32d01d832c45` | 직접 cgroup 계측으로 개발 부하 재시험 | 30 trial 기록, CPU 0 문제 해소 |
+| `43942a825e47` | Fargate 계측 진단 | 12구간·범위 4행·완료 1행, CPU mount 대응 미확인 |
+| `0d0beb9949b1` | 별칭 수정 후 Fargate 계측 재진단 | 12구간·범위 4행·완료 1행, mount 대응 확인 |
+| `ad80a58dee07` | 동일 이미지 진단 후 본 측정 | 진단 17행과 retained 30 trial 완료 |
+
+따라서 확인되는 배포 묶음은 **6개**, 부하 실행은 **4회(실패 1회 + 원자료가 보존된 3회)**, 계측 진단은 **3회**다. 마지막 배포는 진단과 본 측정을 함께 포함하므로 이 횟수들을 배포 횟수로 더하지 않는다. 배포 복구·CLI 재시도는 별도 배포 묶음으로 세지 않았다. 로컬 Docker 실험은 AWS 실행 횟수에서 제외한다.
+
+보존된 부하 run은 `calibration-ef0886d80ca2`, `calibration-32d01d832c45`, `retained-ad80a58dee07`이며 각 `run.json`과 `analysis/analysis.json`에서 30 trial씩 확인했다. 총 90 trial 중 최종 성능 근거는 retained 30개뿐이다. 진단 3회는 각 `execution.json`과 17행 JSONL로 확인했다. 초기 실패는 원자료가 없어 결과 수치나 완료 trial 수를 복원하지 않는다. 초기 calibration 원자료는 로컬 회수본이며 공개 retained 원자료와 혼합하지 않았다.
+
+### 서비스별 Usage 비용
+
+[Cost Explorer 원본 CSV](aws-s4-costs.csv)는 `Charge type: Usage`로 조회한 서비스별 금액이다. 날짜 행은 `2026-09-08` 하나이며 `Service total`과 동일하므로 둘을 합산하지 않는다.
+
+| 서비스 | USD |
+| --- | ---: |
+| Elastic Container Service | 0.4802010774 |
+| Elastic Load Balancing | 0.1416824209 |
+| VPC | 0.0483958750 |
+| S3 | 0.0072942560 |
+| EC2 Container Registry (ECR) | 0.0000422309 |
+| Secrets Manager | 0.0000050000 |
+| Glue / Key Management Service / CloudWatch | 0 |
+| **합계** | **0.6776208602** |
+
+서비스 합계와 CSV 총액은 일치한다. 운영자가 확인한 Bills 표시와 크레딧 사용 표시는 각각 US$0.68로, 반올림한 Usage 합계와 일치한다. CSV에는 Credit 행이 없으므로 정확한 크레딧 상계액이나 순지불액을 이 파일에서 직접 산출하지 않는다.
+
+이 금액은 조회 시점에 반영된 사용료이며 월말 확정 invoice가 아니다. CSV에는 사용량·단가·배포별 식별자가 없으므로 서비스 사용 시간·요청 수나 각 실행 비용으로 역산·균등 배분하지 않는다. CSV의 0도 해당 조회에서 비용이 0이라는 뜻이며 사용량 0의 증거는 아니다. 원자료 `cost.json`은 측정 사용량으로 그대로 보존하며 계정 전체 금액을 단일 run에 주입하지 않는다.
+
+CSV SHA-256: `422546218d2dc0821ea93b8293165e8153af5b883a6cd8f4cb5cfabacd31e15d`.
 
 ## 재검증
 

@@ -107,7 +107,7 @@ Phase A 완료 뒤에는 `COORDINATOR_MODE=process-singleflight`를 기본 후�
 - ECS Task 수에 따른 중복 변환 비용이 process-local 합치기만으로 감당되지 않습니다.
 - 실제 workload에서 변환 비용이 coordination/관측 복잡성보다 작습니다.
 
-여러 프로세스 사이의 lock은 아직 선택하지 않습니다. 후속 [Phase B local 결과](PHASE-B.md)에서 process 2/4개가 각각 2/4회 변환하는 것을 확인했지만, S5 전에 실제 ECS Task와 S3 conditional write 조건을 측정하기로 했습니다.
+프로세스 내부 요청 합치기를 유지합니다. 후속 [로컬 다중 프로세스 결과](PHASE-B.md)와 [실제 AWS 결과](AWS-S4.md)에서 중복 변환 경계를 확인했습니다. 서버 간 조정(S5)은 이번 E1에서 제외하며, 그 방식과 성능·비용 우열을 비교한 것은 아닙니다.
 
 ## 한계
 

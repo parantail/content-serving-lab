@@ -2,6 +2,8 @@
 
 이 디렉터리는 E1에서 ECS Task 1/2/4개가 같은 cold image request를 받을 때 프로세스별 중복 변환과 S3 조건부 저장 경쟁을 측정하는 일회성 `ap-northeast-2` 환경을 만듭니다. Provider schema와 mock plan/apply 계약, 실제 AWS 배포·제거 및 잔여 실행 자원 검사를 확인했습니다. [Retained 결과](../../reports/e1-cache-stampede/AWS-S4.md)는 30개 유효 trial과 재분석 근거를 포함합니다.
 
+이 문서는 재현용 실행 절차입니다. 본 측정·회수·제거는 완료됐으며 새 배포는 예정하지 않습니다. 현재 결론과 범위 제외 항목은 [E1 안내](../../experiments/e1-cache-stampede/README.md)를 봅니다.
+
 ## 고정 구성
 
 - 2개 public subnet, Internet Gateway, NAT Gateway 없음, 같은 Region S3 gateway endpoint
