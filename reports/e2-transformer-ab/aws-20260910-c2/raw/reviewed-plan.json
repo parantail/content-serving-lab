@@ -1,0 +1,20 @@
+{
+  "actions": [
+    "create"
+  ],
+  "bootstrap_resources": 1,
+  "cpu_units": 1024,
+  "https_only_egress": true,
+  "iam_review": "ECS assume role; ECR auth wildcard only; repository pull/log stream and bucket PutObject scoped by Terraform source; verify resolved policies after apply",
+  "image_digest": "sha256:51e4736d49e6bbabb3729e22e25dfb91e1b90291f592119870668396ce8171b8",
+  "launch_type": "FARGATE",
+  "log_retention_days": 1,
+  "memory_mib": 2048,
+  "new_resources": 20,
+  "plan_sha256": "7010c9330d597c823f8624c0f9aee5d6fbc3df70b3724f4ade40f8c1eac26f72",
+  "region": "ap-northeast-2",
+  "resolved_container_definition_check_pending": true,
+  "s3_public_access_block": true,
+  "source_commit": "eea79eca00ca41632777644ccbb3d2a3eaf534a7",
+  "valid": true
+}

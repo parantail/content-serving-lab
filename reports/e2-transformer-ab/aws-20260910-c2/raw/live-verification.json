@@ -1,0 +1,20 @@
+{
+  "active_services": 0,
+  "architecture": "X86_64",
+  "checked_at": "2026-09-10T23:53:22.67484+09:00",
+  "compressed_image_bytes": 168654878,
+  "cpu_units": 1024,
+  "egress": "TCP443 only",
+  "execution_permissions": "ECR auth plus repository pull and log stream writes",
+  "image_digest": "sha256:51e4736d49e6bbabb3729e22e25dfb91e1b90291f592119870668396ce8171b8",
+  "inbound_rules": 0,
+  "memory_mib": 2048,
+  "os": "LINUX",
+  "role_trust": "ECS tasks only",
+  "s3_encryption": "AES256",
+  "s3_ownership": "BucketOwnerEnforced",
+  "s3_public_block": true,
+  "task_permissions": "Result bucket PutObject only",
+  "terraform_no_changes": true,
+  "valid": true
+}

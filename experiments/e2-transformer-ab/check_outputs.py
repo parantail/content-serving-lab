@@ -25,7 +25,7 @@ def check(validation, measured, output):
               "valid":bool(rows) and not failures}
     if output.exists():
         raise ValueError("Output already exists")
-    output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n")
+    output.write_text(json.dumps(result, indent=2, sort_keys=True)+"\n", encoding="utf-8", newline="\n")
     if not result["valid"]:
         raise ValueError("Output differs from validation: inspect saved raw and configuration before interpreting quality")
     print(json.dumps(result))

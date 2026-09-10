@@ -1,0 +1,22 @@
+{
+  "probe_enabled_in_performance": false,
+  "scope": "same task before measured loop",
+  "settings": [
+    {
+      "effective_quality": 80,
+      "encoder_threads": 1,
+      "engine": "vips",
+      "quality_query_error": 0,
+      "samples": 8,
+      "speed": 5
+    },
+    {
+      "effective_quality": 80,
+      "encoder_threads": 2,
+      "engine": "magick",
+      "quality_query_error": 0,
+      "samples": 8,
+      "speed": 5
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "artifacts": [
+    {
+      "file": "analysis/diagnose/batches.json",
+      "matches": true,
+      "sha256": "d2319a1006927ca563e022f0c8f2fe341c34be523ecafac170014699ee881e27"
+    },
+    {
+      "file": "analysis/diagnose/quality.json",
+      "matches": true,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "analysis/diagnose/transforms.json",
+      "matches": true,
+      "sha256": "d5c9cbbe83b43c4efb183037c851103e6a0be8517a2a40610e6f342e9977dc17"
+    },
+    {
+      "file": "analysis/diagnose/verification.json",
+      "matches": true,
+      "sha256": "570ab921a42a534c83600fa796ef6b625c52386c8bacf2a7c32df4d6f1afd453"
+    },
+    {
+      "file": "analysis/validate/batches.json",
+      "matches": true,
+      "sha256": "6389d853f2bfeca0836e3d615873aa9b1d3568fa8c8fe79b74a13350d5613aac"
+    },
+    {
+      "file": "analysis/validate/crops.png",
+      "matches": true,
+      "sha256": "cbcf91360e88aee9b466d42ee0a4fd14444f187d6eb370edf92a623066641adc"
+    },
+    {
+      "file": "analysis/validate/quality.json",
+      "matches": true,
+      "sha256": "0d46a868e755bf10f48b3217068b87204b4383fa0293b631cd62b4c5efe08b83"
+    },
+    {
+      "file": "analysis/validate/transforms.json",
+      "matches": true,
+      "sha256": "bf39fc017c72f4726a17b63b361ecea3ae2ced16f70675fab6c502e9e9b2855e"
+    },
+    {
+      "file": "analysis/validate/verification.json",
+      "matches": true,
+      "sha256": "ff255c96e4625a7c0adc515aecceb71a02f150c1bb3e689fb3e32b792fac0a20"
+    },
+    {
+      "file": "analysis/calibrate/batches.json",
+      "matches": true,
+      "sha256": "7b92c44976b8e9da2207b9ee8d66fb9fe9eae8388f993607f87386b26b169605"
+    },
+    {
+      "file": "analysis/calibrate/quality.json",
+      "matches": true,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "analysis/calibrate/transforms.json",
+      "matches": true,
+      "sha256": "d7e48cb57500a2c03d3c94d4741fb614ebbecb6276988485cf860e3a4d9425ef"
+    },
+    {
+      "file": "analysis/calibrate/verification.json",
+      "matches": true,
+      "sha256": "e5829b9b190ec51fcb2b20b5f74346954d5369ec1125e4743d274006aab8a867"
+    },
+    {
+      "file": "analysis/measure/batches.json",
+      "matches": true,
+      "sha256": "6218c23c0ba5bf75be9c44e44a91350fc43ee4cf15d8a2194d0126d073ec9947"
+    },
+    {
+      "file": "analysis/measure/quality.json",
+      "matches": true,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "analysis/measure/transforms.json",
+      "matches": true,
+      "sha256": "29b7854c5ab6755bf7f500fee7c159c6cd8c12883289243946709ffbf4faf88e"
+    },
+    {
+      "file": "analysis/measure/verification.json",
+      "matches": true,
+      "sha256": "f01c710d6192fd122fa54ba7a3fc882bda4b3d4970d6f3a8e2b93ddc1a18e96b"
+    },
+    {
+      "file": "analysis/quality/batches.json",
+      "matches": true,
+      "sha256": "33991bebc311c89140b71e27f3ad1c55eb7c96a05aaf0565eb1b46df1e70f2f2"
+    },
+    {
+      "file": "analysis/quality/crops.png",
+      "matches": true,
+      "sha256": "10ab43ffb975576f4c25d91454ce74c8c53feaeba6fc92b380d9d129e0990530"
+    },
+    {
+      "file": "analysis/quality/quality.json",
+      "matches": true,
+      "sha256": "abaf04fa3432ae7d29a1f0af6f64987f81159b50fd5e657889469ed59ad83566"
+    },
+    {
+      "file": "analysis/quality/transforms.json",
+      "matches": true,
+      "sha256": "4f9f7b7802818b448f119a00be4ee44033db7a2bb8d16281d13a3fcbf67c280a"
+    },
+    {
+      "file": "analysis/quality/verification.json",
+      "matches": true,
+      "sha256": "dd8228e4e99eb782f5623b99f54a2d2082879c94b5d7189562c64ebd327560a0"
+    },
+    {
+      "file": "figures/conditions.json",
+      "matches": true,
+      "sha256": "8972df5c8015f721149993a3d2070c112c7b170eaa7e196a348a625be24d3a44"
+    },
+    {
+      "file": "figures/input-matrix.png",
+      "matches": true,
+      "sha256": "faf6aa35e659dd3f4e1eb8be6e7e50f537ddb922af8ceb5e8bde9ec159582c6a"
+    },
+    {
+      "file": "figures/quality-bytes.png",
+      "matches": true,
+      "sha256": "c2a66522b4c94ea08c30c13aa1dbeea88b9cfecd905d5287c2d660c8e9a47336"
+    },
+    {
+      "file": "figures/quality-q80.json",
+      "matches": true,
+      "sha256": "e4ec0c8114c6a7c53134f570762e20d5b149e127918d28bc8098f79aa4b776ab"
+    },
+    {
+      "file": "figures/summary.json",
+      "matches": true,
+      "sha256": "65172f92173f91198612f3a2598144cdddd80dfb2fb986a22b80f5cfb2d55ff4"
+    },
+    {
+      "file": "figures/throughput-rss.png",
+      "matches": true,
+      "sha256": "f144e1d8a22a38f174c451ccdcfc55bdb7454ba2e9dd9e9b43b2bc941e9a04b2"
+    },
+    {
+      "file": "summary.json",
+      "matches": true,
+      "sha256": "ddd9f92aaef5cfc86eb2a0f4183a5f70b4d18b34dce09b43c03d26d9b618a29c"
+    }
+  ],
+  "scope_batches_checked": 346,
+  "source": "Published raw copy; network-none independent analyzer runs",
+  "valid": true
+}

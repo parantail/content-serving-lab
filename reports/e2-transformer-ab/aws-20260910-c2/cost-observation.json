@@ -1,0 +1,149 @@
+{
+  "approved_cost_condition_usd": 3.0,
+  "billing": {
+    "aggregation": "DAILY",
+    "billing_final": false,
+    "metric": "UnblendedCost",
+    "observed_at": "2026-09-10T18:33:05.1623700+00:00",
+    "query_succeeded": true,
+    "results": [
+      {
+        "Estimated": true,
+        "Groups": [
+          {
+            "Keys": [
+              "AWS Cost Explorer"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0.01",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "AWS Glue"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon EC2 Container Registry (ECR)"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0.0000170765",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Elastic Container Service"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0.0379795112",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Simple Storage Service"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0.00445315",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Virtual Private Cloud"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0.003495835",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "AmazonCloudWatch"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          }
+        ],
+        "TimePeriod": {
+          "End": "2026-09-11",
+          "Start": "2026-09-10"
+        },
+        "Total": {}
+      }
+    ],
+    "scope": "Account-wide UTC 2026-09-10 Usage records; not attributed to E2"
+  },
+  "deployment_id": "20260910-c2",
+  "notes": [
+    "Same-day Cost Explorer account Usage total is provisional and not E2-attributed.",
+    "Empty daily service groups do not establish zero E2 cost.",
+    "The task estimate excludes ECR, S3, IPv4, logs, transfer, tax, and credits.",
+    "CloudWatch storedBytes is an observed API field and may lag; it is not ingested bytes.",
+    "Pricing sources and conservative full-deployment model are in deploy/e2-transformer-ab/COST.md."
+  ],
+  "predeployment_estimate_usd": 1.5,
+  "schema": "e2-cost-observation-v1",
+  "task_resource_estimate": {
+    "cpu_memory_subtotal_usd": 0.2056382333333333,
+    "cpu_usd": 0.1686248,
+    "cpu_usd_per_vcpu_hour": 0.04656,
+    "memory_usd": 0.03701343333333333,
+    "memory_usd_per_gb_hour": 0.00511,
+    "rounded_seconds_sum": 13038,
+    "tasks": [
+      {
+        "mode": "diagnose",
+        "pull_to_stopped_seconds": 58.477
+      },
+      {
+        "mode": "validate",
+        "pull_to_stopped_seconds": 539.735
+      },
+      {
+        "mode": "calibrate",
+        "pull_to_stopped_seconds": 2069.492
+      },
+      {
+        "mode": "measure",
+        "pull_to_stopped_seconds": 10097.517
+      },
+      {
+        "mode": "quality",
+        "pull_to_stopped_seconds": 269.088
+      }
+    ],
+    "window": "pullStartedAt to stoppedAt; conservative metadata window, not an invoice"
+  },
+  "usage": {
+    "cloudwatch_stored_bytes": 0.0,
+    "compressed_image_bytes": 168654878,
+    "note": "Stored object/log bytes are observations, not billable request/ingestion totals.",
+    "observed_at": "2026-09-10T18:36:57.5928699+00:00",
+    "s3_bytes": 106731634.0,
+    "s3_objects": 2166
+  }
+}

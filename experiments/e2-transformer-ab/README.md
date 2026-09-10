@@ -2,13 +2,13 @@
 
 설계 확정일: 2026-09-09
 
-상태: **quality 수정본의 전체 로컬 검증·calibration·quality 통과, 새 AWS 전체 측정 준비**. [로컬 3,120회 성공·독립 디코딩·시간 gate 근거](../../reports/e2-transformer-ab/local-20260910-c2/README.md).
+상태: **E2 완료 — 수정본 AWS 전체 측정·품질 검증·독립 재분석·자원 정리 완료**. [최종 결과](../../reports/e2-transformer-ab/aws-20260910-c2/README.md)는 libvips 유지로 판단한다. Q80 처리량은 조건별 1.25~3.17배였지만 RSS와 품질·bytes에는 상충이 있다. [선행 로컬 검증](../../reports/e2-transformer-ab/local-20260910-c2/README.md)도 별도 보존한다.
 
 [로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. **2026-09-10 확정: 표준 Debian 패키지를 유지하고 동일 CPU·memory·요청 동시성 아래 배포 후보의 실제 동작을 비교한다.** AVIF delegate의 기본 thread 설정은 native thread 목표 1의 명시적 예외다. Fargate에서도 실제 값을 진단하고, 이 차이를 라이브러리 자체의 우열이나 동일 encoder thread 비교로 해석하지 않는다.
 
 > 같은 이미지 묶음과 1 vCPU·2 GiB 제한에서 두 배포 후보의 처리량, 메모리, 출력 품질과 파일 크기는 어떻게 달라지는가?
 
-이 문서는 실험의 기술 계약이다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json), 두 native adapter·supervisor·독립 analyzer와 [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [최신 AWS 기록](../../reports/e2-transformer-ab/aws-20260910/README.md)은 diagnose/validate/calibrate/measure/quality의 총 14,672회 실행, 159.711분의 5회 본 측정과 21개 자원 제거·잔여 0개를 보존한다. 그러나 ImageMagick AVIF의 Q50/65/80 출력이 같았고 같은 이미지의 로컬 진단에서 요청 Q80에 실제 Q50이 적용됨을 확인했다. 현재 adapter는 `SetImageCompressionQuality`와 AVIF writer가 읽는 `SetCompressionQuality`를 함께 설정한다. 새 실행의 diagnose/preflight는 실제 encoder Q80을 요구하며 원본 trace를 독립 재검사한다. 수정본의 로컬 검증과 새 calibration 후 전체 AWS matrix를 다시 실행한다. 과거 결과로 최종 선택하지 않는다. 허용한 AVIF thread 차이와 별개의 계약 위반이다. 실행·decode·hash 검사 통과를 quality 적용 성공으로 해석하지 않는다.
+이 문서는 실험의 기술 계약이다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json), 두 native adapter·supervisor·독립 analyzer와 [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [최신 AWS 기록](../../reports/e2-transformer-ab/aws-20260910-c2/README.md)은 14,672회 성공·오류 0, 167.237분의 다섯 반복, 독립 decode 576+192개, 29개 산출물 재생성 일치와 21개 자원 제거·잔여 0개를 보존한다. 각 AWS Task에서 실제 AVIF Q80·speed 5·encoder threads 1/2를 확인했다. ImageMagick은 `SetImageCompressionQuality`와 AVIF writer가 읽는 `SetCompressionQuality`를 함께 설정하며 원본 trace를 독립 재검사한다. 이전 [b1 quality 오류 기록](../../reports/e2-transformer-ab/aws-20260910/README.md)은 별도 보존하고 최신 비교에 합치지 않는다. 실행·decode·hash 대조와 실제 quality 적용 검증은 구분한다.
 
 [이전 AWS calibration](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)은 당시 60분 gate에서 중단한 별도 기록이다. 이후 210분·인프라 5시간으로 확대했으며 기존 calibration을 새 5회 본 측정에 합치지 않았다. [로컬 확인](results-local/preflight-20260910/README.md)을 포함해 같은 adapter의 AVIF Q 표기는 요청값이며, 실제 quality 검증 근거로 사용하지 않는다.
 
@@ -16,7 +16,7 @@
 
 현재 서비스의 [Transformer](../../internal/media/contracts.go)는 encoded bytes를 입력받고 결과 bytes를 반환한다. [govips 구현](../../internal/media/vips_transformer.go)과 [spec](../../internal/media/spec.go)은 cover/WebP를 지원하며, [기존 fixture](../e1-cache-stampede/fixtures/README.md)는 CC0 풍경 JPEG 한 장이다. [Dockerfile](../../Dockerfile)은 Go 1.26.7, govips v2.16.0, libvips 8.16.1을 사용하는 기반이다.
 
-E2는 이 호출 구조를 바탕으로 두 adapter, corpus, batch runner, RSS 계측과 report pipeline을 구현한다. HTTP API 확장은 이번 완료 조건에 넣지 않는다. [E1 계측 계약](../e1-cache-stampede/AWS-S4-MEASUREMENT.md)의 cgroup reader와 [배포·정리 흐름](../../deploy/e1-aws-s4/README.md)을 참고하되 E2 프로세스·자원 구성으로 다시 검증한다.
+E2는 이 호출 구조를 바탕으로 두 adapter, corpus, batch runner, RSS 계측과 report pipeline을 구현했다. HTTP API 확장은 이번 완료 조건에 넣지 않는다. [E1 계측 계약](../e1-cache-stampede/AWS-S4-MEASUREMENT.md)의 cgroup reader와 [배포·정리 흐름](../../deploy/e1-aws-s4/README.md)을 참고하되 E2 프로세스·자원 구성으로 다시 검증한다.
 
 초기 가설은 libvips의 thumbnail 경로가 큰 입력의 축소에서 자원 이점을 보일 수 있다는 것이다. 작은 입력, alpha 처리와 encoder 비용에 따라 이점이 달라질 수 있으며, 실제 선택은 아래 품질·성능·오류 결과에 따른다.
 

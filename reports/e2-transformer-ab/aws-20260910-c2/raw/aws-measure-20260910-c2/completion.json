@@ -1,0 +1,8 @@
+{
+  "completed_batches": 240,
+  "ended": "2026-09-10T18:30:53.472712914Z",
+  "planned_batches": 240,
+  "schema": "e2-completion-v1",
+  "valid": true,
+  "wall_ns": 10034191528802
+}

@@ -1,0 +1,22 @@
+{
+  "image_digest": "sha256:51e4736d49e6bbabb3729e22e25dfb91e1b90291f592119870668396ce8171b8",
+  "method": "Copied binaries from an unstarted local container of the exact AWS runtime image; compared SHA-256.",
+  "native_binaries_identical_to_local_validation_and_64_query_probe": [
+    {
+      "file": "e2-vips",
+      "identical": true,
+      "sha256": "064afaffc00876f24422db7680d1dbd3b4c999aed4ed96c6fdba551ddb37d491"
+    },
+    {
+      "file": "e2-magick",
+      "identical": true,
+      "sha256": "bfc69b427d15df670b0f3c93aeac677608f14b8511d21a216114c593904a58d3"
+    },
+    {
+      "file": "e2-codec-trace.so",
+      "identical": true,
+      "sha256": "fc0bc3b32a29940b56ac4e9765ccfd3493b30456755d259155af75c6c4fb7dd5"
+    }
+  ],
+  "native_calls": 0
+}

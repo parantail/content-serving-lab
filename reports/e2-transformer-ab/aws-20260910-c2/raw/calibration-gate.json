@@ -1,0 +1,17 @@
+{
+  "calibration_loop_seconds": 2009.838638972,
+  "calibration_valid": true,
+  "checked_at": "2026-09-10T15:42:23.146712+00:00",
+  "hash_comparisons": 1152,
+  "infrastructure_remaining_seconds": 14859.072841,
+  "max_native_seconds": 25.257515202,
+  "max_wait_rss_mib": 963.84765625,
+  "measured_calls": 1152,
+  "measurement_gate_seconds": 12600,
+  "native_timeout_seconds": 30,
+  "prediction_seconds_with_25_percent_margin": 12561.491493574998,
+  "preflight_calls": 16,
+  "required_remaining_seconds": 14400,
+  "valid": true,
+  "warmup_calls": 1152
+}

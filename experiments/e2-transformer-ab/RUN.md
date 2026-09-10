@@ -2,7 +2,11 @@
 
 공개 저장소 root에서 실행한다. [기술 계약](README.md)과 [AWS workflow](../../deploy/e2-transformer-ab/README.md)는 동일 matrix를 사용한다. 모든 run/output directory는 새 이름이어야 한다.
 
-ImageMagick AVIF는 image와 ImageInfo 양쪽 quality를 설정한다. 새 실행은 effective encoder Q80 gate를 통과해야 하며, 수정본의 64회 실제 quality 조회에 이어 전체 local validation/calibration/quality 3,120회가 통과했다. [로컬 기록](../../reports/e2-transformer-ab/local-20260910-c2/README.md)을 참고한다. [실제 관측과 진단 재현](../../reports/e2-transformer-ab/aws-20260910/README.md)을 먼저 확인한다. 실행·독립 decode·hash 일치는 실제 encoder quality 적용을 보증하지 않는다.
+`.gitattributes`는 hash를 기록한 E2 corpus와 보존 결과의 개행 변환을 끈다. Windows의 `core.autocrlf=true` 환경에서도 원자료와 manifest bytes를 유지하기 위한 설정이다. 새 clone에서는 Git LFS 파일을 확보한 뒤 분석하며, 파일의 개행을 별도로 정규화하지 않는다.
+
+`check_outputs.py`의 파생 검증 JSON은 UTF-8/LF로 기록하므로 Windows와 Linux에서 동일 bytes로 재생성된다.
+
+ImageMagick AVIF는 image와 ImageInfo 양쪽 quality를 설정한다. 새 실행은 effective encoder Q80 gate를 통과해야 한다. 수정본의 [64회 실제 quality 조회](../../reports/e2-transformer-ab/quality-fix-20260910/README.md), [전체 local 3,120회 검증](../../reports/e2-transformer-ab/local-20260910-c2/README.md), [AWS 14,672회·독립 재분석·정리](../../reports/e2-transformer-ab/aws-20260910-c2/README.md)를 완료했다. 최종 보고서에 보존된 원자료 재생성 명령이 있다. [과거 quality 오류](../../reports/e2-transformer-ab/aws-20260910/README.md)는 별도로 보존한다. 실행·독립 decode·hash 일치만으로 실제 encoder quality 적용을 보증하지 않는다.
 
 ```powershell
 docker build -f Dockerfile.e2 --target dev -t e2-dev:local .

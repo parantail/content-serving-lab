@@ -1,0 +1,42 @@
+{
+  "eol_checkout_check": [
+    {
+      "identical": true,
+      "path": "experiments/e2-transformer-ab/fixtures/generated/manifest.json"
+    },
+    {
+      "identical": true,
+      "path": "reports/e2-transformer-ab/local-20260910-c2/raw/local-validate-20260910-c2/manifest.json"
+    },
+    {
+      "identical": true,
+      "path": "reports/e2-transformer-ab/quality-fix-20260910/quality-sweep/magick-q80.log"
+    }
+  ],
+  "eol_method": "Isolated checkout-index with core.autocrlf=true; corpus and retained evidence matched original bytes after .gitattributes rules.",
+  "images": [
+    {
+      "file": "figures/throughput-rss.png",
+      "sha256": "f144e1d8a22a38f174c451ccdcfc55bdb7454ba2e9dd9e9b43b2bc941e9a04b2"
+    },
+    {
+      "file": "figures/quality-bytes.png",
+      "sha256": "c2a66522b4c94ea08c30c13aa1dbeea88b9cfecd905d5287c2d660c8e9a47336"
+    },
+    {
+      "file": "figures/input-matrix.png",
+      "sha256": "faf6aa35e659dd3f4e1eb8be6e7e50f537ddb922af8ceb5e8bde9ec159582c6a"
+    },
+    {
+      "file": "analysis/validate/crops.png",
+      "sha256": "cbcf91360e88aee9b466d42ee0a4fd14444f187d6eb370edf92a623066641adc"
+    },
+    {
+      "file": "analysis/quality/crops.png",
+      "sha256": "10ab43ffb975576f4c25d91454ce74c8c53feaeba6fc92b380d9d129e0990530"
+    }
+  ],
+  "limits": "Visual review covers representative crops; it is not a complete perceptual quality evaluation.",
+  "visual_review": "Viewed all three generated figures and both representative crop grids; labels, units, orientation, fruit texture, and alpha boundaries checked.",
+  "watchdog_process_stopped": true
+}

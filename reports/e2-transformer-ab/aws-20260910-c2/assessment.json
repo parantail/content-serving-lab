@@ -1,0 +1,316 @@
+{
+  "aws_effective_q80_queries": 80,
+  "codec_quality_contract": "effective-avif-q80-v1",
+  "encoder_threads": {
+    "magick": [
+      2
+    ],
+    "vips": [
+      1
+    ]
+  },
+  "experiment_complete": true,
+  "image_digest": "sha256:51e4736d49e6bbabb3729e22e25dfb91e1b90291f592119870668396ce8171b8",
+  "notes": [
+    "Actual Q80 was queried in each AWS Task before the matrix; performance workers had no probe.",
+    "Four requested quality levels generated distinct outputs for every engine/format/quality fixture.",
+    "Equal requested quality does not imply equal perceptual quality.",
+    "Historical b1 AVIF quality failure is preserved separately and excluded from this comparison."
+  ],
+  "probe_in_performance": false,
+  "quality_contract_valid": true,
+  "quality_query_errors": 0,
+  "quality_responsiveness": [
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "alpha-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "alpha-small-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "alpha-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "fruit-large-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "fruit-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "landscape-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "landscape-small-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "avif",
+      "id": "orientation-6-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "alpha-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "alpha-small-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "alpha-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "fruit-large-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "fruit-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "landscape-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "landscape-small-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "jpeg",
+      "id": "orientation-6-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "alpha-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "alpha-small-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "alpha-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "fruit-large-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "fruit-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "landscape-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "landscape-small-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "magick",
+      "format": "webp",
+      "id": "orientation-6-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "alpha-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "alpha-small-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "alpha-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "fruit-large-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "fruit-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "landscape-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "landscape-small-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "avif",
+      "id": "orientation-6-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "alpha-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "alpha-small-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "alpha-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "fruit-large-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "fruit-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "landscape-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "landscape-small-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "jpeg",
+      "id": "orientation-6-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "alpha-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "alpha-small-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "alpha-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "fruit-large-avif"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "fruit-small-png"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "landscape-large-webp"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "landscape-small-jpeg"
+    },
+    {
+      "distinct_hashes": 4,
+      "engine": "vips",
+      "format": "webp",
+      "id": "orientation-6-jpeg"
+    }
+  ],
+  "raw_files_byte_identical_to_recovered": 2166,
+  "schema": "e2-assessment-v1",
+  "source_commit": "eea79eca00ca41632777644ccbb3d2a3eaf534a7"
+}

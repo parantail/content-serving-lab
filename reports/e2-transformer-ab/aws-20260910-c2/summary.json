@@ -1,0 +1,245 @@
+{
+  "all_five_modes_present": true,
+  "image_digest": "sha256:51e4736d49e6bbabb3729e22e25dfb91e1b90291f592119870668396ce8171b8",
+  "native_calls_including_warmup_and_preflight": 14672,
+  "runs": [
+    {
+      "batches": 2,
+      "between_worker_seconds": 0.2967827939999985,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 16,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 332.02734375,
+          "peak_worker_rss_mib": 369.10546875,
+          "sampled_worker_threads_max": 7
+        },
+        "vips": {
+          "peak_cgroup_mib": 238.3984375,
+          "peak_worker_rss_mib": 268.39453125,
+          "sampled_worker_threads_max": 11
+        }
+      },
+      "loop_seconds": 28.551301604,
+      "max_native_seconds": 3.442819677,
+      "mode": "diagnose",
+      "preflight_diagnostic_calls": 0,
+      "run_id": "aws-diagnose-20260910-c2",
+      "self_wait_rss_equal": true,
+      "warm_completed": 0,
+      "worker_lifetime_seconds_sum": 28.25451881
+    },
+    {
+      "batches": 24,
+      "between_worker_seconds": 21.53974003999997,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 576,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 447.35546875,
+          "peak_worker_rss_mib": 412.78515625,
+          "sampled_worker_threads_max": 7
+        },
+        "vips": {
+          "peak_cgroup_mib": 476.6953125,
+          "peak_worker_rss_mib": 421.37109375,
+          "sampled_worker_threads_max": 11
+        }
+      },
+      "loop_seconds": 474.782843518,
+      "max_native_seconds": 5.179331796,
+      "mode": "validate",
+      "preflight_diagnostic_calls": 16,
+      "run_id": "aws-validate-20260910-c2",
+      "same_task_avif_settings": {
+        "probe_enabled_in_performance": false,
+        "scope": "same task before measured loop",
+        "settings": [
+          {
+            "effective_quality": 80,
+            "encoder_threads": 1,
+            "engine": "vips",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          },
+          {
+            "effective_quality": 80,
+            "encoder_threads": 2,
+            "engine": "magick",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          }
+        ]
+      },
+      "self_wait_rss_equal": true,
+      "warm_completed": 0,
+      "worker_lifetime_seconds_sum": 453.243103478
+    },
+    {
+      "batches": 48,
+      "between_worker_seconds": 7.024743497999907,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 1152,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 867.296875,
+          "peak_worker_rss_mib": 886.98046875,
+          "sampled_worker_threads_max": 14
+        },
+        "vips": {
+          "peak_cgroup_mib": 946.0703125,
+          "peak_worker_rss_mib": 963.84765625,
+          "sampled_worker_threads_max": 29
+        }
+      },
+      "loop_seconds": 2009.838638972,
+      "max_native_seconds": 25.257515202,
+      "measurement_time_gate": {
+        "estimated_seconds": 10049.19319486,
+        "limit_seconds": 12600,
+        "margin_multiplier": 1.25,
+        "passed": true,
+        "repetitions": 5,
+        "with_margin_seconds": 12561.491493574998
+      },
+      "mode": "calibrate",
+      "preflight_diagnostic_calls": 16,
+      "run_id": "aws-calibrate-20260910-c2",
+      "same_task_avif_settings": {
+        "probe_enabled_in_performance": false,
+        "scope": "same task before measured loop",
+        "settings": [
+          {
+            "effective_quality": 80,
+            "encoder_threads": 1,
+            "engine": "vips",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          },
+          {
+            "effective_quality": 80,
+            "encoder_threads": 2,
+            "engine": "magick",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          }
+        ]
+      },
+      "self_wait_rss_equal": true,
+      "warm_completed": 1152,
+      "worker_lifetime_seconds_sum": 2002.813895474
+    },
+    {
+      "batches": 240,
+      "between_worker_seconds": 35.08210169400081,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 5760,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 939.984375,
+          "peak_worker_rss_mib": 941.8984375,
+          "sampled_worker_threads_max": 14
+        },
+        "vips": {
+          "peak_cgroup_mib": 937.078125,
+          "peak_worker_rss_mib": 934.515625,
+          "sampled_worker_threads_max": 30
+        }
+      },
+      "loop_seconds": 10034.191528802,
+      "max_native_seconds": 28.408949118,
+      "mode": "measure",
+      "preflight_diagnostic_calls": 16,
+      "run_id": "aws-measure-20260910-c2",
+      "same_task_avif_settings": {
+        "probe_enabled_in_performance": false,
+        "scope": "same task before measured loop",
+        "settings": [
+          {
+            "effective_quality": 80,
+            "encoder_threads": 1,
+            "engine": "vips",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          },
+          {
+            "effective_quality": 80,
+            "encoder_threads": 2,
+            "engine": "magick",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          }
+        ]
+      },
+      "self_wait_rss_equal": true,
+      "warm_completed": 5760,
+      "worker_lifetime_seconds_sum": 9999.109427108
+    },
+    {
+      "batches": 24,
+      "between_worker_seconds": 8.95829704900001,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 192,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 323.875,
+          "peak_worker_rss_mib": 357.23046875,
+          "sampled_worker_threads_max": 7
+        },
+        "vips": {
+          "peak_cgroup_mib": 268.0625,
+          "peak_worker_rss_mib": 280.54296875,
+          "sampled_worker_threads_max": 11
+        }
+      },
+      "loop_seconds": 185.457138541,
+      "max_native_seconds": 5.649558915,
+      "mode": "quality",
+      "preflight_diagnostic_calls": 16,
+      "run_id": "aws-quality-20260910-c2",
+      "same_task_avif_settings": {
+        "probe_enabled_in_performance": false,
+        "scope": "same task before measured loop",
+        "settings": [
+          {
+            "effective_quality": 80,
+            "encoder_threads": 1,
+            "engine": "vips",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          },
+          {
+            "effective_quality": 80,
+            "encoder_threads": 2,
+            "engine": "magick",
+            "quality_query_error": 0,
+            "samples": 8,
+            "speed": 5
+          }
+        ]
+      },
+      "self_wait_rss_equal": true,
+      "warm_completed": 0,
+      "worker_lifetime_seconds_sum": 176.498841492
+    }
+  ],
+  "schema": "e2-aws-checkpoint-v1",
+  "source_commit": "eea79eca00ca41632777644ccbb3d2a3eaf534a7"
+}
