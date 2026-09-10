@@ -1,0 +1,56 @@
+{
+  "schema": "e2-local-preflight-v1",
+  "native_source_commit": "25742ebaec01193fb8aee07f4d8e479fc24f0d82",
+  "harness_revision": "development before first supervisor checkpoint",
+  "note": "Development validation/calibration/quality evidence, not retained five-repeat performance. Quality run includes the final same-task preflight and thread sampler.",
+  "containers": [
+    {
+      "mode": "validate",
+      "image_id": "sha256:492aadf6983c663675d34188e969cd8591e971511a4032ae80ac4086cf214e56",
+      "image_tag": "e2:development",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 2147483648,
+      "started": "2026-09-10T01:28:54.809601054Z",
+      "ended": "2026-09-10T01:31:24.716829493Z",
+      "exit_code": 0,
+      "oom_killed": false,
+      "binary_sha256": {
+        "e2-run": "bc1b35ac563eca6fb287b85d2cfed6a2568ea8c937b9f0594cc19569cee4bbe2",
+        "e2-magick": "7d7cf409ae0dfa82ecc99d957495c6ba6ee975295be6dd468014cc739ef4a0c1",
+        "e2-vips": "cf91600fb191f92a479c5959428426a1496e2cb8cbdf113dbac3ab6276500201"
+      }
+    },
+    {
+      "mode": "calibrate",
+      "image_id": "sha256:9a5b5005399b9b9d8cfec6e0e9a4c65756fe3fb8b6b1c271adc481de5badb22e",
+      "image_tag": "e2:development2",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 2147483648,
+      "started": "2026-09-10T01:33:20.540819812Z",
+      "ended": "2026-09-10T01:43:32.209833263Z",
+      "exit_code": 0,
+      "oom_killed": false,
+      "binary_sha256": {
+        "e2-run": "ff262c52c6658197353080674eb612043684d4d25f8f4cd828cc231271ca0601",
+        "e2-magick": "ce3767f69be7f9803b5b4990f63e8baebe996de89d5f014f1b9d6e2b8c54af35",
+        "e2-vips": "c6a6b0313e000077a8c9ded29d8a3d66d2a7f253433e45ae304526f18fb629de"
+      }
+    },
+    {
+      "mode": "quality",
+      "image_id": "sha256:6bf2a280c708f1be7933db894e1508a7370d26202751a0d21fb38646aed7b193",
+      "image_tag": "e2:checkpoint-final-dev",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 2147483648,
+      "started": "2026-09-10T01:50:44.650909775Z",
+      "ended": "2026-09-10T01:51:53.527535095Z",
+      "exit_code": 0,
+      "oom_killed": false,
+      "binary_sha256": {
+        "e2-magick": "1f5806086b60aab6eac08ed10b0a0bc4178c4293db0db869518fab4fe2981dbc",
+        "e2-vips": "064afaffc00876f24422db7680d1dbd3b4c999aed4ed96c6fdba551ddb37d491",
+        "e2-run": "282614bf34ace88d347cec84499b175d04955072f42cfbe9cd2988741f7de87c"
+      }
+    }
+  ]
+}

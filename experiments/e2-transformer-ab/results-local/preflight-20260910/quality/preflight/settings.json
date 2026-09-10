@@ -1,0 +1,18 @@
+{
+  "probe_enabled_in_performance": false,
+  "scope": "same task before measured loop",
+  "settings": [
+    {
+      "encoder_threads": 1,
+      "engine": "vips",
+      "samples": 8,
+      "speed": 5
+    },
+    {
+      "encoder_threads": 28,
+      "engine": "magick",
+      "samples": 8,
+      "speed": 5
+    }
+  ]
+}

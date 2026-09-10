@@ -4,6 +4,8 @@
 *.exe
 *.test
 *.out
+__pycache__/
+*.pyc
 coverage.*
 
 # Local configuration and secrets
@@ -37,3 +39,10 @@ deploy/e1-aws-s4/deadline.json
 deploy/e1-aws-s4/watchdog.pid
 deploy/e1-aws-s4/watchdog.log
 deploy/e1-aws-s4/recovered-results/
+
+# E2 deployment credentials, plans, local recovery and watchdog state.
+deploy/e2-transformer-ab/local/
+deploy/e2-transformer-ab/runtime.auto.tfvars.json
+deploy/e2-transformer-ab/deadline.json
+deploy/e2-transformer-ab/watchdog.pid
+deploy/e2-transformer-ab/watchdog.log

@@ -2,13 +2,13 @@
 
 설계 확정일: 2026-09-09
 
-상태: **Corpus 고정 · native adapter/worker 구현 · AVIF thread 조건 확인으로 본 측정 대기**.
+상태: **Corpus·native worker·harness 로컬 검증 완료 · AWS 실행 준비**.
 
-[로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. 내부 thread 목표를 만족한 것으로 간주하지 않는다. 비교 조건 확정 전 본 측정·AWS 배포는 중단한다.
+[로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. **2026-09-10 확정: 표준 Debian 패키지를 유지하고 동일 CPU·memory·요청 동시성 아래 배포 후보의 실제 동작을 비교한다.** AVIF delegate의 기본 thread 설정은 native thread 목표 1의 명시적 예외다. Fargate에서도 실제 값을 진단하고, 이 차이를 라이브러리 자체의 우열이나 동일 encoder thread 비교로 해석하지 않는다.
 
 > 같은 이미지 묶음과 1 vCPU·2 GiB 제한에서 두 배포 후보의 처리량, 메모리, 출력 품질과 파일 크기는 어떻게 달라지는가?
 
-이 문서는 구현할 실험의 기술 계약이다. 아래 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter와 단일 batch worker를 구현했으며 [개발 이미지](../../Dockerfile.e2)에서 실행한다. 전체 실험 supervisor/analyzer와 E2 Terraform은 아직 미구현이다.
+이 문서는 실험의 기술 계약이다. 아래 matrix 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter·supervisor와 독립 analyzer, [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [로컬 확인](results-local/preflight-20260910/README.md)에서 576개 출력 검증과 2,304회 calibration을 완료했다. AWS 본 측정은 아직 실행하지 않았다.
 
 ## 현재 기반과 구현 범위
 
@@ -60,11 +60,13 @@ geometry는 (1) 장변 640으로 비율 유지 resize, (2) 640×480 안에 비�
 | PNG | lossless, compression 6, palette 축소 없음; lossy quality curve에 섞지 않음 |
 | 반복 단위 | engine/geometry/output/concurrency 조합마다 새 worker; 24개 corpus 1회 warm-up 후 동일 24개 측정 |
 | 실행 순서 | 두 engine을 같은 조건에서 짝지어 실행; 반복마다 A→B/B→A 교대, fixture 순서는 고정 seed |
-| 자원 | Linux amd64, 1 vCPU·2 GiB, Go/native/codec 병렬 설정 기록; 주 비교 native thread 목표 1 |
+| 자원 | Linux amd64, 1 vCPU·2 GiB, Go/native/codec 병렬 설정 기록; native thread 목표 1, AVIF delegate는 표준 패키지 기본값 예외 |
 | 주 인코딩 조건 | JPEG/WebP/AVIF Q80. JPEG subsampling, WebP method, AVIF speed/encoder는 명시적으로 맞추고 사전 검증 |
 | 시간 제한 | 변환 시작부터 30초, 전체 측정 60분, 인프라 최대 2시간 |
 
-5,760회는 warm-up·품질 출력·검증을 제외한 값이다. AVIF의 실제 시간은 아직 측정하지 않았다. 로컬 calibration에서 전체 소요량을 추정하고 60분 안에 충분한 여유로 끝나는지 확인해야 한다. 맞지 않으면 실행을 중단하고 측정 전에 설계를 재검토한다. 현재 5회 반복을 기준으로 warm-up·검증까지 포함한 최대 호출 수와 manifest를 본 측정 전에 고정한다.
+5,760회는 warm-up·품질 출력·검증을 제외한 값이다. Calibration은 동일 48조건을 한 반복씩 warm-up 포함 실행한다. **Calibration 전체 batch 실행 wall time × 5 × 1.25가 3,600초 이내**여야 본 측정을 시작한다. 이는 25% 시간 여유를 둔 실행 gate이며 완료 보장은 아니다. Parent의 최초 corpus 검증·manifest 준비는 batch 실행 구간 앞에 있으며 Task 총시간과 인프라 deadline에는 포함한다. 맞지 않으면 실행을 중단하고 측정 전에 설계를 재검토한다.
+
+호출 수를 모드별로 고정한다: diagnose 16, validate 576, calibrate 2,304(측정 1,152 + warm-up 1,152), measure 11,520(측정 5,760 + warm-up 5,760), quality 192. diagnose 외 네 mode는 같은 Task에서 추가로 16회씩 AVIF 설정을 사전 진단한다. AWS 한 사이클의 최대 예정 호출은 **14,672**이다. 개발 테스트와 E1 연결 확인 2회는 이 수에 섞지 않는다. 각 mode 시작 전에 전체 job/seed/호출 수를 manifest로 저장한다. 로컬 확인·calibration과 AWS 측정은 별도 cohort다.
 
 libvips operation cache는 E1처럼 끈다. ImageMagick의 pixel cache는 이미지 연산용 저장 공간이므로 동일한 이름의 캐시라고 끌 수 없다. 주 비교는 pixel cache의 디스크 spill을 금지하고 cgroup으로 전체 메모리를 제한한다. native thread 제한만으로 delegate thread까지 제한되었다고 단정하지 않고 codec 설정·관측 thread도 점검한다. ImageMagick 자체의 memory limit은 모든 native 메모리를 제한하는 값이 아니다. [자원·pixel cache 설명](https://imagemagick.org/architecture/).
 
@@ -77,7 +79,7 @@ libvips operation cache는 E1처럼 끈다. ImageMagick의 pixel cache는 이미
 - RSS: worker별 Linux `getrusage(RUSAGE_SELF).ru_maxrss`, 종료 시 개별 child의 wait4 rusage로 교차 확인한다. Linux 단위 KiB를 bytes로 변환한다. worker 수명 전체의 high-water mark이며 runtime·입력 preload·warm-up도 포함한다고 명시한다. parent의 누적 RUSAGE_CHILDREN 값을 해당 batch 값으로 사용하지 않는다. [getrusage](https://man7.org/linux/man-pages/man2/getrusage.2.html).
 - cgroup CPU/memory는 E1 reader를 활용하되 parent와 worker를 포함하는 새 scope를 다시 진단한다. E1의 self 단독 프로세스 검증을 그대로 통과했다고 표현하지 않는다. cgroup sampled max와 RSS는 별도 열이다.
 - `context` timeout만으로 C 호출이 종료되었다고 처리하지 않는다. supervisor가 시작/완료 이벤트를 추적하고 30초 초과 시 worker를 종료한다. 다른 in-flight 작업은 timeout과 구분해 interrupted로 남긴다. OOM 판정은 exit 137만으로 하지 않고 cgroup/Task 종료 근거를 확인한다. 실행 오류 뒤 후속 run은 중단하고 원자료를 회수한다.
-- 품질은 양쪽 출력에 공통인 독립 reference와 SSIM/PSNR을 사용하고 대표 확대 crop도 확인한다. 같은 Q 숫자를 같은 화질로 취급하지 않는다. SSIM은 사람의 평가를 완전히 대체하지 않는다. [SSIM 연구](https://ece.uwaterloo.ca/~z70wang/research/ssim/), [metric 구현 참고](https://scikit-image.org/docs/stable/api/skimage.metrics.html#skimage.metrics.structural_similarity).
+- 품질은 양쪽 출력에 공통인 독립 reference와 SSIM/PSNR을 사용하고 대표 확대 crop도 확인한다. [analyze.py](analyze.py)는 encoded-sRGB RGB, SSIM window 7·uniform weight·sample covariance·channel 평균·data_range 255를 사용한다. 검정/흰 배경 합성은 float RGB에서 계산하며 PSNR은 같은 RGB의 MSE로 계산한다(완전 일치는 JSON null/+∞). 같은 Q 숫자를 같은 화질로 취급하지 않는다. SSIM은 사람의 평가를 완전히 대체하지 않는다. [SSIM 연구](https://ece.uwaterloo.ca/~z70wang/research/ssim/), [metric 구현 참고](https://scikit-image.org/docs/stable/api/skimage.metrics.html#skimage.metrics.structural_similarity).
 - reference는 A나 B의 압축 출력이 아니라 원본의 정규화·geometry를 독립 구현으로 계산한 lossless raster를 사전 생성한다. resize 구현 차이도 포함한 최종 이미지 품질임을 명시한다. alpha는 검정/흰색 배경 합성 후 두 점수를 모두 보고하고 alpha plane 오차도 별도 확인한다. reference 생성기·필터·metric window/색 공간을 본 측정 전에 고정한다.
 - 품질 분석은 성능 worker와 분리해 종료 후 실행한다. 처리량 측정의 output bytes/hash와 curve용 실제 출력을 보존하고 한 engine의 출력만 reference로 삼지 않는다.
 
@@ -115,6 +117,8 @@ Local/AWS raw는 분리한다. 동일 image와 설정이어도 Docker 환경과 
 각 항목은 공개 파일과 명령으로 확인 가능해야 한다. 예정된 파일의 hash나 버전을 추정해서 채우지 않는다. 합의된 범위·제한의 변경이 필요하거나 실행이 막히면 후속 측정을 중단하고 사유를 기록한다. AWS 자원이 이미 존재하면 가능한 원자료 회수와 정리를 우선한다.
 
 ## 재현 경로와 완료 조건
+
+현재 구현의 실제 명령·원자료 형식은 [RUN.md](RUN.md)에 있다.
 
 다음 순서로 구현하며, 해당 기능을 검증할 때 실제 명령과 산출물 경로를 추가한다.
 

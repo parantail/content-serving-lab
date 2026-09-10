@@ -1,6 +1,6 @@
 # AVIF encoder thread configuration
 
-상태: **로컬 native 설정 진단 완료 · 동일 thread 조건 불충족 · 성능 본 측정 중단**.
+상태: **로컬 native 설정 진단 완료 · 표준 패키지의 AVIF thread 차이를 포함한 비교로 확정**.
 
 1 vCPU·2 GiB의 같은 Docker Linux 환경에서 Go adapter를 직접 호출했다. ImageMagick resource thread 1과 `OMP_NUM_THREADS=1`, `MAGICK_THREAD_LIMIT=1`을 설정해도 AV1 encoder의 설정까지 같아지지는 않았다.
 
@@ -30,6 +30,6 @@ docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),
 ./experiments/e2-transformer-ab/diagnostics/run.ps1
 ```
 
-E2 본 측정 전에 내부 encoder thread 조건을 동일하게 만들지, 동일 CPU/memory 제한에서 표준 패키지의 실제 동작을 비교할지 기술 계약을 확정해야 한다. 현재 본 측정·AWS 배포는 진행하지 않았다.
+2026-09-10 확정한 비교는 동일 CPU/memory·요청 동시성 제한 아래 표준 패키지의 실제 동작이다. ImageMagick native 빌드/패치를 추가하지 않으며 AVIF delegate 기본 thread 수는 명시적 예외로 기록한다. AWS에서는 같은 이미지의 encoder 설정을 다시 조회한다. 현재 본 측정·AWS 배포는 진행하지 않았다.
 
 Native integration test는 E2 이미지의 AVIF encoder를 사용하므로 `e2integration` tag로 실행한다. 기존 E1 이미지의 기본 테스트에 AVIF encoder 설치를 요구하지 않는다. 테스트는 두 engine의 작은 입력·세 geometry·네 encode 경로, JPEG 흰 배경 합성과 PNG/WebP alpha, invalid 입력 거부를 확인한다. AVIF 출력의 독립 픽셀 품질 검증과 전체 matrix 검증은 후속 작업이다.
