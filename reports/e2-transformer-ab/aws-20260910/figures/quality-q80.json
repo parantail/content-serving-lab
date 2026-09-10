@@ -1,0 +1,242 @@
+[
+  {
+    "format": "jpeg",
+    "id": "alpha-large-webp",
+    "vips_bytes": 26280,
+    "magick_bytes": 22009,
+    "vips_ssim_min": 0.9820323586463928,
+    "magick_ssim_min": 0.9846322536468506,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "alpha-small-avif",
+    "vips_bytes": 29646,
+    "magick_bytes": 24034,
+    "vips_ssim_min": 0.981870174407959,
+    "magick_ssim_min": 0.9816660284996033,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "alpha-small-png",
+    "vips_bytes": 29606,
+    "magick_bytes": 23803,
+    "vips_ssim_min": 0.9822854399681091,
+    "magick_ssim_min": 0.9820820689201355,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "fruit-large-avif",
+    "vips_bytes": 55111,
+    "magick_bytes": 53994,
+    "vips_ssim_min": 0.9671542048454285,
+    "magick_ssim_min": 0.9669454097747803,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "fruit-small-png",
+    "vips_bytes": 55407,
+    "magick_bytes": 54104,
+    "vips_ssim_min": 0.967578113079071,
+    "magick_ssim_min": 0.9668881297111511,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "landscape-large-webp",
+    "vips_bytes": 98743,
+    "magick_bytes": 100858,
+    "vips_ssim_min": 0.94283527135849,
+    "magick_ssim_min": 0.9469773173332214,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "landscape-small-jpeg",
+    "vips_bytes": 102818,
+    "magick_bytes": 100922,
+    "vips_ssim_min": 0.9462077021598816,
+    "magick_ssim_min": 0.9451963901519775,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "jpeg",
+    "id": "orientation-6-jpeg",
+    "vips_bytes": 18328,
+    "magick_bytes": 11822,
+    "vips_ssim_min": 0.9905624389648438,
+    "magick_ssim_min": 0.9880152344703674,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "webp",
+    "id": "alpha-large-webp",
+    "vips_bytes": 12178,
+    "magick_bytes": 17046,
+    "vips_ssim_min": 0.9804555773735046,
+    "magick_ssim_min": 0.9827547073364258,
+    "vips_alpha_mae": 0.18360839784145355,
+    "magick_alpha_mae": 0.2755468785762787
+  },
+  {
+    "format": "webp",
+    "id": "alpha-small-avif",
+    "vips_bytes": 16752,
+    "magick_bytes": 17946,
+    "vips_ssim_min": 0.9814469218254089,
+    "magick_ssim_min": 0.9811475276947021,
+    "vips_alpha_mae": 0.017607422545552254,
+    "magick_alpha_mae": 0.27236083149909973
+  },
+  {
+    "format": "webp",
+    "id": "alpha-small-png",
+    "vips_bytes": 16734,
+    "magick_bytes": 17940,
+    "vips_ssim_min": 0.9823612570762634,
+    "magick_ssim_min": 0.9823706746101379,
+    "vips_alpha_mae": 0.017607422545552254,
+    "magick_alpha_mae": 0.27236083149909973
+  },
+  {
+    "format": "webp",
+    "id": "fruit-large-avif",
+    "vips_bytes": 23310,
+    "magick_bytes": 23418,
+    "vips_ssim_min": 0.9520408511161804,
+    "magick_ssim_min": 0.9525337815284729,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "webp",
+    "id": "fruit-small-png",
+    "vips_bytes": 23334,
+    "magick_bytes": 23466,
+    "vips_ssim_min": 0.9526813626289368,
+    "magick_ssim_min": 0.9529313445091248,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "webp",
+    "id": "landscape-large-webp",
+    "vips_bytes": 65026,
+    "magick_bytes": 68254,
+    "vips_ssim_min": 0.9441291689872742,
+    "magick_ssim_min": 0.9500961303710938,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "webp",
+    "id": "landscape-small-jpeg",
+    "vips_bytes": 68800,
+    "magick_bytes": 67802,
+    "vips_ssim_min": 0.9468317627906799,
+    "magick_ssim_min": 0.9453124403953552,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "webp",
+    "id": "orientation-6-jpeg",
+    "vips_bytes": 2484,
+    "magick_bytes": 2504,
+    "vips_ssim_min": 0.9724591374397278,
+    "magick_ssim_min": 0.9709036946296692,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "avif",
+    "id": "alpha-large-webp",
+    "vips_bytes": 6700,
+    "magick_bytes": 3856,
+    "vips_ssim_min": 0.9814745783805847,
+    "magick_ssim_min": 0.9821186065673828,
+    "vips_alpha_mae": 0.25325438380241394,
+    "magick_alpha_mae": 0.42509520053863525
+  },
+  {
+    "format": "avif",
+    "id": "alpha-small-avif",
+    "vips_bytes": 9374,
+    "magick_bytes": 4760,
+    "vips_ssim_min": 0.9820365905761719,
+    "magick_ssim_min": 0.9801484942436218,
+    "vips_alpha_mae": 0.13592529296875,
+    "magick_alpha_mae": 0.4347265660762787
+  },
+  {
+    "format": "avif",
+    "id": "alpha-small-png",
+    "vips_bytes": 9362,
+    "magick_bytes": 4827,
+    "vips_ssim_min": 0.9824333190917969,
+    "magick_ssim_min": 0.9810099005699158,
+    "vips_alpha_mae": 0.13592529296875,
+    "magick_alpha_mae": 0.4347265660762787
+  },
+  {
+    "format": "avif",
+    "id": "fruit-large-avif",
+    "vips_bytes": 26999,
+    "magick_bytes": 9190,
+    "vips_ssim_min": 0.9696953892707825,
+    "magick_ssim_min": 0.9442487359046936,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "avif",
+    "id": "fruit-small-png",
+    "vips_bytes": 27214,
+    "magick_bytes": 9134,
+    "vips_ssim_min": 0.9695737361907959,
+    "magick_ssim_min": 0.9435537457466125,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "avif",
+    "id": "landscape-large-webp",
+    "vips_bytes": 92945,
+    "magick_bytes": 38765,
+    "vips_ssim_min": 0.9690970778465271,
+    "magick_ssim_min": 0.9272847175598145,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "avif",
+    "id": "landscape-small-jpeg",
+    "vips_bytes": 94816,
+    "magick_bytes": 36870,
+    "vips_ssim_min": 0.971071720123291,
+    "magick_ssim_min": 0.9205713868141174,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  },
+  {
+    "format": "avif",
+    "id": "orientation-6-jpeg",
+    "vips_bytes": 1618,
+    "magick_bytes": 812,
+    "vips_ssim_min": 0.9565491080284119,
+    "magick_ssim_min": 0.953260600566864,
+    "vips_alpha_mae": 0.0,
+    "magick_alpha_mae": 0.0
+  }
+]

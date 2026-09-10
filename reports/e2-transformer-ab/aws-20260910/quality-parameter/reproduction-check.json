@@ -1,0 +1,18 @@
+{
+  "valid": true,
+  "scope": "Separate local diagnostic reproduction; 16 extra native calls, excluded from AWS totals",
+  "checks": [
+    {
+      "engine": "vips",
+      "local_reproduced_outputs": 8,
+      "quality_queries": 8,
+      "aws_q80_hash_matches": 8
+    },
+    {
+      "engine": "magick",
+      "local_reproduced_outputs": 8,
+      "quality_queries": 8,
+      "aws_q80_hash_matches": 8
+    }
+  ]
+}

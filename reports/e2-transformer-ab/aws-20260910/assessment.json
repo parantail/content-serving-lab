@@ -1,0 +1,118 @@
+{
+  "schema": "e2-quality-contract-assessment-v1",
+  "experiment_complete": false,
+  "transformer_selection": "withheld",
+  "quality_contract_valid": false,
+  "execution_native_errors": 0,
+  "aws_modes_complete": true,
+  "aws_native_calls": 14672,
+  "independent_decode_checks_valid": true,
+  "reason": "ImageMagick AVIF requested quality is not propagated to the encoder; requested Q80 is not a valid controlled comparison.",
+  "aws_identical_first_three_qualities": [
+    {
+      "id": "alpha-large-webp",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 3856,
+      "sha256": "b7b3579c3727dd4730b094e4050df5587b195a18b41b94f154c1c4a7270aceb5"
+    },
+    {
+      "id": "alpha-small-avif",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 4760,
+      "sha256": "87e63016fb62e46f80c1e7a4f24eaaa42e027d63664b9a87e431d1f517815a72"
+    },
+    {
+      "id": "alpha-small-png",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 4827,
+      "sha256": "bba4ca0a6a1a0767bd496d4a1991e26b50a33b881bb351ae153a5adc281b4afd"
+    },
+    {
+      "id": "fruit-large-avif",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 9190,
+      "sha256": "e5785dea05238a3899842689ac50d37ebb1621f3ffc5212cae467b9c70621b20"
+    },
+    {
+      "id": "fruit-small-png",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 9134,
+      "sha256": "15ae4b3a8f8b7a6fff2e88fed0a0aa5418ffa1e0d76a451de5d1d66bc6edbc73"
+    },
+    {
+      "id": "landscape-large-webp",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 38765,
+      "sha256": "8368663607229d6b3ee71e8f33437744e5d45ac837e96db201533c32e653debd"
+    },
+    {
+      "id": "landscape-small-jpeg",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 36870,
+      "sha256": "2d157554be2ea7b9597e8901161ed48caabb6fd7a7ae5cf20081449bc3ea1712"
+    },
+    {
+      "id": "orientation-6-jpeg",
+      "requested_qualities": [
+        50,
+        65,
+        80
+      ],
+      "bytes": 812,
+      "sha256": "ac09e4dd2fabcf12a43126f670261162ff858be595b843a5162a861187a0af92"
+    }
+  ],
+  "local_same_image_probe": {
+    "cohort": "local diagnostic, separate from AWS performance",
+    "image_digest": "sha256:cb2c47d022febbd800f49d9c02d48afcfc81e42f416276e163184d57d21a3c98",
+    "native_calls": 16,
+    "observations": [
+      {
+        "engine": "vips",
+        "requested_quality": 80,
+        "actual_quality": [
+          80
+        ],
+        "samples": 8
+      },
+      {
+        "engine": "magick",
+        "requested_quality": 80,
+        "actual_quality": [
+          50
+        ],
+        "samples": 8
+      }
+    ],
+    "aws_quality_parameter_was_not_directly_probed": true
+  },
+  "next": "Fix the quality-setting API and add effective encoder quality checks; repeat validation, calibration and measurement only after the next execution decision."
+}

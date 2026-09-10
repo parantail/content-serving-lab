@@ -1,0 +1,40 @@
+[
+  {
+    "batch": "vips-cover-avif-q80-c1-r0",
+    "cgroup_cpu_ns": 9881935099,
+    "cgroup_peak_bytes": 265695232,
+    "concurrency": 1,
+    "engine": "vips",
+    "format": "avif",
+    "operation": "cover",
+    "p50_ms": 1021.689067,
+    "p95_ms": 2042.2779976499999,
+    "quality": 80,
+    "repetition": 0,
+    "self_rss_bytes": 269795328,
+    "success": 8,
+    "throughput": 0.8344156347311181,
+    "wait_rss_bytes": 269795328,
+    "wall_seconds": 9.58754806,
+    "worker_cpu_ns": 9804803000
+  },
+  {
+    "batch": "magick-cover-avif-q80-c1-r0",
+    "cgroup_cpu_ns": 14249939876,
+    "cgroup_peak_bytes": 320962560,
+    "concurrency": 1,
+    "engine": "magick",
+    "format": "avif",
+    "operation": "cover",
+    "p50_ms": 1826.8559890000001,
+    "p95_ms": 2630.7541128,
+    "quality": 80,
+    "repetition": 0,
+    "self_rss_bytes": 340078592,
+    "success": 8,
+    "throughput": 0.5726943188542527,
+    "wait_rss_bytes": 340078592,
+    "wall_seconds": 13.969057727,
+    "worker_cpu_ns": 14149222000
+  }
+]

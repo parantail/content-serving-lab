@@ -73,8 +73,9 @@ def export(local, deployment, runs, output):
     write(output / "cleanup.json", cleanup_record)
     write(output / "residual-check.json", cleanup)
     write(output / "reviewed-plan.json", read(local / "reviewed-plan.json"))
-    if (local / "live-verification.json").exists():
-        write(output / "live-verification.json", read(local / "live-verification.json"))
+    for name in ("live-verification.json", "calibration-gate.json"):
+        if (local / name).exists():
+            write(output / name, read(local / name))
     for path in output.rglob("*"):
         if path.is_file() and path.suffix in (".json", ".jsonl", ".log", ".txt") and PRIVATE.search(path.read_text()):
             raise ValueError("Private identifier in exported metadata; do not publish")

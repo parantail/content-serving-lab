@@ -1,5 +1,7 @@
 # AWS E2 calibration — 2026-09-10
 
+후속 [전체 실행의 품질 검사](../aws-20260910/README.md)에서 같은 adapter의 ImageMagick AVIF quality 전달 오류가 확인됐다. 이 기록의 AVIF Q80은 요청값이며 실제 encoder Q80 검증 근거가 아니다. 아래 실행·시간 gate·제거 관측과 원자료는 당시 상태로 보존한다.
+
 **AWS 진단·출력 검증·calibration은 성공했지만, 본 측정의 60분 진입 gate를 통과하지 못했다.** Calibration 30.734분에 5회 반복과 25% 여유를 적용하면 192.087분이 필요하다. 5회 본 측정과 AWS quality sweep은 시작하지 않았다. E2의 성능 판정은 미완료이며, 이번 배포의 결과 회수·자원 제거는 완료했다.
 
 | 확인 | 결과 |

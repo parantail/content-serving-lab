@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-09-10T07:59:42.8772080+00:00",
+  "completed": 1152,
+  "loop_seconds": 1875.453265834,
+  "measurement_estimate_seconds": 9377.26632917,
+  "measurement_limit_seconds": 12600,
+  "output_hash_check": true,
+  "passed": true,
+  "remaining_infrastructure_minutes": 250.035422175,
+  "required_remaining_minutes": 240,
+  "run_id": "aws-calibrate-20260910-b1",
+  "warm_completed": 1152,
+  "with_margin_seconds": 11721.5829114625
+}

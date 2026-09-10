@@ -1,0 +1,18 @@
+{
+  "approved_scope": "E2 one-shot experiment; measurement 210 minutes; infrastructure 5 hours",
+  "change": 0,
+  "cpu": 1024,
+  "create": 20,
+  "destroy": 0,
+  "ecs_services": 0,
+  "egress": "tcp/443",
+  "existing_ecr": 1,
+  "image_digest": "sha256:cb2c47d022febbd800f49d9c02d48afcfc81e42f416276e163184d57d21a3c98",
+  "inbound_rules": 0,
+  "load_balancers": 0,
+  "memory_mib": 2048,
+  "nat_gateways": 0,
+  "plan_sha256": "c530d883698af18650a39c52911245072731997826746f7da463d983e4d66011",
+  "platform": "LINUX/X86_64",
+  "reviewed_at": "2026-09-10T07:11:38.1976739+00:00"
+}

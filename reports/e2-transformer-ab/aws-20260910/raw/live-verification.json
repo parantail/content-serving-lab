@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-10T16:12:59.0389288+09:00",
+  "compressed_image_bytes": 168653619,
+  "image_digest": "sha256:cb2c47d022febbd800f49d9c02d48afcfc81e42f416276e163184d57d21a3c98",
+  "inbound_rules": 0,
+  "native_binaries_match_local_quality": true,
+  "native_binary_sha256": {
+    "magick": "1f5806086b60aab6eac08ed10b0a0bc4178c4293db0db869518fab4fe2981dbc",
+    "vips": "064afaffc00876f24422db7680d1dbd3b4c999aed4ed96c6fdba551ddb37d491"
+  },
+  "outbound_port": 443,
+  "outbound_protocol": "tcp",
+  "resource_count": 21,
+  "source_commit": "e7bb303b5a5f94dc2395aec77a09eb49173aa2cc",
+  "terraform_post_apply_drift": false
+}

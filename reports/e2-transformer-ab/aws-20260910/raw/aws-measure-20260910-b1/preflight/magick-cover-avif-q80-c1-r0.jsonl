@@ -1,0 +1,20 @@
+{"type":"ready","batch":"magick-cover-avif-q80-c1-r0","time_ns":1789027221728260433,"version":"imagick v3.7.3; ImageMagick 7.1.1-43 Q16 x86_64 22550 https://imagemagick.org"}
+{"type":"pass_start","batch":"magick-cover-avif-q80-c1-r0","time_ns":1789027221728388649}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"alpha-small-avif","time_ns":1789027221728594255}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"alpha-small-avif","time_ns":1789027223331487845,"duration_ns":1602885037,"queue_ns":205596,"bytes":4760,"sha256":"87e63016fb62e46f80c1e7a4f24eaaa42e027d63664b9a87e431d1f517815a72"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"landscape-small-jpeg","index":1,"time_ns":1789027223331527540}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"landscape-small-jpeg","index":1,"time_ns":1789027225520644741,"duration_ns":2189112108,"queue_ns":1603138894,"bytes":36870,"sha256":"2d157554be2ea7b9597e8901161ed48caabb6fd7a7ae5cf20081449bc3ea1712"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"orientation-6-jpeg","index":2,"time_ns":1789027225520793660}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"orientation-6-jpeg","index":2,"time_ns":1789027225972966860,"duration_ns":452168370,"queue_ns":3792405016,"bytes":812,"sha256":"ac09e4dd2fabcf12a43126f670261162ff858be595b843a5162a861187a0af92"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"landscape-large-webp","index":3,"time_ns":1789027225972995419}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"landscape-large-webp","index":3,"time_ns":1789027228686039616,"duration_ns":2713039563,"queue_ns":4244606776,"bytes":38765,"sha256":"8368663607229d6b3ee71e8f33437744e5d45ac837e96db201533c32e653debd"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"fruit-small-png","index":4,"time_ns":1789027228686192600}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"fruit-small-png","index":4,"time_ns":1789027229927368288,"duration_ns":1241170861,"queue_ns":6957803969,"bytes":9134,"sha256":"15ae4b3a8f8b7a6fff2e88fed0a0aa5418ffa1e0d76a451de5d1d66bc6edbc73"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"fruit-large-avif","index":5,"time_ns":1789027229927420055}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"fruit-large-avif","index":5,"time_ns":1789027232212061926,"duration_ns":2284636988,"queue_ns":8199031413,"bytes":9190,"sha256":"e5785dea05238a3899842689ac50d37ebb1621f3ffc5212cae467b9c70621b20"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"alpha-large-webp","index":6,"time_ns":1789027232212113930}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"alpha-large-webp","index":6,"time_ns":1789027234868919556,"duration_ns":2656800813,"queue_ns":10483725276,"bytes":3856,"sha256":"b7b3579c3727dd4730b094e4050df5587b195a18b41b94f154c1c4a7270aceb5"}
+{"type":"start","batch":"magick-cover-avif-q80-c1-r0","id":"alpha-small-png","index":7,"time_ns":1789027234868998460}
+{"type":"finish","batch":"magick-cover-avif-q80-c1-r0","id":"alpha-small-png","index":7,"time_ns":1789027236430578497,"duration_ns":1561575586,"queue_ns":13140609811,"bytes":4827,"sha256":"bba4ca0a6a1a0767bd496d4a1991e26b50a33b881bb351ae153a5adc281b4afd"}
+{"type":"pass_end","batch":"magick-cover-avif-q80-c1-r0","time_ns":1789027236430623442,"duration_ns":14702235125,"success":8,"attempts":8}
+{"type":"summary","batch":"magick-cover-avif-q80-c1-r0","time_ns":1789027236430632190,"peak_rss_bytes":397119488,"cpu_user_ns":14275635000,"cpu_system_ns":574887000}

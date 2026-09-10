@@ -9,7 +9,7 @@
 | 실험 | 확인하려는 것 | 주요 지표 | 상태 |
 | --- | --- | --- | --- |
 | [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B](reports/e1-cache-stampede/PHASE-B.md), [AWS S4: Task 1/2/4개에서 변환 1/2/4회](reports/e1-cache-stampede/AWS-S4.md) | Phase A/B 및 AWS S4 retained 측정 완료 |
-| [E2. 이미지 변환기 비교](experiments/e2-transformer-ab/README.md) | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, peak RSS, 파일 크기와 품질 | [AWS 검증·calibration 및 제거 완료](reports/e2-transformer-ab/aws-calibration-20260910/README.md) · 210분·5시간 계약 확정, AWS 재실행 준비 |
+| [E2. 이미지 변환기 비교](experiments/e2-transformer-ab/README.md) | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, peak RSS, 파일 크기와 품질 | [5회 측정·품질 실행·AWS 제거 완료](reports/e2-transformer-ab/aws-20260910/README.md) · AVIF quality 전달 오류로 최종 판정 보류 |
 | E3. 멀티 리전 장애 | 한 리전의 응답이 느려지거나 끊겼을 때 사용자에게 얼마나 오래 영향을 주는가? | 리전별 p95/p99, 오류율, 복구 시간 | 준비 중 |
 | E4. 장애 격리 | 변환기나 저장소 장애가 캐시에 있는 이미지 요청까지 번지는 것을 막을 수 있는가? | 영향받은 요청 범위, 탐지·완화·복구 시간 | 준비 중 |
 | E5. 전달 비용 | 이미지 포맷과 캐시 정책이 응답 속도와 비용을 어떻게 바꾸는가? | 캐시 적중률, 전송량, 요청당 비용 | 준비 중 |

@@ -2,6 +2,8 @@
 
 공개 저장소 root에서 실행한다. [기술 계약](README.md)과 [AWS workflow](../../deploy/e2-transformer-ab/README.md)는 동일 matrix를 사용한다. 모든 run/output directory는 새 이름이어야 한다.
 
+현재 ImageMagick AVIF의 요청 quality 전달 오류로 추가 배포와 최종 비교를 보류한다. [실제 관측과 진단 재현](../../reports/e2-transformer-ab/aws-20260910/README.md)을 먼저 확인한다. 실행·독립 decode·hash 일치는 실제 encoder quality 적용을 보증하지 않는다.
+
 ```powershell
 docker build -f Dockerfile.e2 --target dev -t e2-dev:local .
 docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),target=/src" -w /src e2-dev:local sh -c 'go test ./... && go vet ./... && go test -tags=e2integration ./internal/e2'
@@ -35,6 +37,8 @@ docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),
 ```
 
 보고서 데이터는 raw batch JSON/JSONL에서 계산한다. 새 output 경로로 재분석 후 JSON과 chart의 SHA-256을 대조하면 독립 재생성을 확인할 수 있다. `crops.png`는 cover Q80의 방향·과일·alpha 확대 예시이며 사람의 시각 확인이 별도로 필요하다.
+
+`report.py`는 performance/quality의 cohort와 corpus가 다르거나 모든 품질 입력의 Q50/65/80 출력이 같은 경우 기본 비교 생성을 거부한다. 실패 조사용 차트만 필요한 경우 `--diagnostic-note '<확인된 문제와 판정 보류 문구>'`를 지정하면 모든 그림 제목에 해당 문구를 표시한다. 이 옵션은 실험을 유효하게 만드는 override가 아니다. `conditions.json`과 `quality-q80.json`의 Q도 요청값이다.
 
 원자료 형식:
 

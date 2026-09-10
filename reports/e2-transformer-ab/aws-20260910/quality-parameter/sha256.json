@@ -1,0 +1,9 @@
+{
+  "codec_trace.c": "0a1421e48dfb0d91355d86521979defbcdef4e357a90bf228a4db2f23cd717ef",
+  "magick.jsonl": "6e65b6ff8cbd1c76bd64d3fead746027d7863086ad134c12c94f460b315f0764",
+  "magick.log": "dd1f60df35819d759f401272f15eacd60e95de6c6ea90a8e60a231b5efc2579e",
+  "reproduction-check.json": "253e3a269e5837f2a3dacbf79b02305a73c1a29d172b4102ee918af10d38e001",
+  "run.ps1": "9acb7215e49beb3270125ebc17eec3ab0e47020364c426c530b30bf839dcfd9d",
+  "vips.jsonl": "81c826bd4c603ad79c4f6551f073faf4f104d8e2baac81587f152818e5464e12",
+  "vips.log": "ada8d24e18a81de75588ee3c00f6523c5b5e7f505ea8e3bc779e982a289e5b8e"
+}

@@ -9,7 +9,7 @@
 | govips v2.16.0 / libvips 8.16.1 | libheif 1.19.8 / AOM 3.12.1 | 1 | 5 | 품질 대표 8개 |
 | imagick v3.7.3 / ImageMagick 7.1.1.43 Q16 non-HDRI | libheif 1.19.8 / AOM 3.12.1 | 28 | 5 | 동일 8개 |
 
-threads는 encoder가 보고한 설정값이다. 동시에 28 CPU를 썼다는 뜻이나 실제 실행 thread 수의 시계열은 아니다. 두 컨테이너의 CPU quota는 1 vCPU다. Fargate에서는 다른 기본값이 나올 수 있으며 아직 측정하지 않았다. 이 진단의 latency/RSS는 계측 라이브러리가 추가된 개발 build의 값이므로 A/B 성능 결과로 사용하지 않는다.
+threads는 encoder가 보고한 설정값이다. 동시에 28 CPU를 썼다는 뜻이나 실제 실행 thread 수의 시계열은 아니다. 두 컨테이너의 CPU quota는 1 vCPU다. 후속 [AWS 다섯 Task](../../../reports/e2-transformer-ab/aws-20260910/README.md)에서는 libvips 1/ImageMagick 2를 확인했다. 이 진단의 latency/RSS는 계측 라이브러리가 추가된 개발 build의 값이므로 A/B 성능 결과로 사용하지 않는다.
 
 ## 원인과 계측 방법
 
@@ -30,6 +30,6 @@ docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),
 ./experiments/e2-transformer-ab/diagnostics/run.ps1
 ```
 
-2026-09-10 확정한 비교는 동일 CPU/memory·요청 동시성 제한 아래 표준 패키지의 실제 동작이다. ImageMagick native 빌드/패치를 추가하지 않으며 AVIF delegate 기본 thread 수는 명시적 예외로 기록한다. AWS에서는 같은 이미지의 encoder 설정을 다시 조회한다. 현재 본 측정·AWS 배포는 진행하지 않았다.
+2026-09-10 확정한 비교는 동일 CPU/memory·요청 동시성 제한 아래 표준 패키지의 실제 동작이다. ImageMagick native 빌드/패치를 추가하지 않으며 AVIF delegate 기본 thread 수는 명시적 예외다. 후속 본 측정·AWS 배포·제거는 완료했지만 **별개의 AVIF quality 전달 오류로 최종 판정을 보류**했다. 기존 probe는 threads/speed만 읽어 이 결함을 잡지 못했다. [실제 quality 조회 코드와 관측](../../../reports/e2-transformer-ab/aws-20260910/quality-parameter/codec_trace.c)을 참고한다.
 
-Native integration test는 E2 이미지의 AVIF encoder를 사용하므로 `e2integration` tag로 실행한다. 기존 E1 이미지의 기본 테스트에 AVIF encoder 설치를 요구하지 않는다. 테스트는 두 engine의 작은 입력·세 geometry·네 encode 경로, JPEG 흰 배경 합성과 PNG/WebP alpha, invalid 입력 거부를 확인한다. AVIF 출력의 독립 픽셀 품질 검증과 전체 matrix 검증은 후속 작업이다.
+Native integration test는 E2 이미지의 AVIF encoder를 사용하므로 `e2integration` tag로 실행한다. 기존 E1 이미지의 기본 테스트에 AVIF encoder 설치를 요구하지 않는다. 테스트는 두 engine의 작은 입력·세 geometry·네 encode 경로, JPEG 흰 배경 합성과 PNG/WebP alpha, invalid 입력 거부를 확인한다. 후속 독립 decode·전체 matrix 검사도 실제 AVIF quality 전달을 검증하지 못했으므로, 이 부분의 회귀 검증과 adapter 수정이 남아 있다.

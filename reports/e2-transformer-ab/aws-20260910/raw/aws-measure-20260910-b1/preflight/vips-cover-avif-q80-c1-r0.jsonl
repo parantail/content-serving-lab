@@ -1,0 +1,20 @@
+{"type":"ready","batch":"vips-cover-avif-q80-c1-r0","time_ns":1789027211451029173,"version":"govips v2.16.0; libvips 8.16.1"}
+{"type":"pass_start","batch":"vips-cover-avif-q80-c1-r0","time_ns":1789027211451151271}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"alpha-small-avif","time_ns":1789027211451348085}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"alpha-small-avif","time_ns":1789027212299926718,"duration_ns":848570903,"queue_ns":196818,"bytes":9374,"sha256":"811328fc443fc5643914cebeaaec7c2aaed651b59435367193f2fa2a1b0b05d3"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"landscape-small-jpeg","index":1,"time_ns":1789027212299993052}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"landscape-small-jpeg","index":1,"time_ns":1789027214128919656,"duration_ns":1828921778,"queue_ns":848841790,"bytes":94816,"sha256":"6435c100a96ddc8d38feeeab97c722b03f1646dc8e3be2948d8fa5a96b63cbe9"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"orientation-6-jpeg","index":2,"time_ns":1789027214129273201}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"orientation-6-jpeg","index":2,"time_ns":1789027214329499444,"duration_ns":200221472,"queue_ns":2678121939,"bytes":1618,"sha256":"0cdc8f8728b50e09fc4514e9c20c75cb1ccfa58d24718129710c0b42e1575e8a"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"landscape-large-webp","index":3,"time_ns":1789027214329538752}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"landscape-large-webp","index":3,"time_ns":1789027216494837338,"duration_ns":2165294248,"queue_ns":2878387490,"bytes":92945,"sha256":"83e1eadcf083b65cdd04f0a056e2cff49a4a828dfa14c3ff315deed5c7d6643a"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"fruit-small-png","index":4,"time_ns":1789027216495172121}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"fruit-small-png","index":4,"time_ns":1789027217800853371,"duration_ns":1305677228,"queue_ns":5044020855,"bytes":27214,"sha256":"0de2735efb828025bed544621747c6fb441f0f470504310ee1fe92034289b943"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"fruit-large-avif","index":5,"time_ns":1789027217800976006}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"fruit-large-avif","index":5,"time_ns":1789027219813852744,"duration_ns":2012872117,"queue_ns":6349824741,"bytes":26999,"sha256":"71cb05cf628fa4f9e0135a11bfc0ed1bef42551e0dac868b2b9f7b0149c64f15"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"alpha-large-webp","index":6,"time_ns":1789027219813994376}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"alpha-large-webp","index":6,"time_ns":1789027220599610633,"duration_ns":785611443,"queue_ns":8362843112,"bytes":6700,"sha256":"79eff3680d29aaf5c16759d832255507e14de78d487faae054d9cd327b81c411"}
+{"type":"start","batch":"vips-cover-avif-q80-c1-r0","id":"alpha-small-png","index":7,"time_ns":1789027220599669149}
+{"type":"finish","batch":"vips-cover-avif-q80-c1-r0","id":"alpha-small-png","index":7,"time_ns":1789027221415091092,"duration_ns":815417388,"queue_ns":9148517886,"bytes":9362,"sha256":"f7a3c47eebb9927decbf3b11b1f449846c67926b6186a37366f8c0f6ce312081"}
+{"type":"pass_end","batch":"vips-cover-avif-q80-c1-r0","time_ns":1789027221415151002,"duration_ns":9964000179,"success":8,"attempts":8}
+{"type":"summary","batch":"vips-cover-avif-q80-c1-r0","time_ns":1789027221415160769,"peak_rss_bytes":269025280,"cpu_user_ns":9845772000,"cpu_system_ns":322016000}

@@ -1,0 +1,76 @@
+{
+  "approved_cost_condition_usd": 3.0,
+  "billing": {
+    "aggregation": "DAILY",
+    "billing_final": false,
+    "metric": "UnblendedCost",
+    "observed_at": "2026-09-10T10:47:10.6344223+00:00",
+    "query_succeeded": true,
+    "results": [
+      {
+        "Estimated": true,
+        "Groups": [],
+        "TimePeriod": {
+          "End": "2026-09-11",
+          "Start": "2026-09-10"
+        },
+        "Total": {
+          "UnblendedCost": {
+            "Amount": "0",
+            "Unit": "USD"
+          }
+        }
+      }
+    ],
+    "scope": "Account-wide UTC 2026-09-10 Usage records; not attributed to E2"
+  },
+  "deployment_id": "20260910-b1",
+  "notes": [
+    "Same-day Cost Explorer account Usage total is provisional and not E2-attributed.",
+    "Empty daily service groups do not establish zero E2 cost.",
+    "The task estimate excludes ECR, S3, IPv4, logs, transfer, tax, and credits.",
+    "CloudWatch storedBytes is an observed API field and may lag; it is not ingested bytes.",
+    "Pricing sources and conservative full-deployment model are in deploy/e2-transformer-ab/COST.md."
+  ],
+  "predeployment_estimate_usd": 1.5,
+  "schema": "e2-cost-observation-v1",
+  "task_resource_estimate": {
+    "cpu_memory_subtotal_usd": 0.19496043888888887,
+    "cpu_usd": 0.15986893333333332,
+    "cpu_usd_per_vcpu_hour": 0.04656,
+    "memory_usd": 0.035091505555555555,
+    "memory_usd_per_gb_hour": 0.00511,
+    "rounded_seconds_sum": 12361,
+    "tasks": [
+      {
+        "mode": "diagnose",
+        "pull_to_stopped_seconds": 57.474
+      },
+      {
+        "mode": "validate",
+        "pull_to_stopped_seconds": 507.017
+      },
+      {
+        "mode": "calibrate",
+        "pull_to_stopped_seconds": 1936.027
+      },
+      {
+        "mode": "measure",
+        "pull_to_stopped_seconds": 9639.539
+      },
+      {
+        "mode": "quality",
+        "pull_to_stopped_seconds": 215.861
+      }
+    ],
+    "window": "pullStartedAt to stoppedAt; conservative metadata window, not an invoice"
+  },
+  "usage": {
+    "cloudwatch_stored_bytes": 0.0,
+    "compressed_image_bytes": 168653619,
+    "note": "Stored object/log bytes are observations, not billable request/ingestion totals.",
+    "observed_at": "2026-09-10T10:46:18.4207035+00:00",
+    "s3_bytes": 103515646.0,
+    "s3_objects": 2166
+  }
+}

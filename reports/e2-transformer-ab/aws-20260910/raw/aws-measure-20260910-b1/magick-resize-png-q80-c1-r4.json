@@ -1,0 +1,70 @@
+{
+  "schema": "e2-batch-v1",
+  "job": {
+    "engine": "magick",
+    "batch": {
+      "id": "magick-resize-png-q80-c1-r4",
+      "root": "/app/corpus",
+      "output": "/results/aws-measure-20260910-b1/outputs/magick-resize-png-q80-c1-r4",
+      "spec": {
+        "operation": "resize",
+        "format": "png",
+        "quality": 80
+      },
+      "concurrency": 1,
+      "repetition": 4,
+      "seed": 213,
+      "quality": false,
+      "save": false,
+      "warmup": true
+    }
+  },
+  "started": "2026-09-10T10:10:26.460671968Z",
+  "wall_ns": 30008323087,
+  "exit_code": 0,
+  "wait_rss_bytes": 417583104,
+  "self_rss_bytes": 417583104,
+  "wait_cpu_user_ns": 28286345000,
+  "wait_cpu_system_ns": 1390426000,
+  "cgroup_source": "cgroup-v1-container-visible",
+  "cgroup_sampled_peak_bytes": 396300288,
+  "cgroup_cpu_ns": 29901034457,
+  "sample_count": 588,
+  "scope": {
+    "controllers": [
+      {
+        "child_member": true,
+        "controller": "memory",
+        "hidden_direct_members": 0,
+        "parent_member": true,
+        "visible_direct_members": 2
+      },
+      {
+        "child_member": true,
+        "controller": "cpu,cpuacct",
+        "hidden_direct_members": 0,
+        "parent_member": true,
+        "visible_direct_members": 2
+      },
+      {
+        "child_member": true,
+        "controller": "cpuacct",
+        "hidden_direct_members": 0,
+        "parent_member": true,
+        "visible_direct_members": 2
+      }
+    ],
+    "limits": {
+      "cpu,cpuacct/cpu.cfs_period_us": "100000",
+      "cpu,cpuacct/cpu.cfs_quota_us": "-1",
+      "cpu/cpu.cfs_period_us": "100000",
+      "cpu/cpu.cfs_quota_us": "-1",
+      "memory/memory.limit_in_bytes": "2147483648"
+    },
+    "membership_equal": true,
+    "scope": "container parent and one worker; cgroup counters include both and file cache"
+  },
+  "completed": 24,
+  "warm_completed": 24,
+  "worker_sampled_peak_threads": 6
+}

@@ -1,5 +1,7 @@
 # Local verification and calibration — 2026-09-10
 
+후속 [AWS 품질 검사와 동일 이미지 진단](../../../../reports/e2-transformer-ab/aws-20260910/README.md)에서 ImageMagick AVIF quality 전달 오류가 확인됐다. 아래 실행·decode·hash 검사 통과는 실제 AVIF Q 적용을 증명하지 않으며, 최종 비교 근거로 승격하지 않는다.
+
 **576/576개 출력 검증과 warm-up 포함 2,304/2,304회 calibration이 성공했다.** 이 자료는 개발 단계의 기능·실행 가능성 확인이며 5회 반복 본 측정이나 AWS 성능 결과가 아니다.
 
 최종 runtime 개발 이미지에서는 같은 Task의 사전 진단 16회와 quality sweep 192회도 성공했다. 192개 출력을 독립 디코딩했고 curve의 Q80 48개는 앞선 validation과 hash/bytes가 전부 같았다. [Task 내 encoder 설정](quality/preflight/settings.json), [품질 분석](quality-analysis/quality.json), [Q80 hash 대조](quality-hash-check.json)를 보존했다. 이 run에서 사전 진단은 libvips threads 1/ImageMagick 28, speed 5를 확인했고 본 quality worker에는 probe를 넣지 않았다.

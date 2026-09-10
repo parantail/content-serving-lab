@@ -1,0 +1,19 @@
+{
+  "active_clusters": 0,
+  "active_task_definitions": 0,
+  "buckets": 0,
+  "checked_at": "2026-09-10T10:46:44.5951248+00:00",
+  "deployment_id": "20260910-b1",
+  "internet-gateways": 0,
+  "log_groups": 0,
+  "network_interfaces": 0,
+  "repositories": 0,
+  "roles": 0,
+  "route-tables": 0,
+  "security-groups": 0,
+  "subnets": 0,
+  "terraform_resources": 0,
+  "valid": true,
+  "vpc-endpoints": 0,
+  "vpcs": 0
+}
