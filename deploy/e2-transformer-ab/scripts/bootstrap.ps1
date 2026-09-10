@@ -13,7 +13,7 @@ if (Test-Path -LiteralPath (Join-Path $script:E2Root 'runtime.auto.tfvars.json')
 & (Join-Path $PSScriptRoot 'preflight.ps1') -DeploymentId $DeploymentId -ExpectedCostUsd $ExpectedCostUsd -Profile $Profile
 $local = Join-Path $script:E2Root 'local'
 New-Item -ItemType Directory -Path $local -Force | Out-Null
-$deadline = [DateTimeOffset]::UtcNow.AddHours(2).ToString('o')
+$deadline = [DateTimeOffset]::UtcNow.AddHours(5).ToString('o')
 $runtime = @{ deployment_id=$DeploymentId; aws_profile=$Profile; region='ap-northeast-2'; expires_at=$deadline; image_digest='' }
 Save-E2Json (Join-Path $script:E2Root 'runtime.auto.tfvars.json') $runtime
 Save-E2Json (Join-Path $script:E2Root 'deadline.json') @{ expires_at=$deadline; commit=$commit; expected_cost_usd=$ExpectedCostUsd }

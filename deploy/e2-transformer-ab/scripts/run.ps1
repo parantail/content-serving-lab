@@ -9,7 +9,8 @@ if (Test-Path -LiteralPath $requestPath) { throw 'RunId already has a launch rec
 $runtime = Get-E2Runtime
 $deadline = Assert-BeforeDeadline $runtime
 $config = Get-E2Configuration
-if ($Mode -eq 'measure' -and ($deadline-[DateTimeOffset]::UtcNow).TotalMinutes -lt 65) { throw 'Less than 60 minutes plus cleanup margin remains.' }
+# 210-minute loop + 5-minute Task overhead + 15-minute quality allowance + 10-minute cleanup margin.
+if ($Mode -eq 'measure' -and ($deadline-[DateTimeOffset]::UtcNow).TotalMinutes -lt 240) { throw 'Less than 240 minutes remains for measurement, quality, and cleanup.' }
 $running = Invoke-AwsJson $runtime.aws_profile $runtime.region @('ecs','list-tasks','--cluster',$config.cluster)
 if (@($running.taskArns).Count) { throw 'The E2 cluster already has an active task.' }
 $overrides = @{containerOverrides=@(@{name='runner';command=@('-mode',$Mode,'-output',"/results/$RunId",'-cohort','aws')})}
@@ -24,7 +25,8 @@ $response = Invoke-AwsJson $runtime.aws_profile $runtime.region @('ecs','run-tas
 Save-E2Json (Join-Path $script:E2Root "local/$RunId-start.json") $response
 if (@($response.failures).Count -or @($response.tasks).Count -ne 1) { throw 'ECS task launch failed.' }
 $taskArn=$response.tasks[0].taskArn
-$stopAt=[DateTimeOffset]::UtcNow.AddMinutes(63)
+$taskMinutes = if ($Mode -eq 'measure') { 215 } else { 63 }
+$stopAt=[DateTimeOffset]::UtcNow.AddMinutes($taskMinutes)
 if ($deadline -lt $stopAt) {$stopAt=$deadline}
 try {
     $task=Wait-EcsTaskStopped $runtime.aws_profile $runtime.region $config.cluster $taskArn $stopAt

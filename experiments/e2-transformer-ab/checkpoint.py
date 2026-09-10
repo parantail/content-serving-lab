@@ -58,10 +58,13 @@ def summarize(raw):
         if manifest.get("preflight_diagnostic_calls"):
             summary["same_task_avif_settings"] = read(root / "preflight/settings.json")
         if manifest["mode"] == "calibrate":
+            # Missing field denotes the original 60-minute contract. Preserve
+            # historical gate decisions when reanalyzing old immutable raw.
+            limit = manifest.get("measurement_gate_seconds", 3600)
             summary["measurement_time_gate"] = dict(
-                repetitions=5, margin_multiplier=1.25, limit_seconds=3600,
+                repetitions=5, margin_multiplier=1.25, limit_seconds=limit,
                 estimated_seconds=wall*5, with_margin_seconds=wall*5*1.25,
-                passed=wall*5*1.25 <= 3600)
+                passed=wall*5*1.25 <= limit)
         summaries.append(summary)
     return dict(schema="e2-aws-checkpoint-v1", source_commit=execution["source_commit"],
                 image_digest=execution["image_digest"],

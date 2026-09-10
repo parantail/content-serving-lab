@@ -21,6 +21,8 @@ import (
 
 var commit = "development"
 
+const measurementLimit = 210 * time.Minute
+
 func main() {
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -66,7 +68,11 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	meta := map[string]any{"schema": "e2-run-v1", "contract": e2.Contract, "commit": commit, "cohort": *cohort, "mode": *mode, "started": time.Now().UTC().Format(time.RFC3339Nano), "corpus_sha256": hash, "go_version": runtime.Version(), "arch": runtime.GOARCH, "packages": string(packages), "jobs": jobs, "planned": planned, "warmup_planned": warm, "max_seconds": 3600, "transform_timeout_seconds": 30, "sample_interval_ms": 50, "avif_threads_policy": "standard Debian delegate defaults; external 1 vCPU/2 GiB/concurrency matched"}
+	loopLimit := time.Hour
+	if *mode == "measure" {
+		loopLimit = measurementLimit
+	}
+	meta := map[string]any{"schema": "e2-run-v1", "contract": e2.Contract, "commit": commit, "cohort": *cohort, "mode": *mode, "started": time.Now().UTC().Format(time.RFC3339Nano), "corpus_sha256": hash, "go_version": runtime.Version(), "arch": runtime.GOARCH, "packages": string(packages), "jobs": jobs, "planned": planned, "warmup_planned": warm, "max_seconds": int(loopLimit.Seconds()), "measurement_gate_seconds": int(measurementLimit.Seconds()), "transform_timeout_seconds": 30, "sample_interval_ms": 50, "avif_threads_policy": "standard Debian delegate defaults; external 1 vCPU/2 GiB/concurrency matched"}
 	if *mode != "diagnose" {
 		meta["preflight_diagnostic_calls"] = 16
 	}
@@ -94,7 +100,7 @@ func run() error {
 			return err
 		}
 	}
-	ctx, cancel := context.WithTimeout(parent, time.Hour)
+	ctx, cancel := context.WithTimeout(parent, loopLimit)
 	defer cancel()
 	start := time.Now()
 	completed := 0

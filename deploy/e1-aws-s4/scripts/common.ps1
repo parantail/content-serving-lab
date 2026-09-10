@@ -135,7 +135,7 @@ function Assert-BeforeDeadline {
 
     $deadline = [DateTimeOffset]::Parse($RuntimeConfiguration.expires_at).ToUniversalTime()
     if ([DateTimeOffset]::UtcNow -ge $deadline) {
-        throw "The two-hour deployment deadline has passed. Run destroy.ps1 immediately."
+        throw "The configured deployment deadline has passed. Run destroy.ps1 immediately."
     }
     return $deadline
 }

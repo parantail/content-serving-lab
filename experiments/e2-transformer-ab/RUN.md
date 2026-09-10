@@ -20,7 +20,9 @@ docker build -f experiments/e2-transformer-ab/Dockerfile.tools -t e2-tools:local
 docker run --rm --network none --cpus=2 --memory=2g --mount "type=bind,source=$((Get-Location).Path),target=/repo" e2-tools:local experiments/e2-transformer-ab/analyze.py dist/local-validate dist/local-validate-analysis
 docker run --rm --network none --cpus=2 --memory=2g --mount "type=bind,source=$((Get-Location).Path),target=/repo" e2-tools:local experiments/e2-transformer-ab/analyze.py dist/local-calibrate dist/local-calibrate-analysis
 $calibration = Get-Content dist/local-calibrate/completion.json -Raw | ConvertFrom-Json
-if (-not $calibration.valid -or $calibration.wall_ns / 1e9 * 5 * 1.25 -gt 3600) { throw 'Calibration gate failed; do not measure.' }
+$manifest = Get-Content dist/local-calibrate/manifest.json -Raw | ConvertFrom-Json
+$limit = if ('measurement_gate_seconds' -in $manifest.PSObject.Properties.Name) { $manifest.measurement_gate_seconds } else { 3600 }
+if (-not $calibration.valid -or $calibration.wall_ns / 1e9 * 5 * 1.25 -gt $limit) { throw 'Calibration gate failed; do not measure.' }
 ```
 
 AWS 회수 디렉터리에도 같은 analyzer를 사용한다. `validate`는 두 adapter의 모든 Q80 출력 576개를 독립 디코딩하여 geometry·alpha·JPEG 4:4:4·PNG truecolor와 reference/hash를 확인한다. `quality`는 대표 8개·4 quality·3 lossy format·두 engine의 192개 출력이다. `measure`에는 실제 출력 파일 저장을 끄고 hash/bytes만 남겨 파일 쓰기를 batch wall time에 넣지 않는다.
@@ -45,7 +47,7 @@ docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),
 
 worker `ru_maxrss`에는 Go runtime, corpus/reference hash 검증의 임시 할당, encoded input preload와 warm-up도 포함된다. 두 engine에 같은 경로를 사용하며 baseline을 빼지 않는다. wait4 값은 종료까지의 개별 child HWM이므로 마지막 summary JSON 할당으로 self 값보다 커질 수 있다. 누적 RUSAGE_CHILDREN은 쓰지 않는다.
 
-Fargate는 mode별 Task를 다른 호스트에 배치할 수 있다. 따라서 diagnose 외의 mode도 동일 Task의 `preflight/`에서 16회 별도 AVIF probe를 먼저 실행하고 `settings.json`에 AOM 버전·threads·speed·scope를 검증한다. 이 worker를 종료한 후 새로운 worker로 본 matrix를 실행하며 성능 worker에는 LD_PRELOAD를 넣지 않는다. Manifest의 `preflight_diagnostic_calls`는 measured/warm-up 호출 수와 별도다. 60분은 batch 실행 loop에 적용하고 최초 corpus/manifest 준비·사전 진단은 별도이며, 전체 Task 시간은 외부 Task supervisor와 2시간 인프라 deadline에도 제한된다.
+Fargate는 mode별 Task를 다른 호스트에 배치할 수 있다. 따라서 diagnose 외의 mode도 동일 Task의 `preflight/`에서 16회 별도 AVIF probe를 먼저 실행하고 `settings.json`에 AOM 버전·threads·speed·scope를 검증한다. 이 worker를 종료한 후 새로운 worker로 본 matrix를 실행하며 성능 worker에는 LD_PRELOAD를 넣지 않는다. Manifest의 `preflight_diagnostic_calls`는 measured/warm-up 호출 수와 별도다. 본 측정 210분(다른 mode 60분)은 batch 실행 loop에 적용하고 최초 corpus/manifest 준비·사전 진단은 별도이며, 전체 Task 시간은 외부 Task supervisor와 5시간 인프라 deadline에도 제한된다.
 
 `GOMAXPROCS=1`, `VIPS_CONCURRENCY=1`, `OMP_NUM_THREADS=1`, `MAGICK_THREAD_LIMIT=1`이다. ImageMagick memory 1,536 MiB/map 0/disk 0/area 20MP와 thread 1을 설정한다. 전체 메모리는 Docker/Fargate 2 GiB로 제한한다. AVIF delegate 기본 thread 수는 별도로 진단하고, worker 전체의 sampled thread peak는 codec thread 설정과 구분한다.
 
@@ -53,4 +55,4 @@ JPEG는 4:4:4·non-progressive·metadata 제거, WebP는 lossy method/effort 4·
 
 E1 연결 검증 `TestE1JPEGToWebPConnection`은 고정 E1 JPEG를 기존 image-thumbnail과 E2 buffer-thumbnail에서 cover640/WebP Q80으로 변환하여 Go WebP decoder로 두 크기를 확인한다. 코드 경로·resampler가 달라 byte 동일성을 요구하지 않으며 E1 성능 원자료는 변경하지 않는다.
 
-AWS 회수 자료의 공개 정리는 `export_aws.py <local-metadata-directory> <deployment-id> <fresh-output> <run-id>...`로 수행한다. 검증된 cleanup을 요구하고 실행 image/source를 대조하며 원자료 bytes와 SHA-256을 보존한다. AWS launch request·Terraform state·계정 식별자를 공개 복사하지 않는다. `checkpoint.py <exported-raw> <fresh-summary.json>`은 완결된 run의 성공·warm-up 수, loop 시간·RSS와 60분 gate를 재계산한다. 모든 mode가 없으면 `all_five_modes_present=false`로 남긴다. [실제 AWS calibration 기록과 재생성 명령](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)을 참고한다.
+AWS 회수 자료의 공개 정리는 `export_aws.py <local-metadata-directory> <deployment-id> <fresh-output> <run-id>...`로 수행한다. 검증된 cleanup을 요구하고 실행 image/source를 대조하며 원자료 bytes와 SHA-256을 보존한다. AWS launch request·Terraform state·계정 식별자를 공개 복사하지 않는다. `checkpoint.py <exported-raw> <fresh-summary.json>`은 완결된 run의 성공·warm-up 수, loop 시간·RSS와 manifest의 measurement_gate_seconds(미기록된 과거 run은 3,600초) 기준 gate를 재계산한다. 모든 mode가 없으면 `all_five_modes_present=false`로 남긴다. [실제 AWS calibration 기록과 재생성 명령](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)을 참고한다.

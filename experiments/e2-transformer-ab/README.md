@@ -2,13 +2,13 @@
 
 설계 확정일: 2026-09-09
 
-상태: **AWS 진단·출력 검증·calibration 및 자원 제거 완료 · 본 측정 시간 gate 초과로 보류**.
+상태: **AWS calibration 근거로 본 측정 210분·인프라 5시간 확정 · 재실행 준비**.
 
 [로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. **2026-09-10 확정: 표준 Debian 패키지를 유지하고 동일 CPU·memory·요청 동시성 아래 배포 후보의 실제 동작을 비교한다.** AVIF delegate의 기본 thread 설정은 native thread 목표 1의 명시적 예외다. Fargate에서도 실제 값을 진단하고, 이 차이를 라이브러리 자체의 우열이나 동일 encoder thread 비교로 해석하지 않는다.
 
 > 같은 이미지 묶음과 1 vCPU·2 GiB 제한에서 두 배포 후보의 처리량, 메모리, 출력 품질과 파일 크기는 어떻게 달라지는가?
 
-이 문서는 실험의 기술 계약이다. 아래 matrix 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter·supervisor와 독립 analyzer, [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [로컬 확인](results-local/preflight-20260910/README.md)에 이어 [AWS 결과](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)에서도 576개 출력 검증과 2,304회 calibration을 완료했다. AWS calibration은 30.734분으로, 5회와 25% 여유 적용 시 192.087분이 필요해 현재 60분 gate를 통과하지 못했다. 5회 본 측정과 AWS quality sweep은 미실행이며 시간 제한을 재검토해야 한다. 이번 배포의 21개 자원은 제거하고 잔여 0개를 확인했다.
+이 문서는 실험의 기술 계약이다. 아래 matrix 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter·supervisor와 독립 analyzer, [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [로컬 확인](results-local/preflight-20260910/README.md)에 이어 [AWS 결과](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)에서도 576개 출력 검증과 2,304회 calibration을 완료했다. AWS calibration은 30.734분으로, 5회와 25% 여유 적용 시 192.087분이 필요해 당시 60분 gate를 통과하지 못했다. 2026-09-10 본 측정 210분·인프라 5시간으로 제한 변경을 확정했다. 5회 본 측정과 AWS quality sweep은 새 checkpoint에서 진행하며 기존 calibration을 본 측정에 편입하지 않는다. 이번 배포의 21개 자원은 제거하고 잔여 0개를 확인했다.
 
 ## 현재 기반과 구현 범위
 
@@ -62,9 +62,9 @@ geometry는 (1) 장변 640으로 비율 유지 resize, (2) 640×480 안에 비�
 | 실행 순서 | 두 engine을 같은 조건에서 짝지어 실행; 반복마다 A→B/B→A 교대, fixture 순서는 고정 seed |
 | 자원 | Linux amd64, 1 vCPU·2 GiB, Go/native/codec 병렬 설정 기록; native thread 목표 1, AVIF delegate는 표준 패키지 기본값 예외 |
 | 주 인코딩 조건 | JPEG/WebP/AVIF Q80. JPEG subsampling, WebP method, AVIF speed/encoder는 명시적으로 맞추고 사전 검증 |
-| 시간 제한 | 변환 시작부터 30초, 전체 측정 60분, 인프라 최대 2시간 |
+| 시간 제한 | 변환 시작부터 30초, 본 측정 210분(다른 mode 60분), 인프라 최대 5시간 |
 
-5,760회는 warm-up·품질 출력·검증을 제외한 값이다. Calibration은 동일 48조건을 한 반복씩 warm-up 포함 실행한다. **Calibration 전체 batch 실행 wall time × 5 × 1.25가 3,600초 이내**여야 본 측정을 시작한다. 이는 25% 시간 여유를 둔 실행 gate이며 완료 보장은 아니다. Parent의 최초 corpus 검증·manifest 준비는 batch 실행 구간 앞에 있으며 Task 총시간과 인프라 deadline에는 포함한다. 맞지 않으면 실행을 중단하고 측정 전에 설계를 재검토한다.
+5,760회는 warm-up·품질 출력·검증을 제외한 값이다. Calibration은 동일 48조건을 한 반복씩 warm-up 포함 실행한다. **Calibration 전체 batch 실행 wall time × 5 × 1.25가 12,600초 이내**여야 본 측정을 시작한다. 이는 25% 시간 여유를 둔 실행 gate이며 완료 보장은 아니다. Parent의 최초 corpus 검증·manifest 준비는 batch 실행 구간 앞에 있으며 Task 총시간과 인프라 deadline에는 포함한다. 맞지 않으면 실행을 중단하고 측정 전에 설계를 재검토한다.
 
 호출 수를 모드별로 고정한다: diagnose 16, validate 576, calibrate 2,304(측정 1,152 + warm-up 1,152), measure 11,520(측정 5,760 + warm-up 5,760), quality 192. diagnose 외 네 mode는 같은 Task에서 추가로 16회씩 AVIF 설정을 사전 진단한다. AWS 한 사이클의 최대 예정 호출은 **14,672**이다. 개발 테스트와 E1 연결 확인 2회는 이 수에 섞지 않는다. 각 mode 시작 전에 전체 job/seed/호출 수를 manifest로 저장한다. 로컬 확인·calibration과 AWS 측정은 별도 cohort다.
 
@@ -95,7 +95,7 @@ libvips operation cache는 E1처럼 끈다. ImageMagick의 pixel cache는 이미
 
 새 E2 Terraform에 VPC/public subnet/IGW/route/security group, ECS cluster/task definition, immutable ECR, 결과 S3, IAM, CloudWatch Logs, S3 gateway endpoint를 만든다. corpus는 이미지에 고정하고 결과 S3에는 batch 종료 후 업로드한다. public IPv4로 image pull/log 전송 경로를 확보하며 inbound는 열지 않는다. NAT와 유료 interface endpoint는 사용하지 않는다. 기존 E1 state/resource와 섞지 않는다.
 
-월간 US$10 Budget·알림을 재확인하고, 이번 배포 예상 비용 US$3 이내·인프라 최대 2시간을 실행 조건으로 사용한다. US$3은 실행 허용 기준이며 산출된 견적이나 실제 과금의 자동 차단 한도가 아니다. 실제 단가는 구현할 resource 수·보존량·소요 시간과 함께 apply 전에 계산한다. Fargate는 image 다운로드부터 종료까지의 자원 사용시간에 요금이 적용되며 S3/ECR/로그/IPv4 비용도 따로 포함해야 한다. [Fargate 요금](https://aws.amazon.com/fargate/pricing/).
+월간 US$10 Budget·알림을 재확인하고, 이번 배포 예상 비용 US$3 이내·인프라 최대 5시간을 실행 조건으로 사용한다. US$3은 실행 허용 기준이며 산출된 견적이나 실제 과금의 자동 차단 한도가 아니다. 실제 단가는 구현할 resource 수·보존량·소요 시간과 함께 apply 전에 계산한다. Fargate는 image 다운로드부터 종료까지의 자원 사용시간에 요금이 적용되며 S3/ECR/로그/IPv4 비용도 따로 포함해야 한다. [Fargate 요금](https://aws.amazon.com/fargate/pricing/).
 
 E1에서 검증한 preflight → clean checkpoint → ECR bootstrap/push → 저장된 plan 검토/apply → 동일 이미지 진단 → calibration/본 측정 → 회수/독립 재분석 → destroy/잔여 검사 흐름을 E2에 맞춘다. watchdog는 bootstrap 전에 시작하고 deadline에 실행 중 Task를 중단·회수·제거한다. 기존 로컬 watchdog는 운영 PC가 계속 켜져 있고 AWS 인증이 유효해야 동작한다. AWS 자체 예약 정리는 새 범위이므로 포함한 것으로 간주하지 않는다.
 
@@ -111,7 +111,7 @@ Local/AWS raw는 분리한다. 동일 image와 설정이어도 Docker 환경과 
 | Build/adapter | imagick/native/codec의 정확한 버전, ImageMagick Q16 non-HDRI 확인, AVIF encoder와 실제 네 포맷 round-trip, 동일 codec 경로·thread 설정 |
 | 변환·제한 정책 | 크기 반올림·crop 좌표, 최대 입력 bytes/pixels, JPEG subsampling·WebP method·AVIF speed, native/pixel-cache 자원 제한 |
 | 품질 기준 | 독립 reference 생성기·버전·필터, metric window/색 공간·PSNR 정의, alpha 검사와 시각 확인 입력 |
-| Harness/calibration | seed·raw schema·warm-up 포함 최대 호출 수, 오류/timeout 회수, RSS와 cgroup scope, 60분 이내 실행 가능 여부 |
+| Harness/calibration | seed·raw schema·warm-up 포함 최대 호출 수, 오류/timeout 회수, RSS와 cgroup scope, 210분 이내 본 측정 실행 가능 여부 |
 | AWS 사전점검 | 현재 인증·Budget·quota·잔여 자원, 자원별 비용 계산, 생성 자원 plan, image digest·watchdog·회수/제거 경로 |
 
 각 항목은 공개 파일과 명령으로 확인 가능해야 한다. 예정된 파일의 hash나 버전을 추정해서 채우지 않는다. 합의된 범위·제한의 변경이 필요하거나 실행이 막히면 후속 측정을 중단하고 사유를 기록한다. AWS 자원이 이미 존재하면 가능한 원자료 회수와 정리를 우선한다.
