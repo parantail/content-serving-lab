@@ -1,0 +1,20 @@
+{"type":"ready","batch":"vips-q50","time_ns":1789049853293448414,"version":"govips v2.16.0; libvips 8.16.1"}
+{"type":"pass_start","batch":"vips-q50","time_ns":1789049853293529488}
+{"type":"start","batch":"vips-q50","id":"alpha-small-avif","time_ns":1789049853293543704}
+{"type":"finish","batch":"vips-q50","id":"alpha-small-avif","time_ns":1789049853565368591,"duration_ns":271823566,"queue_ns":14215,"bytes":4788,"sha256":"2773351cd8ad3fa4ea5ced34702ca72b4b9a8f8a614c7e7e57bf2f83a6d880e4"}
+{"type":"start","batch":"vips-q50","id":"landscape-small-jpeg","index":1,"time_ns":1789049853565409111}
+{"type":"finish","batch":"vips-q50","id":"landscape-small-jpeg","index":1,"time_ns":1789049854075222946,"duration_ns":509811717,"queue_ns":271879622,"bytes":37739,"sha256":"885d62c8d84f823d696237aa27d1acfda8d80c57ae369895790e640619d05450"}
+{"type":"start","batch":"vips-q50","id":"orientation-6-jpeg","index":2,"time_ns":1789049854075265228}
+{"type":"finish","batch":"vips-q50","id":"orientation-6-jpeg","index":2,"time_ns":1789049854145088844,"duration_ns":69821868,"queue_ns":781735739,"bytes":825,"sha256":"ad6ab2e854abc2b4ece31d56420110c21ab7882d6d337a9ad946be1b03290493"}
+{"type":"start","batch":"vips-q50","id":"landscape-large-webp","index":3,"time_ns":1789049854145127984}
+{"type":"finish","batch":"vips-q50","id":"landscape-large-webp","index":3,"time_ns":1789049854775366493,"duration_ns":630236818,"queue_ns":851598494,"bytes":36185,"sha256":"c703686fe2816a585a813677913de62b8bc35675a91046adee67a26a1a8fc978"}
+{"type":"start","batch":"vips-q50","id":"fruit-small-png","index":4,"time_ns":1789049854775409355}
+{"type":"finish","batch":"vips-q50","id":"fruit-small-png","index":4,"time_ns":1789049855060163560,"duration_ns":284752474,"queue_ns":1481879867,"bytes":9242,"sha256":"b513db0a550828e8e4c2d0381ac0313087599d5231fefa12c5159f2cd700fab7"}
+{"type":"start","batch":"vips-q50","id":"fruit-large-avif","index":5,"time_ns":1789049855060195295}
+{"type":"finish","batch":"vips-q50","id":"fruit-large-avif","index":5,"time_ns":1789049855613156432,"duration_ns":552959412,"queue_ns":1766665807,"bytes":9127,"sha256":"1cc1cab3314856cbc892245e5953697aada85e4a4a7771ff49e17007aff02892"}
+{"type":"start","batch":"vips-q50","id":"alpha-large-webp","index":6,"time_ns":1789049855613192112}
+{"type":"finish","batch":"vips-q50","id":"alpha-large-webp","index":6,"time_ns":1789049855861603861,"duration_ns":248409826,"queue_ns":2319662624,"bytes":3585,"sha256":"40596331593e672a7350566a8d7fd44be524a560c3e254b85989cb412ea2fa13"}
+{"type":"start","batch":"vips-q50","id":"alpha-small-png","index":7,"time_ns":1789049855861645388}
+{"type":"finish","batch":"vips-q50","id":"alpha-small-png","index":7,"time_ns":1789049856110541711,"duration_ns":248894564,"queue_ns":2568115900,"bytes":4782,"sha256":"6ecc6d26d2d0c9fb93097515da6c5669925bad268d47beb0e21551fec5811e57"}
+{"type":"pass_end","batch":"vips-q50","time_ns":1789049856110580659,"duration_ns":2817051353,"success":8,"attempts":8}
+{"type":"summary","batch":"vips-q50","time_ns":1789049856110584642,"peak_rss_bytes":265596928,"cpu_user_ns":2758267000,"cpu_system_ns":179887000}

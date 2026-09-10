@@ -1,0 +1,4 @@
+{"type":"ready","batch":"magick-resize-avif-q80-c1-r0","time_ns":1789049967467181694,"version":"imagick v3.7.3; ImageMagick 7.1.1-43 Q16 x86_64 22550 https://imagemagick.org"}
+{"type":"pass_start","batch":"magick-resize-avif-q80-c1-r0","time_ns":1789049967467268194}
+{"type":"start","batch":"magick-resize-avif-q80-c1-r0","id":"alpha-large-png","time_ns":1789049967467283283}
+{"type":"terminated","batch":"magick-resize-avif-q80-c1-r0","id":"alpha-large-png","time_ns":1789049967467283283,"error":"interrupted"}

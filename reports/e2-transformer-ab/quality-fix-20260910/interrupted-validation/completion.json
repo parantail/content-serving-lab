@@ -1,0 +1,9 @@
+{
+  "completed_batches": 7,
+  "ended": "2026-09-10T14:19:28.077734905Z",
+  "error": "context canceled",
+  "planned_batches": 24,
+  "schema": "e2-completion-v1",
+  "valid": false,
+  "wall_ns": 33512958598
+}

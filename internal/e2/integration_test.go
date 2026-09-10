@@ -75,3 +75,32 @@ func TestNativeGeometryAlphaAndLimits(t *testing.T) {
 		})
 	}
 }
+
+// Q50 and Q80 share AVIF 4:2:0, so a chroma switch cannot hide a no-op setter.
+func TestNativeAVIFQualityResponds(t *testing.T) {
+	input := image.NewNRGBA(image.Rect(0, 0, 64, 48))
+	for y := 0; y < 48; y++ {
+		for x := 0; x < 64; x++ {
+			input.SetNRGBA(x, y, color.NRGBA{R: uint8(x*17 + y*3), G: uint8(x*7 + y*19), B: uint8(x*31 + y*11), A: 255})
+		}
+	}
+	var encoded bytes.Buffer
+	if err := png.Encode(&encoded, input); err != nil {
+		t.Fatal(err)
+	}
+	for name, engine := range map[string]e2.Transformer{"vips": e2vips.New(), "magick": e2magick.New()} {
+		t.Run(name, func(t *testing.T) {
+			low, err := engine.Transform(encoded.Bytes(), e2.Spec{Operation: "cover", Format: "avif", Quality: 50})
+			if err != nil {
+				t.Fatal(err)
+			}
+			high, err := engine.Transform(encoded.Bytes(), e2.Spec{Operation: "cover", Format: "avif", Quality: 80})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if bytes.Equal(low, high) {
+				t.Fatal("AVIF quality setter has no effect")
+			}
+		})
+	}
+}

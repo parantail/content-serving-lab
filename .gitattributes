@@ -5,3 +5,4 @@
 *.avif filter=lfs diff=lfs merge=lfs -text
 # Preserve the PowerShell-captured diagnostic stderr bytes, including CRLF.
 reports/e2-transformer-ab/aws-20260910/quality-parameter/*.log -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+reports/e2-transformer-ab/quality-fix-20260910/quality-sweep/*.log -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -8,7 +8,7 @@ import (
 )
 
 func TestCodecConfigurationGate(t *testing.T) {
-	line := "E2_CODEC encoder=AOMedia Project AV1 Encoder v3.12.1 threads=1 speed=5 query_errors=0,0\n"
+	line := "E2_CODEC encoder=AOMedia Project AV1 Encoder v3.12.1 threads=1 speed=5 quality=80 query_errors=0,0,0\n"
 	for _, test := range []struct {
 		engine, log string
 		want        int
@@ -16,6 +16,20 @@ func TestCodecConfigurationGate(t *testing.T) {
 		got, err := parseCodec(test.log, test.engine)
 		if got != test.want || (err != nil) != (test.want == 0) {
 			t.Fatalf("%s got %d/%v, want %d", test.engine, got, err, test.want)
+		}
+	}
+}
+
+func TestCodecRejectsMissingOrWrongEffectiveQuality(t *testing.T) {
+	line := "E2_CODEC encoder=AOMedia Project AV1 Encoder v3.12.1 threads=2 speed=5 quality=80 query_errors=0,0,0\n"
+	for _, bad := range []string{
+		strings.ReplaceAll(line, "quality=80", "quality=50"),
+		strings.ReplaceAll(line, "quality=80 ", ""),
+		strings.ReplaceAll(line, "0,0,0", "0,0,1"),
+		strings.ReplaceAll(line, "quality=80", "quality=-1"),
+	} {
+		if _, err := parseCodec(strings.Repeat(line, 7)+bad, "magick"); err == nil {
+			t.Fatal("accepted missing, failed, or incorrect quality query", bad)
 		}
 	}
 }

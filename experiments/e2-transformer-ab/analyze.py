@@ -8,6 +8,7 @@ black and white. PSNR uses the same RGB samples (infinity represented by null).
 import argparse
 import json
 import math
+import re
 from pathlib import Path
 
 import numpy as np
@@ -48,6 +49,28 @@ def metrics(reference, output, jpeg):
     return result
 
 
+def verify_effective_quality(run, manifest):
+    contract = manifest.get("codec_quality_contract")
+    if contract is None:
+        return  # Historical raw predates actual quality queries; preserve reanalysis.
+    if contract != "effective-avif-q80-v1":
+        raise ValueError("Unknown codec quality contract")
+    diagnostic = manifest["mode"] == "diagnose"
+    path = run if diagnostic else run / "preflight"
+    logs = list(path.glob("*.stderr.log"))
+    if len(logs) != 2:
+        raise ValueError("Missing effective quality probe logs")
+    pattern = re.compile(r"^E2_CODEC encoder=AOMedia Project AV1 Encoder v3\.12\.1 threads=(\d+) speed=5 quality=80 query_errors=0,0,0$", re.M)
+    for log in logs:
+        matches = pattern.findall(log.read_text())
+        if len(matches) != 8 or len(set(matches)) != 1 or not 1 <= int(matches[0]) <= 64:
+            raise ValueError("Actual encoder quality/configuration mismatch")
+    if not diagnostic:
+        settings = read(path / "settings.json")
+        if any(s.get("effective_quality") != 80 or s.get("quality_query_error") != 0 for s in settings["settings"]):
+            raise ValueError("Effective quality settings missing or invalid")
+
+
 def analyze(run, output, corpus):
     manifest, completion = read(run / "manifest.json"), read(run / "completion.json")
     fixtures = {f["id"]: f for f in read(corpus / "manifest.json")["fixtures"]}
@@ -55,6 +78,7 @@ def analyze(run, output, corpus):
         raise ValueError("corpus hash mismatch")
     if not completion["valid"] or completion["completed_batches"] != len(manifest["jobs"]):
         raise ValueError("Incomplete/failed run: preserve raw; cannot report as valid")
+    verify_effective_quality(run, manifest)
     if manifest.get("preflight_diagnostic_calls"):
         settings = read(run / "preflight/settings.json")
         if settings["probe_enabled_in_performance"] or {s["engine"] for s in settings["settings"]} != {"vips", "magick"}:

@@ -9,10 +9,11 @@ struct heif_error heif_context_encode_image(struct heif_context *ctx,
   typedef struct heif_error (*encode_fn)(struct heif_context *, const struct heif_image *,
       struct heif_encoder *, const struct heif_encoding_options *, struct heif_image_handle **);
   encode_fn original = (encode_fn)dlsym(RTLD_NEXT, "heif_context_encode_image");
-  int threads=-1, speed=-1;
+  int threads=-1, speed=-1, quality=-1;
   struct heif_error t=heif_encoder_get_parameter_integer(encoder,"threads",&threads);
   struct heif_error s=heif_encoder_get_parameter_integer(encoder,"speed",&speed);
-  fprintf(stderr,"E2_CODEC encoder=%s threads=%d speed=%d query_errors=%d,%d\n",
-      heif_encoder_get_name(encoder), threads, speed, t.code, s.code);
+  struct heif_error q=heif_encoder_get_parameter_integer(encoder,"quality",&quality);
+  fprintf(stderr,"E2_CODEC encoder=%s threads=%d speed=%d quality=%d query_errors=%d,%d,%d\n",
+      heif_encoder_get_name(encoder), threads, speed, quality, t.code, s.code, q.code);
   return original(ctx,image,encoder,options,handle);
 }

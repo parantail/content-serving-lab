@@ -1,0 +1,97 @@
+{
+  "native_calls": 64,
+  "checks": [
+    {
+      "effective_quality": 50,
+      "samples": 8,
+      "requested_quality": 50,
+      "engine": "vips",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 50,
+      "samples": 8,
+      "requested_quality": 50,
+      "engine": "magick",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 65,
+      "samples": 8,
+      "requested_quality": 65,
+      "engine": "vips",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 65,
+      "samples": 8,
+      "requested_quality": 65,
+      "engine": "magick",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 80,
+      "samples": 8,
+      "requested_quality": 80,
+      "engine": "vips",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 80,
+      "samples": 8,
+      "requested_quality": 80,
+      "engine": "magick",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 90,
+      "samples": 8,
+      "requested_quality": 90,
+      "engine": "vips",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "effective_quality": 90,
+      "samples": 8,
+      "requested_quality": 90,
+      "engine": "magick",
+      "query_errors": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "schema": "e2-effective-quality-sweep-v1",
+  "image": "e2:quality-fix-dev",
+  "valid": true,
+  "cohort": "local"
+}

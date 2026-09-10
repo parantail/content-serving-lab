@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/parantail/content-serving-lab/internal/e2"
 	"gopkg.in/gographics/imagick.v3/imagick"
-	"strconv"
 	"strings"
 	"sync"
 )
@@ -104,13 +103,15 @@ func (*Transformer) Transform(b []byte, s e2.Spec) ([]byte, error) {
 	if e := mw.SetImageCompressionQuality(uint(s.Quality)); e != nil {
 		return nil, e
 	}
+	// HEIC/AVIF reads ImageInfo.quality; setting only Image.quality leaves
+	// libheif at its default Q50. Keep both for the different format writers.
+	if e := mw.SetCompressionQuality(uint(s.Quality)); e != nil {
+		return nil, e
+	}
 	if s.Format == "png" {
 		if e := mw.SetOption("png:color-type", "6"); e != nil {
 			return nil, e
 		}
-	}
-	if e := mw.SetOption("quality", strconv.Itoa(s.Quality)); e != nil {
-		return nil, e
 	}
 	if e := mw.StripImage(); e != nil {
 		return nil, e

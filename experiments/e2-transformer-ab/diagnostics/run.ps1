@@ -19,7 +19,7 @@ foreach ($engine in @('vips','magick')) {
         > (Join-Path $output "$engine.jsonl") 2> (Join-Path $output "$engine.log")
     if ($LASTEXITCODE -ne 0) { throw "Worker failed: $engine; preserve raw output" }
     $lines = @(Get-Content -LiteralPath (Join-Path $output "$engine.log") | Where-Object { $_ -match '^E2_CODEC ' })
-    if ($lines.Count -ne 8 -or @($lines | Where-Object {$_ -notmatch 'query_errors=0,0$'}).Count) { throw 'Missing/invalid codec observations' }
+    if ($lines.Count -ne 8 -or @($lines | Where-Object {$_ -notmatch 'speed=5 quality=80 query_errors=0,0,0$'}).Count) { throw 'Missing/invalid codec observations' }
     Write-Host "$engine`: $($lines[0]); observations=$($lines.Count)"
 }
 Write-Host "Raw results: dist/$RunId"

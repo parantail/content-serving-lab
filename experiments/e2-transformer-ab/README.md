@@ -2,13 +2,13 @@
 
 설계 확정일: 2026-09-09
 
-상태: **AWS 5회 측정·품질 실행·정리 완료, ImageMagick AVIF quality 전달 오류로 E2 최종 판정 보류**.
+상태: **ImageMagick AVIF quality 전달 수정·64회 실제 quality 확인, AWS 인증 만료로 재로그인 대기**. [수정본 로컬 근거와 중단 범위](../../reports/e2-transformer-ab/quality-fix-20260910/README.md).
 
 [로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. **2026-09-10 확정: 표준 Debian 패키지를 유지하고 동일 CPU·memory·요청 동시성 아래 배포 후보의 실제 동작을 비교한다.** AVIF delegate의 기본 thread 설정은 native thread 목표 1의 명시적 예외다. Fargate에서도 실제 값을 진단하고, 이 차이를 라이브러리 자체의 우열이나 동일 encoder thread 비교로 해석하지 않는다.
 
 > 같은 이미지 묶음과 1 vCPU·2 GiB 제한에서 두 배포 후보의 처리량, 메모리, 출력 품질과 파일 크기는 어떻게 달라지는가?
 
-이 문서는 실험의 기술 계약이다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json), 두 native adapter·supervisor·독립 analyzer와 [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [최신 AWS 기록](../../reports/e2-transformer-ab/aws-20260910/README.md)은 diagnose/validate/calibrate/measure/quality의 총 14,672회 실행, 159.711분의 5회 본 측정과 21개 자원 제거·잔여 0개를 보존한다. 그러나 ImageMagick AVIF의 Q50/65/80 출력이 같았고 같은 이미지의 로컬 진단에서 요청 Q80에 실제 Q50이 적용됨을 확인했다. **현재 adapter의 AVIF quality 전달은 미수정이며 추가 배포와 최종 선택을 보류한다.** 허용한 AVIF thread 차이와 별개의 계약 위반이다. 실행·decode·hash 검사 통과를 quality 적용 성공으로 해석하지 않는다.
+이 문서는 실험의 기술 계약이다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json), 두 native adapter·supervisor·독립 analyzer와 [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [최신 AWS 기록](../../reports/e2-transformer-ab/aws-20260910/README.md)은 diagnose/validate/calibrate/measure/quality의 총 14,672회 실행, 159.711분의 5회 본 측정과 21개 자원 제거·잔여 0개를 보존한다. 그러나 ImageMagick AVIF의 Q50/65/80 출력이 같았고 같은 이미지의 로컬 진단에서 요청 Q80에 실제 Q50이 적용됨을 확인했다. 현재 adapter는 `SetImageCompressionQuality`와 AVIF writer가 읽는 `SetCompressionQuality`를 함께 설정한다. 새 실행의 diagnose/preflight는 실제 encoder Q80을 요구하며 원본 trace를 독립 재검사한다. 수정본의 로컬 검증과 새 calibration 후 전체 AWS matrix를 다시 실행한다. 과거 결과로 최종 선택하지 않는다. 허용한 AVIF thread 차이와 별개의 계약 위반이다. 실행·decode·hash 검사 통과를 quality 적용 성공으로 해석하지 않는다.
 
 [이전 AWS calibration](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)은 당시 60분 gate에서 중단한 별도 기록이다. 이후 210분·인프라 5시간으로 확대했으며 기존 calibration을 새 5회 본 측정에 합치지 않았다. [로컬 확인](results-local/preflight-20260910/README.md)을 포함해 같은 adapter의 AVIF Q 표기는 요청값이며, 실제 quality 검증 근거로 사용하지 않는다.
 

@@ -1,0 +1,20 @@
+{"type":"ready","batch":"magick-q65","time_ns":1789049868219237856,"version":"imagick v3.7.3; ImageMagick 7.1.1-43 Q16 x86_64 22550 https://imagemagick.org"}
+{"type":"pass_start","batch":"magick-q65","time_ns":1789049868219302372}
+{"type":"start","batch":"magick-q65","id":"alpha-small-avif","time_ns":1789049868219316088}
+{"type":"finish","batch":"magick-q65","id":"alpha-small-avif","time_ns":1789049868735516592,"duration_ns":516199283,"queue_ns":13711,"bytes":7048,"sha256":"409c02b3c972a6d3904bacc2b2e915970f3ec5d5eff677e24e43ddcdb0eb7a3b"}
+{"type":"start","batch":"magick-q65","id":"landscape-small-jpeg","index":1,"time_ns":1789049868735543399}
+{"type":"finish","batch":"magick-q65","id":"landscape-small-jpeg","index":1,"time_ns":1789049869459136011,"duration_ns":723590601,"queue_ns":516241027,"bytes":64738,"sha256":"670fc5be5c33f17855c1e9093a68d089034ed23f9631b00c84559683a70cfbd9"}
+{"type":"start","batch":"magick-q65","id":"orientation-6-jpeg","index":2,"time_ns":1789049869459181862}
+{"type":"finish","batch":"magick-q65","id":"orientation-6-jpeg","index":2,"time_ns":1789049869623948334,"duration_ns":164764533,"queue_ns":1239879490,"bytes":1161,"sha256":"6548f6ec9cf44ca6f60cc774b32de41e8931b67b011269482dca53f470372bfb"}
+{"type":"start","batch":"magick-q65","id":"landscape-large-webp","index":3,"time_ns":1789049869623975201}
+{"type":"finish","batch":"magick-q65","id":"landscape-large-webp","index":3,"time_ns":1789049870551800747,"duration_ns":927823720,"queue_ns":1404672829,"bytes":67808,"sha256":"94b9da3bea15db7dbaba056df23c7e4dd48fd1a6f547b71642986892bfbedfb0"}
+{"type":"start","batch":"magick-q65","id":"fruit-small-png","index":4,"time_ns":1789049870551918716}
+{"type":"finish","batch":"magick-q65","id":"fruit-small-png","index":4,"time_ns":1789049870934825553,"duration_ns":382904957,"queue_ns":2332616344,"bytes":16751,"sha256":"94cdc887a1dbe315bd5b0e060dff0ef7c2345872c14dfbb61faf4643c3753da2"}
+{"type":"start","batch":"magick-q65","id":"fruit-large-avif","index":5,"time_ns":1789049870934856051}
+{"type":"finish","batch":"magick-q65","id":"fruit-large-avif","index":5,"time_ns":1789049871734464567,"duration_ns":799606779,"queue_ns":2715553679,"bytes":16854,"sha256":"d2d7a43f6da527dad87e4a89d3fca802757b8cd96efd52b765950eab88756d27"}
+{"type":"start","batch":"magick-q65","id":"alpha-large-webp","index":6,"time_ns":1789049871734494775}
+{"type":"finish","batch":"magick-q65","id":"alpha-large-webp","index":6,"time_ns":1789049872636411111,"duration_ns":901914495,"queue_ns":3515192403,"bytes":5552,"sha256":"63560310ba9a4d8b7631be7eb147c07f636075f4a44801692c20c4cb10d1cbab"}
+{"type":"start","batch":"magick-q65","id":"alpha-small-png","index":7,"time_ns":1789049872636436679}
+{"type":"finish","batch":"magick-q65","id":"alpha-small-png","index":7,"time_ns":1789049873121118585,"duration_ns":484680084,"queue_ns":4417134307,"bytes":6952,"sha256":"94fca29ea5c4292767433f15c81b8707fc218d4e542fbcc82c69f64dea7b495e"}
+{"type":"pass_end","batch":"magick-q65","time_ns":1789049873121145868,"duration_ns":4901843634,"success":8,"attempts":8}
+{"type":"summary","batch":"magick-q65","time_ns":1789049873121149305,"peak_rss_bytes":367513600,"cpu_user_ns":4693301000,"cpu_system_ns":289549000}

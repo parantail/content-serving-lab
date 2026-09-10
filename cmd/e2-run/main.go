@@ -76,6 +76,7 @@ func run() error {
 	if *mode != "diagnose" {
 		meta["preflight_diagnostic_calls"] = 16
 	}
+	meta["codec_quality_contract"] = "effective-avif-q80-v1"
 	if err = e2.WriteJSON(filepath.Join(*output, "manifest.json"), meta); err != nil {
 		return err
 	}
@@ -107,6 +108,13 @@ func run() error {
 	for i, job := range jobs {
 		fmt.Printf("batch %d/%d %s\n", i+1, len(jobs), job.Batch.ID)
 		_, err = e2.Supervise(ctx, job, filepath.Join(*binaries, "e2-"+job.Engine), *output, *mode == "diagnose", 30*time.Second)
+		if err == nil && *mode == "diagnose" {
+			var log []byte
+			log, err = os.ReadFile(filepath.Join(*output, job.Batch.ID+".stderr.log"))
+			if err == nil {
+				_, err = parseCodec(string(log), job.Engine)
+			}
+		}
 		if uploadErr := transfer.Flush(); uploadErr != nil && err == nil {
 			err = uploadErr
 		}
@@ -152,13 +160,13 @@ func preflight(parent context.Context, root, output, binaries string) error {
 		if err != nil {
 			return err
 		}
-		settings = append(settings, map[string]any{"engine": job.Engine, "encoder_threads": threads, "speed": 5, "samples": 8})
+		settings = append(settings, map[string]any{"engine": job.Engine, "encoder_threads": threads, "speed": 5, "effective_quality": 80, "quality_query_error": 0, "samples": 8})
 	}
 	return e2.WriteJSON(filepath.Join(path, "settings.json"), map[string]any{"scope": "same task before measured loop", "probe_enabled_in_performance": false, "settings": settings})
 }
 
 func parseCodec(log, engine string) (int, error) {
-	pattern := regexp.MustCompile(`E2_CODEC encoder=AOMedia Project AV1 Encoder v3\.12\.1 threads=(\d+) speed=(\d+) query_errors=(\d+),(\d+)`)
+	pattern := regexp.MustCompile(`(?m)^E2_CODEC encoder=AOMedia Project AV1 Encoder v3\.12\.1 threads=(\d+) speed=(\d+) quality=(\d+) query_errors=(\d+),(\d+),(\d+)\r?$`)
 	matches := pattern.FindAllStringSubmatch(log, -1)
 	if len(matches) != 8 {
 		return 0, fmt.Errorf("encoder probe count for %s: %d", engine, len(matches))
@@ -166,7 +174,7 @@ func parseCodec(log, engine string) (int, error) {
 	threads := 0
 	for _, match := range matches {
 		n, _ := strconv.Atoi(match[1])
-		if n < 1 || n > 64 || match[2] != "5" || match[3] != "0" || match[4] != "0" || threads != 0 && threads != n {
+		if n < 1 || n > 64 || match[2] != "5" || match[3] != "80" || match[4] != "0" || match[5] != "0" || match[6] != "0" || threads != 0 && threads != n {
 			return 0, fmt.Errorf("encoder configuration gate: %s", engine)
 		}
 		threads = n

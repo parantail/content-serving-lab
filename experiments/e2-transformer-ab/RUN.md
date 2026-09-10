@@ -2,7 +2,7 @@
 
 공개 저장소 root에서 실행한다. [기술 계약](README.md)과 [AWS workflow](../../deploy/e2-transformer-ab/README.md)는 동일 matrix를 사용한다. 모든 run/output directory는 새 이름이어야 한다.
 
-현재 ImageMagick AVIF의 요청 quality 전달 오류로 추가 배포와 최종 비교를 보류한다. [실제 관측과 진단 재현](../../reports/e2-transformer-ab/aws-20260910/README.md)을 먼저 확인한다. 실행·독립 decode·hash 일치는 실제 encoder quality 적용을 보증하지 않는다.
+ImageMagick AVIF는 image와 ImageInfo 양쪽 quality를 설정한다. 새 실행은 effective encoder Q80 gate를 통과해야 하며, 수정본의 64회 실제 quality 검증은 통과했고 AWS 인증 만료로 전체 validation·새 calibration 전에 중단했다. [로컬 기록](../../reports/e2-transformer-ab/quality-fix-20260910/README.md)을 참고한다. [실제 관측과 진단 재현](../../reports/e2-transformer-ab/aws-20260910/README.md)을 먼저 확인한다. 실행·독립 decode·hash 일치는 실제 encoder quality 적용을 보증하지 않는다.
 
 ```powershell
 docker build -f Dockerfile.e2 --target dev -t e2-dev:local .
@@ -46,12 +46,12 @@ docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),
 - `<batch>.jsonl`: ready/pass/start/finish/summary. Duration은 native 객체 해제까지이며 output hash 계산과 파일 쓰기는 제외한다. Queue는 pass 시작 후 slot까지다. 성능 batch wall에는 scheduling·hash·프로토콜 계측 overhead가 포함된다.
 - `<batch>.json`: 개별 wait4 RSS/CPU와 worker 자체 RSS, cgroup sampled peak/CPU, parent+worker membership, 종료 코드와 오류.
 - `<batch>.cgroup.jsonl`: 50 ms 표본과 경계 표본. Worker lifetime의 cgroup 값은 parent/worker·page cache도 포함하므로 RSS와 같지 않다.
-- `<batch>.stderr.log`: native 진단과 오류. diagnose에서만 LD_PRELOAD로 AVIF encoder threads/speed를 읽는다. 성능 run에는 probe를 주입하지 않는다.
+- `<batch>.stderr.log`: native 진단과 오류. diagnose에서만 LD_PRELOAD로 AVIF encoder threads/speed/quality를 읽는다. 성능 run에는 probe를 주입하지 않는다.
 - `completion.json`: 전체 예정/완료 batch와 유효 여부. 실패 시 성공 결과로 분석하지 않고 미시작 job 및 timeout/interrupted를 보존한다.
 
 worker `ru_maxrss`에는 Go runtime, corpus/reference hash 검증의 임시 할당, encoded input preload와 warm-up도 포함된다. 두 engine에 같은 경로를 사용하며 baseline을 빼지 않는다. wait4 값은 종료까지의 개별 child HWM이므로 마지막 summary JSON 할당으로 self 값보다 커질 수 있다. 누적 RUSAGE_CHILDREN은 쓰지 않는다.
 
-Fargate는 mode별 Task를 다른 호스트에 배치할 수 있다. 따라서 diagnose 외의 mode도 동일 Task의 `preflight/`에서 16회 별도 AVIF probe를 먼저 실행하고 `settings.json`에 AOM 버전·threads·speed·scope를 검증한다. 이 worker를 종료한 후 새로운 worker로 본 matrix를 실행하며 성능 worker에는 LD_PRELOAD를 넣지 않는다. Manifest의 `preflight_diagnostic_calls`는 measured/warm-up 호출 수와 별도다. 본 측정 210분(다른 mode 60분)은 batch 실행 loop에 적용하고 최초 corpus/manifest 준비·사전 진단은 별도이며, 전체 Task 시간은 외부 Task supervisor와 5시간 인프라 deadline에도 제한된다.
+Fargate는 mode별 Task를 다른 호스트에 배치할 수 있다. 따라서 diagnose 외의 mode도 동일 Task의 `preflight/`에서 16회 별도 AVIF probe를 먼저 실행하고 `settings.json`에 AOM 버전·threads·speed·실제 Q80·scope를 검증한다. 이 worker를 종료한 후 새로운 worker로 본 matrix를 실행하며 성능 worker에는 LD_PRELOAD를 넣지 않는다. Manifest의 `preflight_diagnostic_calls`는 measured/warm-up 호출 수와 별도다. 본 측정 210분(다른 mode 60분)은 batch 실행 loop에 적용하고 최초 corpus/manifest 준비·사전 진단은 별도이며, 전체 Task 시간은 외부 Task supervisor와 5시간 인프라 deadline에도 제한된다.
 
 `GOMAXPROCS=1`, `VIPS_CONCURRENCY=1`, `OMP_NUM_THREADS=1`, `MAGICK_THREAD_LIMIT=1`이다. ImageMagick memory 1,536 MiB/map 0/disk 0/area 20MP와 thread 1을 설정한다. 전체 메모리는 Docker/Fargate 2 GiB로 제한한다. AVIF delegate 기본 thread 수는 별도로 진단하고, worker 전체의 sampled thread peak는 codec thread 설정과 구분한다.
 
@@ -60,3 +60,11 @@ JPEG는 4:4:4·non-progressive·metadata 제거, WebP는 lossy method/effort 4·
 E1 연결 검증 `TestE1JPEGToWebPConnection`은 고정 E1 JPEG를 기존 image-thumbnail과 E2 buffer-thumbnail에서 cover640/WebP Q80으로 변환하여 Go WebP decoder로 두 크기를 확인한다. 코드 경로·resampler가 달라 byte 동일성을 요구하지 않으며 E1 성능 원자료는 변경하지 않는다.
 
 AWS 회수 자료의 공개 정리는 `export_aws.py <local-metadata-directory> <deployment-id> <fresh-output> <run-id>...`로 수행한다. 검증된 cleanup을 요구하고 실행 image/source를 대조하며 원자료 bytes와 SHA-256을 보존한다. AWS launch request·Terraform state·계정 식별자를 공개 복사하지 않는다. `checkpoint.py <exported-raw> <fresh-summary.json>`은 완결된 run의 성공·warm-up 수, loop 시간·RSS와 manifest의 measurement_gate_seconds(미기록된 과거 run은 3,600초) 기준 gate를 재계산한다. 모든 mode가 없으면 `all_five_modes_present=false`로 남긴다. [실제 AWS calibration 기록과 재생성 명령](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)을 참고한다.
+
+실제 quality 전달 회귀 검증은 runtime 이미지에서 다음 명령으로 수행한다. 두 engine × Q50/65/80/90 × 대표 8개 = 64회 로컬 진단으로 AWS 호출 수와 구분한다. 각 인코더 query가 성공하고 실제 Q가 요청과 같아야 한다. Native 통합 테스트도 동일 chroma의 Q50/Q80 출력이 달라지는지 검사한다.
+
+```powershell
+./experiments/e2-transformer-ab/diagnostics/quality-sweep.ps1 -Image e2:local -RunId <fresh-quality-probe-id>
+```
+
+새 manifest는 `codec_quality_contract=effective-avif-q80-v1`을 기록한다. Diagnose와 각 Task preflight 모두 실제 Q80을 요구하고 analyzer가 원본 stderr와 settings를 다시 검사한다. 이 필드가 없는 과거 raw는 기존 실행 검사 범위로 재분석되며 실제 quality 검증 완료를 뜻하지 않는다.
