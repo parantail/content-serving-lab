@@ -52,3 +52,5 @@ Fargate는 mode별 Task를 다른 호스트에 배치할 수 있다. 따라서 d
 JPEG는 4:4:4·non-progressive·metadata 제거, WebP는 lossy method/effort 4·alpha quality 100, AVIF는 AOM speed 5·8-bit·Q90 미만 4:2:0/Q90 이상 4:4:4다. PNG는 compression 6·8-bit이며 libvips는 RGB/RGBA를 선택하고 ImageMagick은 RGBA/color-type 6·filter 0을 지정한다. AVIF tiling 등 양쪽 API가 노출하지 않는 delegate 기본값까지 동일하다고 주장하지 않는다. 정확한 패키지는 각 manifest에 보존한다. Worker 전체 thread 수에는 Go runtime과 decoder 등의 thread도 포함되며 encoder threads 설정값과 같지 않다.
 
 E1 연결 검증 `TestE1JPEGToWebPConnection`은 고정 E1 JPEG를 기존 image-thumbnail과 E2 buffer-thumbnail에서 cover640/WebP Q80으로 변환하여 Go WebP decoder로 두 크기를 확인한다. 코드 경로·resampler가 달라 byte 동일성을 요구하지 않으며 E1 성능 원자료는 변경하지 않는다.
+
+AWS 회수 자료의 공개 정리는 `export_aws.py <local-metadata-directory> <deployment-id> <fresh-output> <run-id>...`로 수행한다. 검증된 cleanup을 요구하고 실행 image/source를 대조하며 원자료 bytes와 SHA-256을 보존한다. AWS launch request·Terraform state·계정 식별자를 공개 복사하지 않는다. `checkpoint.py <exported-raw> <fresh-summary.json>`은 완결된 run의 성공·warm-up 수, loop 시간·RSS와 60분 gate를 재계산한다. 모든 mode가 없으면 `all_five_modes_present=false`로 남긴다. [실제 AWS calibration 기록과 재생성 명령](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)을 참고한다.

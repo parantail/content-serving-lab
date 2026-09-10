@@ -1,0 +1,68 @@
+{
+  "approved_cost_condition_usd": 3.0,
+  "billing": {
+    "aggregation": "DAILY",
+    "billing_final": false,
+    "metric": "UnblendedCost",
+    "observed_at": "2026-09-10T02:44:37.6318101+00:00",
+    "query_succeeded": true,
+    "results": [
+      {
+        "Estimated": true,
+        "Groups": [],
+        "TimePeriod": {
+          "End": "2026-09-11",
+          "Start": "2026-09-10"
+        },
+        "Total": {
+          "UnblendedCost": {
+            "Amount": "0",
+            "Unit": "USD"
+          }
+        }
+      }
+    ],
+    "scope": "Account-wide UTC 2026-09-10 Usage records; not attributed to E2"
+  },
+  "deployment_id": "20260910-a1",
+  "notes": [
+    "Same-day Cost Explorer account Usage total is provisional and not E2-attributed.",
+    "Empty daily service groups do not establish zero E2 cost.",
+    "The task estimate excludes ECR, S3, IPv4, logs, transfer, tax, and credits.",
+    "CloudWatch storedBytes is an observed API field and may lag; it is not ingested bytes.",
+    "Pricing sources and conservative full-deployment model are in deploy/e2-transformer-ab/COST.md."
+  ],
+  "predeployment_estimate_usd": 1.0,
+  "schema": "e2-cost-observation-v1",
+  "task_resource_estimate": {
+    "cpu_memory_subtotal_usd": 0.038878527777777776,
+    "cpu_usd": 0.03188066666666667,
+    "cpu_usd_per_vcpu_hour": 0.04656,
+    "memory_usd": 0.006997861111111111,
+    "memory_usd_per_gb_hour": 0.00511,
+    "rounded_seconds_sum": 2465,
+    "tasks": [
+      {
+        "mode": "diagnose",
+        "pull_to_stopped_seconds": 63.091
+      },
+      {
+        "mode": "validate",
+        "pull_to_stopped_seconds": 499.085
+      },
+      {
+        "mode": "calibrate",
+        "pull_to_stopped_seconds": 1900.241
+      }
+    ],
+    "window": "pullStartedAt to stoppedAt; conservative metadata window, not an invoice"
+  },
+  "usage": {
+    "cloudwatch_stored_bytes": 0.0,
+    "compressed_image_bytes": 168652751,
+    "note": "Stored object/log bytes are observations, not billable request/ingestion totals.",
+    "observed_at": "2026-09-10T02:44:10.7015148+00:00",
+    "s3_bytes": 76143490.0,
+    "s3_objects": 896
+  }
+}

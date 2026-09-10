@@ -30,3 +30,5 @@
 - [Fargate 과금 설명](https://aws.amazon.com/fargate/pricing/): image 다운로드부터 종료까지 과금한다. 기본 20 GB ephemeral storage를 사용한다.
 
 예상 사용량 계산과 계정 청구 내역은 구분한다. 실행 후 비용 조회 시각·범위·집계 지연을 별도 기록하며, 아직 집계되지 않은 비용을 US$0으로 확정하지 않는다.
+
+2026-09-10 배포는 진단·검증·calibration 후 본 측정 시간 gate에서 중단하고 21개 자원을 제거했다. [사용량·비용 관측](../../reports/e2-transformer-ab/aws-calibration-20260910/cost-observation.json)에 Task 시각, image 168,652,751 bytes, S3 896개·76,143,490 bytes와 같은 날 UTC의 Cost Explorer 조회를 기록했다. 조회 당시 account-wide Usage는 서비스별 집계가 비어 있었고 `Estimated=true`였으므로 E2 비용 US$0으로 해석하지 않는다. Task 시각과 위 단가로 계산한 CPU·memory 소계도 청구 확정값이나 전체 비용이 아니다.

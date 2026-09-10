@@ -1,0 +1,477 @@
+{
+  "arch": "amd64",
+  "avif_threads_policy": "standard Debian delegate defaults; external 1 vCPU/2 GiB/concurrency matched",
+  "cohort": "aws",
+  "commit": "f60e5b2ee46aa44868e02affba87ac0b5be43995",
+  "contract": "e2-native-v1",
+  "corpus_sha256": "127390f507c0d3918b2097eb081511b2952715cc5ac1fbe17683c7745cf5a458",
+  "go_version": "go1.26.7",
+  "jobs": [
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-resize-jpeg-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-resize-jpeg-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "jpeg",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-resize-jpeg-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-resize-jpeg-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "jpeg",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-resize-png-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-resize-png-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "png",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-resize-png-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-resize-png-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "png",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-resize-webp-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-resize-webp-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "webp",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-resize-webp-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-resize-webp-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "webp",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-resize-avif-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-resize-avif-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "avif",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-resize-avif-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-resize-avif-q80-c1-r0",
+        "spec": {
+          "operation": "resize",
+          "format": "avif",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-contain-jpeg-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-contain-jpeg-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "jpeg",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-contain-jpeg-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-contain-jpeg-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "jpeg",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-contain-png-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-contain-png-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "png",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-contain-png-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-contain-png-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "png",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-contain-webp-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-contain-webp-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "webp",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-contain-webp-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-contain-webp-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "webp",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-contain-avif-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-contain-avif-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "avif",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-contain-avif-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-contain-avif-q80-c1-r0",
+        "spec": {
+          "operation": "contain",
+          "format": "avif",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-cover-jpeg-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-cover-jpeg-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "jpeg",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-cover-jpeg-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-cover-jpeg-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "jpeg",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-cover-png-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-cover-png-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "png",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-cover-png-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-cover-png-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "png",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-cover-webp-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-cover-webp-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "webp",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-cover-webp-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-cover-webp-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "webp",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "vips",
+      "batch": {
+        "id": "vips-cover-avif-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/vips-cover-avif-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "avif",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    },
+    {
+      "engine": "magick",
+      "batch": {
+        "id": "magick-cover-avif-q80-c1-r0",
+        "root": "/app/corpus",
+        "output": "/results/aws-validate-20260910-a1/outputs/magick-cover-avif-q80-c1-r0",
+        "spec": {
+          "operation": "cover",
+          "format": "avif",
+          "quality": 80
+        },
+        "concurrency": 1,
+        "repetition": 0,
+        "seed": 209,
+        "quality": false,
+        "save": true,
+        "warmup": false
+      }
+    }
+  ],
+  "max_seconds": 3600,
+  "mode": "validate",
+  "packages": "adduser=3.152\napt=3.0.3\nbase-files=13.8+deb13u6\nbase-passwd=3.6.7\nbash=5.2.37-2+b9\nbsdutils=1:2.41.5-0+deb13u1\nca-certificates=20250419\ncoreutils=9.7-3\ndash=0.5.12-12\ndebconf=1.5.91\ndebian-archive-keyring=2025.1\ndebianutils=5.23.2\ndiffutils=1:3.10-4\ndirmngr=2.4.7-21+deb13u1+b4\ndpkg=1.22.22\nfindutils=4.10.0-3\nfontconfig=2.15.0-2.3\nfontconfig-config=2.15.0-2.3\nfonts-dejavu-core=2.37-8\nfonts-dejavu-mono=2.37-8\ngcc-14-base=14.2.0-19\ngnupg=2.4.7-21+deb13u1\ngnupg-l10n=2.4.7-21+deb13u1\ngpg=2.4.7-21+deb13u1+b4\ngpg-agent=2.4.7-21+deb13u1+b4\ngpgconf=2.4.7-21+deb13u1+b4\ngpgsm=2.4.7-21+deb13u1+b4\ngrep=3.11-4\ngzip=1.13-1\nhostname=3.25\nimagemagick-7-common=8:7.1.1.43+dfsg1-1+deb13u11\ninit-system-helpers=1.69~deb13u1\nlibacl1=2.3.2-2+b1\nlibaec0=1.1.3-1+b1\nlibaom3=3.12.1-1+deb13u1\nlibapt-pkg7.0=3.0.3\nlibarchive13t64=3.7.4-4+deb13u1\nlibassuan9=3.0.2-2\nlibatomic1=14.2.0-19\nlibattr1=1:2.5.2-3\nlibaudit-common=1:4.0.2-2\nlibaudit1=1:4.0.2-2+b2\nlibblkid1=2.41.5-0+deb13u1\nlibbrotli1=1.1.0-2+b7\nlibbsd0=0.12.2-2\nlibbz2-1.0=1.0.8-6\nlibc-bin=2.41-12+deb13u3\nlibc6=2.41-12+deb13u3\nlibcairo-gobject2=1.18.4-1+b1\nlibcairo2=1.18.4-1+b1\nlibcap-ng0=0.8.5-4+b1\nlibcap2=1:2.75-10+deb13u1+b1\nlibcfitsio10t64=4.6.2-2\nlibcgif0=0.5.0-1\nlibcom-err2=1.47.2-3+b11\nlibcrypt1=1:4.4.38-1\nlibcurl3t64-gnutls=8.14.1-2+deb13u4\nlibcurl4t64=8.14.1-2+deb13u4\nlibdatrie1=0.2.13-3+b1\nlibdav1d7=1.5.1-1\nlibdb5.3t64=5.3.28+dfsg2-9\nlibde265-0=1.0.15-1+deb13u2\nlibdebconfclient0=0.280\nlibdeflate0=1.23-2\nlibexif12=0.6.25-1+deb13u1\nlibexpat1=2.8.3-1~deb13u1\nlibffi8=3.4.8-2\nlibfftw3-double3=3.3.10-2+b1\nlibfontconfig1=2.15.0-2.3\nlibfreetype6=2.13.3+dfsg-1+deb13u1\nlibfribidi0=1.0.16-1\nlibgcc-s1=14.2.0-19\nlibgcrypt20=1.11.0-7+deb13u1\nlibgdk-pixbuf-2.0-0=2.42.12+dfsg-4+deb13u1\nlibgdk-pixbuf2.0-common=2.42.12+dfsg-4+deb13u1\nlibglib2.0-0t64=2.84.4-3~deb13u3\nlibgmp10=2:6.3.0+dfsg-3\nlibgnutls30t64=3.8.9-3+deb13u4\nlibgomp1=14.2.0-19\nlibgpg-error0=1.51-4\nlibgpgme11t64=1.24.2-3\nlibgpgmepp6t64=1.24.2-3\nlibgraphite2-3=1.3.14-2+deb13u1\nlibgssapi-krb5-2=1.21.3-5+deb13u1\nlibharfbuzz0b=10.2.0-1+deb13u1\nlibhdf5-310=1.14.5+repack-3\nlibheif-plugin-aomenc=1.19.8-1+deb13u1\nlibheif-plugin-dav1d=1.19.8-1+deb13u1\nlibheif-plugin-libde265=1.19.8-1+deb13u1\nlibheif1=1.19.8-1+deb13u1\nlibhogweed6t64=3.10.1-1\nlibhwy1t64=1.2.0-2+b2\nlibidn2-0=2.3.8-2\nlibimagequant0=2.18.0-1+b2\nlibimath-3-1-29t64=3.1.12-1+b3\nlibjbig0=2.1-6.1+b2\nlibjpeg62-turbo=1:2.1.5-4\nlibjxl0.11=0.11.2-0.1~deb13u2\nlibk5crypto3=1.21.3-5+deb13u1\nlibkeyutils1=1.6.3-6\nlibkrb5-3=1.21.3-5+deb13u1\nlibkrb5support0=1.21.3-5+deb13u1\nlibksba8=1.6.7-2+b1\nliblastlog2-2=2.41.5-0+deb13u1\nliblcms2-2=2.16-2+deb13u2\nlibldap2=2.6.10+dfsg-1\nliblerc4=4.0.0+ds-5\nliblqr-1-0=0.4.2-2.1+b2\nlibltdl7=2.5.4-4\nliblz4-1=1.10.0-4\nliblzma5=5.8.1-1+deb13u1\nlibmagickcore-7.q16-10=8:7.1.1.43+dfsg1-1+deb13u11\nlibmagickwand-7.q16-10=8:7.1.1.43+dfsg1-1+deb13u11\nlibmatio13=1.5.28-2\nlibmd0=1.1.0-2+b1\nlibmount1=2.41.5-0+deb13u1\nlibncursesw6=6.5+20250216-2\nlibnettle8t64=3.10.1-1\nlibnghttp2-14=1.64.0-1.1+deb13u1\nlibnghttp3-9=1.8.0-1\nlibngtcp2-16=1.11.0-1+deb13u1\nlibngtcp2-crypto-gnutls8=1.11.0-1+deb13u1\nlibnpth0t64=1.8-3\nlibnspr4=2:4.36-1\nlibnss3=2:3.110-1+deb13u4\nlibopenexr-3-1-30=3.1.13-2\nlibopenjp2-7=2.5.3-2.1~deb13u2\nlibopenslide0=3.4.1+dfsg-7+deb13u1\nlibp11-kit0=0.25.5-3\nlibpam-modules=1.7.0-5\nlibpam-modules-bin=1.7.0-5\nlibpam-runtime=1.7.0-5\nlibpam0g=1.7.0-5\nlibpango-1.0-0=1.56.3-1\nlibpangocairo-1.0-0=1.56.3-1\nlibpangoft2-1.0-0=1.56.3-1\nlibpcre2-8-0=10.46-1~deb13u1\nlibpixman-1-0=0.44.0-3\nlibpng16-16t64=1.6.48-1+deb13u5\nlibpoppler-glib8t64=25.03.0-5+deb13u4\nlibpoppler147=25.03.0-5+deb13u4\nlibpsl5t64=0.21.2-1.1+b1\nlibraw23t64=0.21.4-2\nlibreadline8t64=8.2-6\nlibrsvg2-2=2.60.0+dfsg-1\nlibrtmp1=2.4+20151223.gitfa8646d.1-2+b5\nlibsasl2-2=2.1.28+dfsg1-9\nlibsasl2-modules-db=2.1.28+dfsg1-9\nlibseccomp2=2.6.0-2\nlibselinux1=3.8.1-1\nlibsemanage-common=3.8.1-1\nlibsemanage2=3.8.1-1\nlibsepol2=3.8.1-1\nlibsharpyuv0=1.5.0-0.1\nlibsmartcols1=2.41.5-0+deb13u1\nlibspng0=0.7.4-2\nlibsqlite3-0=3.46.1-7+deb13u1\nlibssh2-1t64=1.11.1-1+deb13u1\nlibssl3t64=3.5.7-1~deb13u2\nlibstdc++6=14.2.0-19\nlibsystemd0=257.13-1~deb13u1\nlibsz2=1.1.3-1+b1\nlibtasn1-6=4.20.0-2+deb13u1\nlibthai-data=0.1.29-2\nlibthai0=0.1.29-2+b1\nlibtiff6=4.7.0-3+deb13u3\nlibtinfo6=6.5+20250216-2\nlibudev1=257.13-1~deb13u1\nlibunistring5=1.3-2\nlibuuid1=2.41.5-0+deb13u1\nlibvips42t64=8.16.1-1+deb13u1\nlibwebp7=1.5.0-0.1\nlibwebpdemux2=1.5.0-0.1\nlibwebpmux3=1.5.0-0.1\nlibx11-6=2:1.8.12-1\nlibx11-data=2:1.8.12-1\nlibxau6=1:1.0.11-1\nlibxcb-render0=1.17.0-2+b1\nlibxcb-shm0=1.17.0-2+b1\nlibxcb1=1.17.0-2+b1\nlibxdmcp6=1:1.1.5-1\nlibxext6=2:1.3.4-1+b3\nlibxml2=2.12.7+dfsg+really2.9.14-2.1+deb13u3\nlibxrender1=1:0.9.12-1\nlibxxhash0=0.8.3-2\nlibzstd1=1.5.7+dfsg-1\nlogin=1:4.16.0-2+really2.41.5-0+deb13u1\nlogin.defs=1:4.17.4-2\nmawk=1.3.4.20250131-1\nmount=2.41.5-0+deb13u1\nncurses-base=6.5+20250216-2\nncurses-bin=6.5+20250216-2\nopenssl=3.5.7-1~deb13u2\nopenssl-provider-legacy=3.5.7-1~deb13u2\npasswd=1:4.17.4-2\nperl-base=5.40.1-6\npinentry-curses=1.3.1-2\nreadline-common=8.2-6\nsed=4.9-2+deb13u1\nshared-mime-info=2.4-5+b2\nsqv=1.3.0-3+b2\nsysvinit-utils=3.14-4\ntar=1.35+dfsg-3.1\ntzdata=2026b-0+deb13u1\nutil-linux=2.41.5-0+deb13u1\nzlib1g=1:1.3.dfsg+really1.3.1-1+b1\n",
+  "planned": 576,
+  "preflight_diagnostic_calls": 16,
+  "sample_interval_ms": 50,
+  "schema": "e2-run-v1",
+  "started": "2026-09-10T02:02:14.977664187Z",
+  "transform_timeout_seconds": 30,
+  "warmup_planned": 0
+}

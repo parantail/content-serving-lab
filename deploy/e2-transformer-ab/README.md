@@ -2,7 +2,9 @@
 
 서울의 Linux amd64 Task 하나에서 E2 library worker를 교대로 호출한다. ECS Service·ALB·NAT 없이 1 vCPU·2 GiB를 고정한다. [실험 계약](../../experiments/e2-transformer-ab/README.md), [비용 계산](COST.md)을 먼저 확인한다.
 
-현재 구현 검증 단계이며 실제 배포·정리 완료 기록은 아직 없다. 아래 명령은 공개 저장소 root의 PowerShell 7에서 실행한다. AWS CLI 2.32+, Terraform 1.15–1.16, Docker와 유효한 sandbox `aws login` 세션이 필요하다. E1의 checked CLI·자격/예산 검사·로컬 watchdog 패턴을 재사용하며 E1 state는 변경하지 않는다.
+2026-09-10 배포 `20260910-a1`에서 bootstrap 1개·full plan 20개를 생성하고 진단·출력 검증·calibration을 실행했다. [실행·회수·제거 기록](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)에 원자료와 독립 잔여 0개 검사를 보존했다. Calibration의 5회·25% 여유 적용 예상은 192.087분으로 60분 gate를 초과해 본 측정과 quality sweep은 실행하지 않았다. 시간 제한을 확정하기 전에는 본 측정을 시작하지 않는다.
+
+아래 명령은 공개 저장소 root의 PowerShell 7에서 실행한다. AWS CLI 2.32+, Terraform 1.15–1.16, Docker와 유효한 sandbox `aws login` 세션이 필요하다. E1의 checked CLI·자격/예산 검사·로컬 watchdog 패턴을 재사용하며 E1 state는 변경하지 않는다.
 
 ```powershell
 terraform -chdir=deploy/e2-transformer-ab init -backend=false -lockfile=readonly

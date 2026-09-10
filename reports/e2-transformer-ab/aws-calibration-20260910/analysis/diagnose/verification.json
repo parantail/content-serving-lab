@@ -1,0 +1,12 @@
+{
+  "batches": 2,
+  "cohort": "aws",
+  "corpus_sha256": "127390f507c0d3918b2097eb081511b2952715cc5ac1fbe17683c7745cf5a458",
+  "decoded_outputs": 0,
+  "metrics": "encoded-sRGB RGB SSIM window7 uniform sample covariance; float alpha composites black/white; PSNR null when MSE0",
+  "mode": "diagnose",
+  "run_manifest_sha256": "840e87729214e99209965b636af574eab4a32110b70e13310ec1f5084eaa8493",
+  "schema": "e2-analysis-v1",
+  "transforms": 16,
+  "valid": true
+}

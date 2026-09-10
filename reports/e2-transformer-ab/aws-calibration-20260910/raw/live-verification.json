@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-09-10T02:11:06.7102228+00:00",
+  "compressed_image_bytes": 168652751,
+  "image_digest": "sha256:18634a03201756b4b377520eab6e237bfeb7b7e684f4c93b3456e7bae1bbf71f",
+  "inbound_rules": 0,
+  "native_binaries_match_local_quality": true,
+  "outbound_port": 443,
+  "outbound_protocol": "tcp",
+  "resource_count": 21,
+  "source_commit": "f60e5b2ee46aa44868e02affba87ac0b5be43995",
+  "terraform_post_apply_drift": false
+}

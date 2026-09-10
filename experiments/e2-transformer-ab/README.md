@@ -2,13 +2,13 @@
 
 설계 확정일: 2026-09-09
 
-상태: **Corpus·native worker·harness 로컬 검증 완료 · AWS 실행 준비**.
+상태: **AWS 진단·출력 검증·calibration 및 자원 제거 완료 · 본 측정 시간 gate 초과로 보류**.
 
 [로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. **2026-09-10 확정: 표준 Debian 패키지를 유지하고 동일 CPU·memory·요청 동시성 아래 배포 후보의 실제 동작을 비교한다.** AVIF delegate의 기본 thread 설정은 native thread 목표 1의 명시적 예외다. Fargate에서도 실제 값을 진단하고, 이 차이를 라이브러리 자체의 우열이나 동일 encoder thread 비교로 해석하지 않는다.
 
 > 같은 이미지 묶음과 1 vCPU·2 GiB 제한에서 두 배포 후보의 처리량, 메모리, 출력 품질과 파일 크기는 어떻게 달라지는가?
 
-이 문서는 실험의 기술 계약이다. 아래 matrix 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter·supervisor와 독립 analyzer, [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [로컬 확인](results-local/preflight-20260910/README.md)에서 576개 출력 검증과 2,304회 calibration을 완료했다. AWS 본 측정은 아직 실행하지 않았다.
+이 문서는 실험의 기술 계약이다. 아래 matrix 숫자는 측정할 조건과 호출 수이며 성능 결과가 아니다. [Corpus와 재현 명령](fixtures/README.md), [manifest](fixtures/generated/manifest.json)는 고정했다. 두 native adapter·supervisor와 독립 analyzer, [runtime 이미지](../../Dockerfile.e2), [E2 Terraform](../../deploy/e2-transformer-ab/README.md)을 구현했다. [로컬 확인](results-local/preflight-20260910/README.md)에 이어 [AWS 결과](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)에서도 576개 출력 검증과 2,304회 calibration을 완료했다. AWS calibration은 30.734분으로, 5회와 25% 여유 적용 시 192.087분이 필요해 현재 60분 gate를 통과하지 못했다. 5회 본 측정과 AWS quality sweep은 미실행이며 시간 제한을 재검토해야 한다. 이번 배포의 21개 자원은 제거하고 잔여 0개를 확인했다.
 
 ## 현재 기반과 구현 범위
 

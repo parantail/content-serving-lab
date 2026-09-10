@@ -1,0 +1,73 @@
+{
+  "artifacts": [
+    {
+      "file": "analysis/diagnose/batches.json",
+      "matches": true,
+      "sha256": "4ee21bea72f053ba3d0b64c50158b1b55c58e6f2c9f114798bf140de6e7babb9"
+    },
+    {
+      "file": "analysis/diagnose/quality.json",
+      "matches": true,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "analysis/diagnose/transforms.json",
+      "matches": true,
+      "sha256": "ac3e019f73f26ee498c8a66a4cc74b591ecf354d04b99b3cac198dc2f4b0fdba"
+    },
+    {
+      "file": "analysis/diagnose/verification.json",
+      "matches": true,
+      "sha256": "a5dc71877ac3995abdfcdc5aeee6cfa19505fc0d15bb798ccab63937be6e5c05"
+    },
+    {
+      "file": "analysis/validate/batches.json",
+      "matches": true,
+      "sha256": "6f1ecea31af31454fc7a75ce1b55b7e8d5a15d19a97021e83b39d954a01e48ee"
+    },
+    {
+      "file": "analysis/validate/crops.png",
+      "matches": true,
+      "sha256": "403feae6d20a59ff2839a0fd56018f6d7e8741e522c13e5e43b94c1a0fdd8fb9"
+    },
+    {
+      "file": "analysis/validate/quality.json",
+      "matches": true,
+      "sha256": "f5cc1219e6aaf3f7b65eeba96b91a937c98619a579c0fb754beef5b2fe97cdbb"
+    },
+    {
+      "file": "analysis/validate/transforms.json",
+      "matches": true,
+      "sha256": "e53ff0bbf0e141c748d18c727da4cfe9abbbb97eedd7f683d5c7d0d631c6a7d2"
+    },
+    {
+      "file": "analysis/validate/verification.json",
+      "matches": true,
+      "sha256": "63bcceae2de11458db3bfd08277a23c1fa08f96421b15b17ed97f3edb66d1c8d"
+    },
+    {
+      "file": "analysis/calibrate/batches.json",
+      "matches": true,
+      "sha256": "30462b5c2296383b7d19156c9341c2ba4ed2403553349c4722e9e2bf3a9bfd43"
+    },
+    {
+      "file": "analysis/calibrate/quality.json",
+      "matches": true,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "analysis/calibrate/transforms.json",
+      "matches": true,
+      "sha256": "77560d8a7061a031a679c91fef819adf26fbe9160349bb779b2fc020e58e0469"
+    },
+    {
+      "file": "analysis/calibrate/verification.json",
+      "matches": true,
+      "sha256": "2cd7bb5eaa5219ee6f0fce11b5e97d66805d27c9a6946ea4094813c625efa322"
+    }
+  ],
+  "scope_batches_checked": 78,
+  "source": "published raw copy; network-none independent analyzer runs",
+  "valid": true,
+  "watchdog_process_stopped": true
+}

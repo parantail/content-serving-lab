@@ -1,0 +1,137 @@
+{
+  "all_five_modes_present": false,
+  "image_digest": "sha256:18634a03201756b4b377520eab6e237bfeb7b7e684f4c93b3456e7bae1bbf71f",
+  "native_calls_including_warmup_and_preflight": 2928,
+  "runs": [
+    {
+      "batches": 2,
+      "between_worker_seconds": 0.3578609940000028,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 16,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 315.65625,
+          "peak_worker_rss_mib": 336.1015625,
+          "sampled_worker_threads_max": 7
+        },
+        "vips": {
+          "peak_cgroup_mib": 235.5625,
+          "peak_worker_rss_mib": 266.40234375,
+          "sampled_worker_threads_max": 11
+        }
+      },
+      "loop_seconds": 27.710992774,
+      "max_native_seconds": 2.954195949,
+      "mode": "diagnose",
+      "preflight_diagnostic_calls": 0,
+      "run_id": "aws-diagnose-20260910-a1",
+      "self_wait_rss_equal": true,
+      "warm_completed": 0,
+      "worker_lifetime_seconds_sum": 27.35313178
+    },
+    {
+      "batches": 24,
+      "between_worker_seconds": 23.90587713800005,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 576,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 431.609375,
+          "peak_worker_rss_mib": 395.77734375,
+          "sampled_worker_threads_max": 7
+        },
+        "vips": {
+          "peak_cgroup_mib": 442.328125,
+          "peak_worker_rss_mib": 427.1953125,
+          "sampled_worker_threads_max": 11
+        }
+      },
+      "loop_seconds": 438.915851877,
+      "max_native_seconds": 3.613218174,
+      "mode": "validate",
+      "preflight_diagnostic_calls": 16,
+      "run_id": "aws-validate-20260910-a1",
+      "same_task_avif_settings": {
+        "probe_enabled_in_performance": false,
+        "scope": "same task before measured loop",
+        "settings": [
+          {
+            "encoder_threads": 1,
+            "engine": "vips",
+            "samples": 8,
+            "speed": 5
+          },
+          {
+            "encoder_threads": 2,
+            "engine": "magick",
+            "samples": 8,
+            "speed": 5
+          }
+        ]
+      },
+      "self_wait_rss_equal": true,
+      "warm_completed": 0,
+      "worker_lifetime_seconds_sum": 415.009974739
+    },
+    {
+      "batches": 48,
+      "between_worker_seconds": 7.3729909730000145,
+      "cgroup_sources": [
+        "cgroup-v1-container-visible"
+      ],
+      "completed": 1152,
+      "engines": {
+        "magick": {
+          "peak_cgroup_mib": 852.79296875,
+          "peak_worker_rss_mib": 877.16796875,
+          "sampled_worker_threads_max": 14
+        },
+        "vips": {
+          "peak_cgroup_mib": 833.71484375,
+          "peak_worker_rss_mib": 846.515625,
+          "sampled_worker_threads_max": 29
+        }
+      },
+      "loop_seconds": 1844.034708415,
+      "max_native_seconds": 22.789736152,
+      "measurement_time_gate": {
+        "estimated_seconds": 9220.173542075001,
+        "limit_seconds": 3600,
+        "margin_multiplier": 1.25,
+        "passed": false,
+        "repetitions": 5,
+        "with_margin_seconds": 11525.216927593752
+      },
+      "mode": "calibrate",
+      "preflight_diagnostic_calls": 16,
+      "run_id": "aws-calibrate-20260910-a1",
+      "same_task_avif_settings": {
+        "probe_enabled_in_performance": false,
+        "scope": "same task before measured loop",
+        "settings": [
+          {
+            "encoder_threads": 1,
+            "engine": "vips",
+            "samples": 8,
+            "speed": 5
+          },
+          {
+            "encoder_threads": 2,
+            "engine": "magick",
+            "samples": 8,
+            "speed": 5
+          }
+        ]
+      },
+      "self_wait_rss_equal": true,
+      "warm_completed": 1152,
+      "worker_lifetime_seconds_sum": 1836.661717442
+    }
+  ],
+  "schema": "e2-aws-checkpoint-v1",
+  "source_commit": "f60e5b2ee46aa44868e02affba87ac0b5be43995"
+}
