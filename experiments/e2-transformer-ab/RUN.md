@@ -2,7 +2,7 @@
 
 공개 저장소 root에서 실행한다. [기술 계약](README.md)과 [AWS workflow](../../deploy/e2-transformer-ab/README.md)는 동일 matrix를 사용한다. 모든 run/output directory는 새 이름이어야 한다.
 
-ImageMagick AVIF는 image와 ImageInfo 양쪽 quality를 설정한다. 새 실행은 effective encoder Q80 gate를 통과해야 하며, 수정본의 64회 실제 quality 검증은 통과했고 AWS 인증 만료로 전체 validation·새 calibration 전에 중단했다. [로컬 기록](../../reports/e2-transformer-ab/quality-fix-20260910/README.md)을 참고한다. [실제 관측과 진단 재현](../../reports/e2-transformer-ab/aws-20260910/README.md)을 먼저 확인한다. 실행·독립 decode·hash 일치는 실제 encoder quality 적용을 보증하지 않는다.
+ImageMagick AVIF는 image와 ImageInfo 양쪽 quality를 설정한다. 새 실행은 effective encoder Q80 gate를 통과해야 하며, 수정본의 64회 실제 quality 조회에 이어 전체 local validation/calibration/quality 3,120회가 통과했다. [로컬 기록](../../reports/e2-transformer-ab/local-20260910-c2/README.md)을 참고한다. [실제 관측과 진단 재현](../../reports/e2-transformer-ab/aws-20260910/README.md)을 먼저 확인한다. 실행·독립 decode·hash 일치는 실제 encoder quality 적용을 보증하지 않는다.
 
 ```powershell
 docker build -f Dockerfile.e2 --target dev -t e2-dev:local .

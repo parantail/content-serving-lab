@@ -1,0 +1,156 @@
+{
+  "aws_rerun_pending": true,
+  "calibration_prediction_seconds_with_25_percent_margin": 3752.9920558625004,
+  "cohort": "local",
+  "experiment_complete": false,
+  "image_digest": "sha256:5a20a4cb1ba993716bd138b6ac8945e248174022b3327fe6f830c34136a3217c",
+  "measurement_gate_seconds": 12600,
+  "native_binaries_identical_to_64_query_development_probe": [
+    {
+      "file": "e2-vips",
+      "identical": true,
+      "sha256": "064afaffc00876f24422db7680d1dbd3b4c999aed4ed96c6fdba551ddb37d491"
+    },
+    {
+      "file": "e2-magick",
+      "identical": true,
+      "sha256": "bfc69b427d15df670b0f3c93aeac677608f14b8511d21a216114c593904a58d3"
+    },
+    {
+      "file": "e2-codec-trace.so",
+      "identical": true,
+      "sha256": "fc0bc3b32a29940b56ac4e9765ccfd3493b30456755d259155af75c6c4fb7dd5"
+    }
+  ],
+  "native_calls": 3120,
+  "quality_responsiveness": [
+    {
+      "distinct_output_counts_per_fixture": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "engine": "vips",
+      "fixtures": 8,
+      "format": "jpeg"
+    },
+    {
+      "distinct_output_counts_per_fixture": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "engine": "vips",
+      "fixtures": 8,
+      "format": "webp"
+    },
+    {
+      "distinct_output_counts_per_fixture": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "engine": "vips",
+      "fixtures": 8,
+      "format": "avif"
+    },
+    {
+      "distinct_output_counts_per_fixture": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "engine": "magick",
+      "fixtures": 8,
+      "format": "jpeg"
+    },
+    {
+      "distinct_output_counts_per_fixture": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "engine": "magick",
+      "fixtures": 8,
+      "format": "webp"
+    },
+    {
+      "distinct_output_counts_per_fixture": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "engine": "magick",
+      "fixtures": 8,
+      "format": "avif"
+    }
+  ],
+  "runs": {
+    "calibrate": {
+      "batches": 48,
+      "loop_seconds": 600.478728938,
+      "max_native_seconds": 5.621436719,
+      "max_wait_rss_mib": 1006.64453125,
+      "measured_calls": 1152,
+      "preflight_calls": 16,
+      "scope_valid": true,
+      "valid": true,
+      "warmup_calls": 1152
+    },
+    "quality": {
+      "batches": 24,
+      "loop_seconds": 58.584179735,
+      "max_native_seconds": 1.402112805,
+      "max_wait_rss_mib": 355.76953125,
+      "measured_calls": 192,
+      "preflight_calls": 16,
+      "scope_valid": true,
+      "valid": true,
+      "warmup_calls": 0
+    },
+    "validate": {
+      "batches": 24,
+      "loop_seconds": 148.901747298,
+      "max_native_seconds": 1.192704546,
+      "max_wait_rss_mib": 447.83203125,
+      "measured_calls": 576,
+      "preflight_calls": 16,
+      "scope_valid": true,
+      "valid": true,
+      "warmup_calls": 0
+    }
+  },
+  "schema": "e2-local-preflight-v1",
+  "source_commit": "5774b94a2f84d95b12534d5de22057b4307e1bde",
+  "worker_processes": 102
+}

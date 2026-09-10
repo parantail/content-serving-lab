@@ -2,7 +2,7 @@
 
 서울의 Linux amd64 Task 하나에서 E2 library worker를 교대로 호출한다. ECS Service·ALB·NAT 없이 1 vCPU·2 GiB를 고정한다. [실험 계약](../../experiments/e2-transformer-ab/README.md), [비용 계산](COST.md)을 먼저 확인한다.
 
-2026-09-10 `20260910-b1`에서 210분·인프라 5시간 계약으로 다섯 mode를 모두 실행하고 21개 자원을 제거했다. [실행·회수·제거 기록](../../reports/e2-transformer-ab/aws-20260910/README.md)에 원자료와 독립 잔여 0개 검사를 보존했다. ImageMagick AVIF quality 전달 오류를 수정하고 실제 encoder Q80 gate를 추가했다. 수정본의 로컬 quality sweep 64회는 통과했으나 AWS 인증이 만료되어 후속 진행을 중단했다. 인증 복구 후 전체 validation·새 calibration을 통과한 clean checkpoint로 AWS matrix를 다시 실행한다. [수정본 로컬 기록](../../reports/e2-transformer-ab/quality-fix-20260910/README.md). 과거 결과는 최종 비교 근거로 사용하지 않는다. 이전 `20260910-a1`의 [60분 gate 중단 기록](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)은 별도로 보존한다.
+2026-09-10 `20260910-b1`에서 210분·인프라 5시간 계약으로 다섯 mode를 모두 실행하고 21개 자원을 제거했다. [실행·회수·제거 기록](../../reports/e2-transformer-ab/aws-20260910/README.md)에 원자료와 독립 잔여 0개 검사를 보존했다. ImageMagick AVIF quality 전달 오류를 수정하고 실제 encoder Q80 gate를 추가했다. AWS 재인증 후 수정본의 전체 local validation/calibration/quality 3,120회와 시간 gate를 통과했다. 이 clean checkpoint로 AWS matrix를 다시 실행하며 AWS calibration을 별도로 확인한다. [수정본 로컬 기록](../../reports/e2-transformer-ab/local-20260910-c2/README.md). 과거 결과는 최종 비교 근거로 사용하지 않는다. 이전 `20260910-a1`의 [60분 gate 중단 기록](../../reports/e2-transformer-ab/aws-calibration-20260910/README.md)은 별도로 보존한다.
 
 아래 명령은 공개 저장소 root의 PowerShell 7에서 실행한다. AWS CLI 2.32+, Terraform 1.15–1.16, Docker와 유효한 sandbox `aws login` 세션이 필요하다. E1의 checked CLI·자격/예산 검사·로컬 watchdog 패턴을 재사용하며 E1 state는 변경하지 않는다.
 

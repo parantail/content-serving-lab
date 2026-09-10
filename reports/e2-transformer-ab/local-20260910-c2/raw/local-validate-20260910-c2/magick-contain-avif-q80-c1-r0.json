@@ -1,0 +1,55 @@
+{
+  "schema": "e2-batch-v1",
+  "job": {
+    "engine": "magick",
+    "batch": {
+      "id": "magick-contain-avif-q80-c1-r0",
+      "root": "/app/corpus",
+      "output": "/results/local-validate-20260910-c2/outputs/magick-contain-avif-q80-c1-r0",
+      "spec": {
+        "operation": "contain",
+        "format": "avif",
+        "quality": 80
+      },
+      "concurrency": 1,
+      "repetition": 0,
+      "seed": 209,
+      "quality": false,
+      "save": true,
+      "warmup": false
+    }
+  },
+  "started": "2026-09-10T14:27:29.176909722Z",
+  "wall_ns": 13848337318,
+  "exit_code": 0,
+  "wait_rss_bytes": 420753408,
+  "self_rss_bytes": 420753408,
+  "wait_cpu_user_ns": 13039433000,
+  "wait_cpu_system_ns": 693379000,
+  "cgroup_source": "cgroup-v2-container-visible",
+  "cgroup_sampled_peak_bytes": 425639936,
+  "cgroup_cpu_ns": 13862934000,
+  "sample_count": 274,
+  "scope": {
+    "controllers": [
+      {
+        "child_member": true,
+        "controller": "cgroup",
+        "hidden_direct_members": 0,
+        "parent_member": true,
+        "visible_direct_members": 2
+      }
+    ],
+    "limits": {
+      "cpu.max": "100000 100000",
+      "memory.max": "2147483648"
+    },
+    "membership_equal": true,
+    "scope": "container parent and one worker; cgroup counters include both and file cache"
+  },
+  "memory_events_before": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "memory_events_after": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "completed": 24,
+  "warm_completed": 0,
+  "worker_sampled_peak_threads": 32
+}

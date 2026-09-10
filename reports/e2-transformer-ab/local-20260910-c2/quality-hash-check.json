@@ -1,0 +1,8 @@
+{
+  "compared": 48,
+  "measured_transforms_sha256": "1bb936b711eed794faff8fb2ff3bf98bc1f2e8c409659656692f74d47aa60764",
+  "mismatches": [],
+  "schema": "e2-output-hash-check-v1",
+  "valid": true,
+  "validation_transforms_sha256": "9a67917d2c17be24ecd5e9627f29f88f335391c596007ac63f0e8be845557af3"
+}

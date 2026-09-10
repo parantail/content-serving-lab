@@ -1,0 +1,55 @@
+{
+  "schema": "e2-batch-v1",
+  "job": {
+    "engine": "vips",
+    "batch": {
+      "id": "vips-resize-png-q80-c1-r0",
+      "root": "/app/corpus",
+      "output": "/results/local-validate-20260910-c2/outputs/vips-resize-png-q80-c1-r0",
+      "spec": {
+        "operation": "resize",
+        "format": "png",
+        "quality": 80
+      },
+      "concurrency": 1,
+      "repetition": 0,
+      "seed": 209,
+      "quality": false,
+      "save": true,
+      "warmup": false
+    }
+  },
+  "started": "2026-09-10T14:26:10.033348003Z",
+  "wall_ns": 2425582383,
+  "exit_code": 0,
+  "wait_rss_bytes": 418336768,
+  "self_rss_bytes": 418336768,
+  "wait_cpu_user_ns": 2068467000,
+  "wait_cpu_system_ns": 336255000,
+  "cgroup_source": "cgroup-v2-container-visible",
+  "cgroup_sampled_peak_bytes": 398618624,
+  "cgroup_cpu_ns": 2436338000,
+  "sample_count": 50,
+  "scope": {
+    "controllers": [
+      {
+        "child_member": true,
+        "controller": "cgroup",
+        "hidden_direct_members": 0,
+        "parent_member": true,
+        "visible_direct_members": 2
+      }
+    ],
+    "limits": {
+      "cpu.max": "100000 100000",
+      "memory.max": "2147483648"
+    },
+    "membership_equal": true,
+    "scope": "container parent and one worker; cgroup counters include both and file cache"
+  },
+  "memory_events_before": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "memory_events_after": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "completed": 24,
+  "warm_completed": 0,
+  "worker_sampled_peak_threads": 37
+}

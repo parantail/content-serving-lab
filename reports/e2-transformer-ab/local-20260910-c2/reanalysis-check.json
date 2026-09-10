@@ -1,0 +1,20 @@
+{
+  "files_compared": 14,
+  "sha256": {
+    "analysis/calibrate/batches.json": "7b40760060e6e8c51096e12409108c88e11e04a8ab02cc0df86b7dc1dbf6e446",
+    "analysis/calibrate/quality.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "analysis/calibrate/transforms.json": "27e74f18e435615ae8a7175228d43f6b105ecd775a7b18bf984b4cbad45884a7",
+    "analysis/calibrate/verification.json": "43c7dda8af91d372f5d1430240d1cb9f6fea38ffcdf2347fe4871bb8a0a6f721",
+    "analysis/quality/batches.json": "d730729641b9d2b41a8ad11a631a1d2516f59defd3f0646e1900a8a96be424b6",
+    "analysis/quality/crops.png": "10ab43ffb975576f4c25d91454ce74c8c53feaeba6fc92b380d9d129e0990530",
+    "analysis/quality/quality.json": "ba0fc1dd7101d5240e08affa1ce722c8e9471a674756afb0c8ca5128c58c9091",
+    "analysis/quality/transforms.json": "1bb936b711eed794faff8fb2ff3bf98bc1f2e8c409659656692f74d47aa60764",
+    "analysis/quality/verification.json": "a782ba5986cff04496fb68369924ee74141fe95155a26f8d3eaf31c2ceef45f1",
+    "analysis/validate/batches.json": "714cbdd19127e4d961327290a44e96c352579cf510ee01018e11d696a80b89f6",
+    "analysis/validate/crops.png": "cbcf91360e88aee9b466d42ee0a4fd14444f187d6eb370edf92a623066641adc",
+    "analysis/validate/quality.json": "2431576213206bea15dc599380a4fbf59963b0dba7e042cd234ed153456b790e",
+    "analysis/validate/transforms.json": "9a67917d2c17be24ecd5e9627f29f88f335391c596007ac63f0e8be845557af3",
+    "analysis/validate/verification.json": "5a675648699b113694a30ea48e82775a94a6ddf0226ed7a6ea5e9e7c49934c7a"
+  },
+  "valid": true
+}

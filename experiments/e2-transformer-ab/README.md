@@ -2,7 +2,7 @@
 
 설계 확정일: 2026-09-09
 
-상태: **ImageMagick AVIF quality 전달 수정·64회 실제 quality 확인, AWS 인증 만료로 재로그인 대기**. [수정본 로컬 근거와 중단 범위](../../reports/e2-transformer-ab/quality-fix-20260910/README.md).
+상태: **quality 수정본의 전체 로컬 검증·calibration·quality 통과, 새 AWS 전체 측정 준비**. [로컬 3,120회 성공·독립 디코딩·시간 gate 근거](../../reports/e2-transformer-ab/local-20260910-c2/README.md).
 
 [로컬 AVIF 진단](diagnostics/README.md)에서 같은 1 vCPU·2 GiB 조건의 encoder threads 설정이 libvips 1, ImageMagick 28로 확인됐다. **2026-09-10 확정: 표준 Debian 패키지를 유지하고 동일 CPU·memory·요청 동시성 아래 배포 후보의 실제 동작을 비교한다.** AVIF delegate의 기본 thread 설정은 native thread 목표 1의 명시적 예외다. Fargate에서도 실제 값을 진단하고, 이 차이를 라이브러리 자체의 우열이나 동일 encoder thread 비교로 해석하지 않는다.
 

@@ -1,0 +1,12 @@
+{
+  "batches": 24,
+  "cohort": "local",
+  "corpus_sha256": "127390f507c0d3918b2097eb081511b2952715cc5ac1fbe17683c7745cf5a458",
+  "decoded_outputs": 192,
+  "metrics": "encoded-sRGB RGB SSIM window7 uniform sample covariance; float alpha composites black/white; PSNR null when MSE0",
+  "mode": "quality",
+  "run_manifest_sha256": "0e5294cba53b776cacb351033d1a9c8b6aaf92b1d1b7ed81d0a9f141b0a850ca",
+  "schema": "e2-analysis-v1",
+  "transforms": 192,
+  "valid": true
+}
