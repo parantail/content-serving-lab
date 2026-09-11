@@ -71,7 +71,13 @@ func Execute(config Config) (RunOutput, error) {
 		return RunOutput{}, fmt.Errorf("read fixture: %w", err)
 	}
 	fixtureDigest := sha256.Sum256(fixture)
-	sourceHash := hex.EncodeToString(fixtureDigest[:])
+	fixtureHash := hex.EncodeToString(fixtureDigest[:])
+	sourceHash := fixtureHash
+	if config.Storage == StorageS3 {
+		// A shared bucket keeps derivatives across runs, so each run addresses
+		// the fixture through a run-scoped alias and never sees stale hits.
+		sourceHash = RunScopedSourceHash(config.RunID, fixtureHash)
+	}
 	poisonedHash := PoisonedSourceHash(sourceHash)
 	hitSpecs, err := HitSpecs(config.HitKeys)
 	if err != nil {
@@ -100,7 +106,7 @@ func Execute(config Config) (RunOutput, error) {
 		metadata.Transformer = config.transformer.Version()
 	}
 	metadata.FixturePath = filepath.Base(config.FixturePath)
-	metadata.FixtureSHA256 = sourceHash
+	metadata.FixtureSHA256 = fixtureHash
 	metadata.FixtureBytes = len(fixture)
 	metadata.SourceHash = sourceHash
 	metadata.PoisonedSourceHash = poisonedHash
@@ -159,6 +165,13 @@ func Execute(config Config) (RunOutput, error) {
 			item.ID, result.trial.Valid, result.trial.InvalidReason, hit.Errors, hit.Requests, miss.Errors, miss.Requests, miss.P99MS, result.trial.ShedRequests, result.trial.KillSwitchRequests)
 	}
 	return output, nil
+}
+
+// RunScopedSourceHash derives the per-run alias under which S3 runs upload
+// the fixture. It is a valid SHA-256 hex string distinct from the fixture hash.
+func RunScopedSourceHash(runID, fixtureHash string) string {
+	digest := sha256.Sum256([]byte("e3-run\n" + runID + "\n" + strings.ToLower(fixtureHash)))
+	return hex.EncodeToString(digest[:])
 }
 
 // PoisonedSourceHash derives the poisoned alias for a fixture hash. The

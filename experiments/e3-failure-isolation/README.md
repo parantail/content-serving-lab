@@ -258,7 +258,7 @@ docker run --rm \
   "${image}" analyze --run-dir "/results/retained-${commit}"
 ```
 
-AWS 단계는 [E3 Fargate 배포](../../deploy/e3-failure-isolation/README.md)를 사용한다. 같은 image의 `run --storage s3`가 Task 1개 안에서 서비스와 부하 생성기를 함께 실행하고 원본·파생 저장소만 S3를 쓴다. ALB는 없으므로 health check 반응은 보지 않는다.
+AWS 단계는 [E3 Fargate 배포](../../deploy/e3-failure-isolation/README.md)를 사용한다. 같은 image의 `run --storage s3`가 Task 1개 안에서 서비스와 부하 생성기를 함께 실행하고 원본·파생 저장소만 S3를 쓴다. 하나의 버킷이 여러 run의 파생 이미지를 보관하므로 S3 모드에서는 fixture를 run ID로 파생한 별칭 hash(`run.json`의 `source_hash`)로 올려 run 사이에 파생 키가 겹치지 않게 한다. `fixture_sha256`은 실제 fixture hash다. ALB는 없으므로 health check 반응은 보지 않는다. Fargate의 vCPU는 로컬 calibration host보다 느려 AWS 단계의 stream rate는 `run.ps1`의 `-RunnerArgs` 기본값(hit 5, healthy-miss 0.2, poisoned-miss 0.4 req/s)으로 낮춘다.
 
 ## 완료 조건
 

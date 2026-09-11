@@ -186,6 +186,10 @@ func TestSpecsAndScheduleAreUniqueAndOrdered(t *testing.T) {
 	if poisoned == source || media.ValidateSourceHash(poisoned) != nil {
 		t.Fatalf("poisoned hash = %s", poisoned)
 	}
+	scopedA, scopedB := RunScopedSourceHash("run-a", source), RunScopedSourceHash("run-b", source)
+	if scopedA == scopedB || scopedA == source || media.ValidateSourceHash(scopedA) != nil || PoisonedSourceHash(scopedA) == PoisonedSourceHash(scopedB) {
+		t.Fatalf("run-scoped hashes are not distinct: %s %s", scopedA, scopedB)
+	}
 
 	config := Config{
 		Modes:       []media.IsolationMode{media.IsolationBaseline, media.IsolationBoundedWait},

@@ -4,7 +4,10 @@ param(
     [Parameter(Mandatory)][ValidatePattern('^[a-z0-9][a-z0-9-]+$')][string]$RunId,
     [string]$Modes = 'baseline,bounded-wait,kill-switch',
     [string]$Faults = 'none,transform-timeout,slow-original',
-    [ValidateRange(1,5)][int]$Repetitions = 3
+    [ValidateRange(1,5)][int]$Repetitions = 3,
+    # Fargate's vCPU is slower than the local calibration host, so the AWS
+    # phase lowers the stream rates; keep the same values for calibrate and measure.
+    [string[]]$RunnerArgs = @('--hit-rate','5','--healthy-miss-rate','0.2','--poisoned-miss-rate','0.4')
 )
 . (Join-Path $PSScriptRoot 'common.ps1')
 $requestPath = Join-Path $script:E3Root "local/$RunId-request.json"
@@ -29,6 +32,7 @@ if ($Mode -eq 'calibrate') {
 } else {
     $command += @('--modes',$Modes,'--faults',$Faults,'--repetitions',"$Repetitions")
 }
+$command += $RunnerArgs
 $overrides = @{containerOverrides=@(@{name='runner';command=$command})}
 $request = @{
     cluster=$config.cluster; taskDefinition=$config.task_definition; launchType='FARGATE'; platformVersion='1.4.0'; count=1
