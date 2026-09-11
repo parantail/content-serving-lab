@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/parantail/content-serving-lab/internal/e1awss4"
+	"github.com/parantail/content-serving-lab/internal/e3control"
 	"github.com/parantail/content-serving-lab/internal/media"
 )
 
@@ -21,10 +22,17 @@ type errorResponse struct {
 }
 
 func NewHandler(processor *media.Processor) http.Handler {
-	return NewHandlerWithExperiment(processor, nil)
+	return NewHandlerWithControls(processor, nil, nil)
 }
 
 func NewHandlerWithExperiment(processor *media.Processor, experiment *e1awss4.Controller) http.Handler {
+	return NewHandlerWithControls(processor, experiment, nil)
+}
+
+// NewHandlerWithControls mounts the media endpoints plus the opt-in E1 trial
+// controls and E3 isolation controls. A nil controller leaves its routes
+// unmounted.
+func NewHandlerWithControls(processor *media.Processor, experiment *e1awss4.Controller, isolation *e3control.Controller) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health/live", health("live"))
 	mux.HandleFunc("GET /health/ready", health("ready"))
@@ -35,6 +43,11 @@ func NewHandlerWithExperiment(processor *media.Processor, experiment *e1awss4.Co
 	if experiment != nil {
 		mux.HandleFunc("POST /internal/e1/trials/{trial}/prepare", prepareExperiment(experiment))
 		mux.HandleFunc("POST /internal/e1/trials/{trial}/finish", finishExperiment(experiment))
+	}
+	if isolation != nil {
+		mux.HandleFunc("GET /internal/e3/state", isolationState(isolation))
+		mux.HandleFunc("POST /internal/e3/fault", isolationFault(isolation))
+		mux.HandleFunc("POST /internal/e3/kill-switch", isolationKillSwitch(isolation))
 	}
 	return mux
 }
@@ -85,6 +98,10 @@ func derivative(processor *media.Processor, experiment *e1awss4.Controller) http
 				writeError(w, http.StatusBadRequest, err.Error())
 			case errors.Is(err, media.ErrOriginalNotFound):
 				writeError(w, http.StatusNotFound, "original not found")
+			case errors.Is(err, media.ErrTransformShed):
+				writeIsolationError(w, media.IsolationOutcomeShed, "transform capacity exhausted; retry later")
+			case errors.Is(err, media.ErrTransformDisabled):
+				writeIsolationError(w, media.IsolationOutcomeKillSwitch, "transform path disabled by operator; retry later")
 			case errors.Is(err, r.Context().Err()):
 				writeError(w, http.StatusRequestTimeout, "request canceled or timed out")
 			default:
@@ -148,6 +165,90 @@ func writeExperimentError(w http.ResponseWriter, err error, preparing bool) {
 		writeError(w, http.StatusServiceUnavailable, "task is not ready for experiment")
 	default:
 		writeError(w, http.StatusInternalServerError, "experiment control failed")
+	}
+}
+
+// IsolationHeader names the isolation outcome that ended a request early.
+const IsolationHeader = "X-Media-Isolation"
+
+// IsolationRetryAfterSeconds is the Retry-After value sent with fast
+// failures. It is a fixed experiment constant, not an adaptive backoff.
+const IsolationRetryAfterSeconds = "1"
+
+func writeIsolationError(w http.ResponseWriter, outcome, message string) {
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Retry-After", IsolationRetryAfterSeconds)
+	w.Header().Set(IsolationHeader, outcome)
+	writeError(w, http.StatusServiceUnavailable, message)
+}
+
+type faultRequest struct {
+	Fault string `json:"fault"`
+	Delay string `json:"delay"`
+}
+
+type killSwitchRequest struct {
+	Enabled bool `json:"enabled"`
+}
+
+func isolationState(controller *e3control.Controller) http.HandlerFunc {
+	return func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		writeJSON(w, http.StatusOK, controller.State())
+	}
+}
+
+func isolationFault(controller *e3control.Controller) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		var body faultRequest
+		if err := decodeJSONBody(w, r, &body); err != nil {
+			writeError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		state, err := controller.SetFault(body.Fault, body.Delay)
+		if err != nil {
+			writeIsolationControlError(w, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, state)
+	}
+}
+
+func isolationKillSwitch(controller *e3control.Controller) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		var body killSwitchRequest
+		if err := decodeJSONBody(w, r, &body); err != nil {
+			writeError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		state, err := controller.SetKillSwitch(body.Enabled)
+		if err != nil {
+			writeIsolationControlError(w, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, state)
+	}
+}
+
+func decodeJSONBody(w http.ResponseWriter, r *http.Request, value any) error {
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(value); err != nil {
+		return fmt.Errorf("invalid JSON body: %v", err)
+	}
+	return nil
+}
+
+func writeIsolationControlError(w http.ResponseWriter, err error) {
+	switch {
+	case errors.Is(err, e3control.ErrInvalidRequest):
+		writeError(w, http.StatusBadRequest, err.Error())
+	case errors.Is(err, e3control.ErrFaultsDisabled), errors.Is(err, e3control.ErrKillSwitchDisabled):
+		writeError(w, http.StatusConflict, err.Error())
+	default:
+		writeError(w, http.StatusInternalServerError, "isolation control failed")
 	}
 }
 

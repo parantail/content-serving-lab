@@ -37,12 +37,22 @@ func NewVipsTransformer() *VipsTransformer {
 	return NewVipsTransformerWithConcurrency(DefaultTransformConcurrency)
 }
 
+// NewVipsTransformerWithConcurrency bounds concurrent transforms inside the
+// transformer. Use NewUnboundedVipsTransformer when a processor-level
+// TransformGate owns the limit instead.
 func NewVipsTransformerWithConcurrency(maxConcurrent int) *VipsTransformer {
 	StartVips()
 	if maxConcurrent < 1 {
 		panic("media: transform concurrency must be positive")
 	}
 	return &VipsTransformer{slots: make(chan struct{}, maxConcurrent)}
+}
+
+// NewUnboundedVipsTransformer runs every transform it receives immediately.
+// The caller is responsible for limiting concurrency.
+func NewUnboundedVipsTransformer() *VipsTransformer {
+	StartVips()
+	return &VipsTransformer{}
 }
 
 func (t *VipsTransformer) Transform(ctx context.Context, original []byte, spec TransformSpec) ([]byte, error) {
@@ -52,11 +62,13 @@ func (t *VipsTransformer) Transform(ctx context.Context, original []byte, spec T
 	if spec.Fit != FitCover || spec.Format != FormatWebP {
 		return nil, fmt.Errorf("%w: vips transformer only supports cover WebP", ErrInvalidSpec)
 	}
-	select {
-	case t.slots <- struct{}{}:
-		defer func() { <-t.slots }()
-	case <-ctx.Done():
-		return nil, ctx.Err()
+	if t.slots != nil {
+		select {
+		case t.slots <- struct{}{}:
+			defer func() { <-t.slots }()
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
 	}
 
 	image, err := vips.NewImageFromBuffer(original)

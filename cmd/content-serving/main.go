@@ -11,12 +11,14 @@ import (
 	"os/signal"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/parantail/content-serving-lab/internal/e1awss4"
+	"github.com/parantail/content-serving-lab/internal/e3control"
 	"github.com/parantail/content-serving-lab/internal/httpapi"
 	"github.com/parantail/content-serving-lab/internal/media"
 )
@@ -52,10 +54,14 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	isolationControl, err := newIsolationController(processor)
+	if err != nil {
+		return err
+	}
 
 	server := &http.Server{
 		Addr:              ":" + port,
-		Handler:           httpapi.NewHandlerWithExperiment(processor, experiment),
+		Handler:           httpapi.NewHandlerWithControls(processor, experiment, isolationControl),
 		ReadHeaderTimeout: 5 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
@@ -78,6 +84,8 @@ func run() error {
 		"git_commit", gitCommit,
 		"coordinator", processor.CoordinatorMode(),
 		"experiment_mode", experiment != nil,
+		"isolation_mode", processor.Isolation().Mode,
+		"isolation_control", isolationControl != nil,
 	)
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
@@ -136,7 +144,13 @@ func newExperimentController(processor *media.Processor, storageMetrics *media.S
 }
 
 func newProcessor(storageMetrics *media.S3Metrics) (*media.Processor, error) {
-	originals, derivatives, err := newStores(storageMetrics)
+	poisonedSourceHash := os.Getenv("E3_POISONED_SOURCE_HASH")
+	if poisonedSourceHash != "" {
+		if err := media.ValidateSourceHash(poisonedSourceHash); err != nil {
+			return nil, fmt.Errorf("invalid E3_POISONED_SOURCE_HASH: %w", err)
+		}
+	}
+	originals, derivatives, err := newStores(storageMetrics, poisonedSourceHash)
 	if err != nil {
 		return nil, err
 	}
@@ -163,16 +177,68 @@ func newProcessor(storageMetrics *media.S3Metrics) (*media.Processor, error) {
 		}
 	}
 
-	return media.NewProcessor(
+	metrics := &media.Metrics{}
+	isolation, err := newIsolation(transformConcurrency, metrics)
+	if err != nil {
+		return nil, err
+	}
+	if poisonedSourceHash != "" {
+		isolation.Faults, err = media.NewFaultInjector(poisonedSourceHash, metrics)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return media.NewProcessorWithIsolation(
 		originals,
 		derivatives,
-		media.NewVipsTransformerWithConcurrency(transformConcurrency),
+		media.NewUnboundedVipsTransformer(),
 		coordinator,
-		&media.Metrics{},
-	), nil
+		metrics,
+		isolation,
+	)
 }
 
-func newStores(storageMetrics *media.S3Metrics) (media.OriginalStore, media.DerivativeStore, error) {
+// newIsolation reads ISOLATION_MODE (baseline, bounded-wait, kill-switch) and
+// E3_SLOT_WAIT_LIMIT (bounded-wait only, default 2s). The transform gate owns
+// the process-wide transform concurrency in every mode.
+func newIsolation(transformConcurrency int, metrics *media.Metrics) (media.Isolation, error) {
+	rawMode := os.Getenv("ISOLATION_MODE")
+	if rawMode == "" {
+		rawMode = string(media.IsolationBaseline)
+	}
+	mode, err := media.ParseIsolationMode(rawMode)
+	if err != nil {
+		return media.Isolation{}, fmt.Errorf("invalid ISOLATION_MODE: %w", err)
+	}
+	waitLimit := 2 * time.Second
+	if raw := os.Getenv("E3_SLOT_WAIT_LIMIT"); raw != "" {
+		waitLimit, err = time.ParseDuration(raw)
+		if err != nil || waitLimit <= 0 {
+			return media.Isolation{}, fmt.Errorf("invalid E3_SLOT_WAIT_LIMIT %q", raw)
+		}
+	}
+	return media.NewIsolation(mode, transformConcurrency, waitLimit, metrics)
+}
+
+// newIsolationController mounts the E3 fault and kill switch endpoints only
+// when E3_CONTROL_MODE=true.
+func newIsolationController(processor *media.Processor) (*e3control.Controller, error) {
+	rawMode := os.Getenv("E3_CONTROL_MODE")
+	if rawMode == "" {
+		return nil, nil
+	}
+	enabled, err := strconv.ParseBool(rawMode)
+	if err != nil {
+		return nil, fmt.Errorf("invalid E3_CONTROL_MODE %q", rawMode)
+	}
+	if !enabled {
+		return nil, nil
+	}
+	return e3control.NewController(processor)
+}
+
+func newStores(storageMetrics *media.S3Metrics, poisonedSourceHash string) (media.OriginalStore, media.DerivativeStore, error) {
 	backend := os.Getenv("STORAGE_BACKEND")
 	if backend == "" {
 		backend = "local"
@@ -197,7 +263,13 @@ func newStores(storageMetrics *media.S3Metrics) (media.OriginalStore, media.Deri
 		if err != nil {
 			return nil, nil, err
 		}
-		return media.NewFileOriginalStore(map[string]string{sourceHash: sourceFile}), derivatives, nil
+		files := map[string]string{sourceHash: sourceFile}
+		if poisonedSourceHash != "" {
+			// The poisoned source is an alias of the same fixture so faults
+			// can target it without a second original file.
+			files[strings.ToLower(poisonedSourceHash)] = sourceFile
+		}
+		return media.NewFileOriginalStore(files), derivatives, nil
 	case "s3":
 		originalBucket := os.Getenv("ORIGINAL_BUCKET")
 		derivativeBucket := os.Getenv("DERIVATIVE_BUCKET")

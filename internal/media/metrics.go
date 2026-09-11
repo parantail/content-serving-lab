@@ -30,6 +30,17 @@ type Metrics struct {
 	publishCreated          atomic.Int64
 	publishExisting         atomic.Int64
 	publishError            atomic.Int64
+
+	transformWaitNanos    atomic.Int64
+	transformWaitCount    atomic.Int64
+	transformShed         atomic.Int64
+	killSwitchState       atomic.Int64
+	killSwitchRejected    atomic.Int64
+	originalBytesInflight atomic.Int64
+	faultSlowTransform    atomic.Int64
+	faultTransformTimeout atomic.Int64
+	faultTransformError   atomic.Int64
+	faultSlowOriginal     atomic.Int64
 }
 
 type MetricsSnapshot struct {
@@ -55,6 +66,17 @@ type MetricsSnapshot struct {
 	PublishCreated          int64
 	PublishExisting         int64
 	PublishError            int64
+
+	TransformWaitNanos    int64
+	TransformWaitCount    int64
+	TransformShed         int64
+	KillSwitchState       int64
+	KillSwitchRejected    int64
+	OriginalBytesInflight int64
+	FaultSlowTransform    int64
+	FaultTransformTimeout int64
+	FaultTransformError   int64
+	FaultSlowOriginal     int64
 }
 
 func (m *Metrics) Snapshot() MetricsSnapshot {
@@ -81,6 +103,17 @@ func (m *Metrics) Snapshot() MetricsSnapshot {
 		PublishCreated:          m.publishCreated.Load(),
 		PublishExisting:         m.publishExisting.Load(),
 		PublishError:            m.publishError.Load(),
+
+		TransformWaitNanos:    m.transformWaitNanos.Load(),
+		TransformWaitCount:    m.transformWaitCount.Load(),
+		TransformShed:         m.transformShed.Load(),
+		KillSwitchState:       m.killSwitchState.Load(),
+		KillSwitchRejected:    m.killSwitchRejected.Load(),
+		OriginalBytesInflight: m.originalBytesInflight.Load(),
+		FaultSlowTransform:    m.faultSlowTransform.Load(),
+		FaultTransformTimeout: m.faultTransformTimeout.Load(),
+		FaultTransformError:   m.faultTransformError.Load(),
+		FaultSlowOriginal:     m.faultSlowOriginal.Load(),
 	}
 }
 
@@ -112,6 +145,15 @@ func (m *Metrics) WritePrometheus(w io.Writer) error {
 		{"media_derivative_publish_attempts_total", `result="created"`, s.PublishCreated},
 		{"media_derivative_publish_attempts_total", `result="existing"`, s.PublishExisting},
 		{"media_derivative_publish_attempts_total", `result="error"`, s.PublishError},
+		{"media_transform_wait_seconds_count", "", s.TransformWaitCount},
+		{"media_transform_shed_total", "", s.TransformShed},
+		{"media_kill_switch_state", "", s.KillSwitchState},
+		{"media_kill_switch_rejected_total", "", s.KillSwitchRejected},
+		{"media_original_bytes_inflight", "", s.OriginalBytesInflight},
+		{"media_fault_injections_total", `fault="slow-transform"`, s.FaultSlowTransform},
+		{"media_fault_injections_total", `fault="transform-timeout"`, s.FaultTransformTimeout},
+		{"media_fault_injections_total", `fault="transform-error"`, s.FaultTransformError},
+		{"media_fault_injections_total", `fault="slow-original"`, s.FaultSlowOriginal},
 	}
 	for _, value := range values {
 		if value.labels == "" {
@@ -127,6 +169,9 @@ func (m *Metrics) WritePrometheus(w io.Writer) error {
 		return err
 	}
 	if _, err := fmt.Fprintf(w, "media_transform_duration_seconds_count %d\n", s.TransformSuccess+s.TransformError+s.TransformTimeout); err != nil {
+		return err
+	}
+	if _, err := fmt.Fprintf(w, "media_transform_wait_seconds_sum %.9f\n", float64(s.TransformWaitNanos)/1e9); err != nil {
 		return err
 	}
 	return writeRequestDurationMetrics(w, s)

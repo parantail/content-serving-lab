@@ -2,7 +2,7 @@
 
 설계 초안일: 2026-09-11
 
-상태: **설계 초안 — 구현과 측정 전**. 이 문서는 실험의 기술 계약 초안이다. 아래 숫자 중 "calibration에서 확정"이라고 적은 값은 로컬 calibration 결과로 바뀔 수 있으며, 확정 시 이 문서를 갱신한다. 장애 주입 기능, 격리 수단, workload와 분석 도구는 아직 구현하지 않았다.
+상태: **설계 초안 — 장애 주입·격리 수단 구현, workload·calibration·측정 전**. 이 문서는 실험의 기술 계약이다. 아래 숫자 중 "calibration에서 확정"이라고 적은 값은 로컬 calibration 결과로 바뀔 수 있으며, 확정 시 이 문서를 갱신한다. 서비스 쪽의 [제어 계약](#구현한-제어-계약)(변환 gate, kill switch, 장애 주입, 제어 endpoint)은 구현하고 test로 고정했다. 부하 생성기, 분석기와 차트는 아직 구현하지 않았다.
 
 > 이미지 변환기가 느려지거나 오류를 내거나 원본 저장소가 실패할 때, 이미 저장된 파생 이미지 요청은 얼마나 영향을 받고, 격리 수단은 그 영향을 얼마나 줄이는가?
 
@@ -78,7 +78,7 @@ E3는 단일 프로세스와 단일 Task 범위다. 여러 리전, CloudFront, A
 | --- | --- | --- | --- |
 | T0 | 없음 | 장애 주입 꺼짐 | 격리 수단의 정상 시 비용 |
 | T1 | 느린 변환 (gray) | 오염 키의 변환을 transform timeout보다 짧게 지연한 뒤 성공 | 실패 신호 없이 느려지기만 할 때 semaphore 점유가 정상 miss를 얼마나 막는가 |
-| T2 | 변환 시간 초과 | 오염 키의 변환을 transform timeout보다 길게 지연 | E1 F3 후보. timeout까지 slot을 점유하고 waiter가 timeout을 공유할 때의 영향 |
+| T2 | 변환 시간 초과 | 오염 키의 변환을 transform timeout이 끝날 때까지 정지시킴 (지연값 없음) | E1 F3 후보. timeout까지 slot을 점유하고 waiter가 timeout을 공유할 때의 영향 |
 | T3 | 변환 즉시 오류 | 오염 키의 변환이 지연 없이 오류 반환 | 빠른 실패는 번지지 않는가. T1/T2와 대비하는 대조군 |
 | T4 | 원본 읽기 지연 | 오염 키의 원본 읽기를 지연 | 변환 semaphore 밖에서 생기는 지연은 다른 경로로 번지는가 |
 
@@ -94,6 +94,8 @@ E3는 단일 프로세스와 단일 Task 범위다. 여러 리전, CloudFront, A
 | M3 circuit breaker (선택) | 최근 변환의 timeout/오류 비율이 기준을 넘으면 일정 시간 변환을 열어(open) 즉시 실패시키고, 반열림(half-open)에서 시험 요청으로 닫는다 | 자동 완화. M1/M2 결과가 나온 뒤 시간이 남을 때만 추가한다 |
 
 M1과 M2는 필수, M3는 선택이다. M3를 하지 않으면 보고서에 하지 않았다고 적는다.
+
+M1은 원본 읽기를 slot 확보 뒤로 옮기므로, T4(원본 읽기 지연)에서는 오염 요청이 원본을 기다리는 동안에도 slot을 점유한다. M0에서는 slot 밖에서 기다린다. 이 차이는 M1 설계의 결과이며 T4 결과를 해석할 때 함께 기록한다.
 
 각 모드는 환경 변수로 선택한다. 부하 생성기와 분석기는 모드 값을 원자료에 기록하며, 모드와 장애 조합이 계획과 다르면 분석을 실패시킨다.
 
@@ -130,7 +132,8 @@ Timeline 초안은 정상 30초, 장애 60초, 복구 60초의 총 150초다. Ra
 | Coordinator | `process-singleflight` | E1 채택 결과 |
 | 동시 변환 상한 | 4 | E1 calibration 값 |
 | Request timeout / transform timeout | 30초 / 20초 (초안) | E1의 90/60초는 150초 timeline에 비해 너무 길다. calibration에서 확정 |
-| T1 지연 / T2 지연 / T4 지연 | 15초 / 25초 / 15초 (초안) | transform timeout 기준으로 확정 |
+| T1 지연 / T4 지연 | 15초 / 15초 (초안) | transform timeout보다 짧게. calibration에서 확정 |
+| T2 | 지연값 없음. transform timeout까지 정지 | timeout 값이 곧 T2의 점유 시간 |
 | M1 slot 대기 상한 | 2초 (초안) | 정상 miss의 T0 p99보다 크고 request timeout보다 훨씬 짧게 |
 | M2 kill switch on/off 시각 | 장애 시작 +20초 / 장애 종료 +10초 (초안) | 고정값. 자동 탐지 시간이 아니다 |
 | 반복 | 모드×장애 조합별 5회 (초안) | calibration 분산이 작으면 3회로 줄일 수 있음 |
@@ -139,19 +142,46 @@ Timeline 초안은 정상 30초, 장애 60초, 복구 60초의 총 150초다. Ra
 
 필수 조합은 모드 3개(M0/M1/M2) × 장애 5개(T0~T4) = 15개다. 반복 5회, timeline 150초면 본 측정은 약 3.1시간이다. M3를 추가하면 5개 조합이 늘어난다.
 
+## 구현한 제어 계약
+
+서비스 프로세스는 다음 환경 변수로 모드와 실험 기능을 고른다. 기본값은 모두 실험 기능이 꺼진 상태다.
+
+| 환경 변수 | 값 | 뜻 |
+| --- | --- | --- |
+| `ISOLATION_MODE` | `baseline` (기본) / `bounded-wait` / `kill-switch` | 비교 모드 M0 / M1 / M2 |
+| `TRANSFORM_CONCURRENCY` | 기본 4 | 프로세스 전체 동시 변환 상한. 모든 모드에서 processor의 변환 gate가 소유한다 |
+| `E3_SLOT_WAIT_LIMIT` | 기본 `2s` | `bounded-wait`에서 slot 대기 상한. 다른 모드에서는 무시 |
+| `E3_POISONED_SOURCE_HASH` | SHA-256 hex | 장애 주입 대상 source hash. 로컬 저장소에서는 같은 fixture의 별칭으로 등록한다. S3에서는 이 키로 원본을 미리 올린다. 비어 있으면 장애 주입 비활성 |
+| `E3_CONTROL_MODE` | `true` | 아래 제어 endpoint를 연다. 기본은 닫힘 |
+
+제어 endpoint는 `E3_CONTROL_MODE=true`일 때만 존재한다.
+
+| 요청 | 본문 | 응답 |
+| --- | --- | --- |
+| `GET /internal/e3/state` | 없음 | 모드, 장애 상태, kill switch 상태와 전환 이력, gate 상태, processor 상태, 메트릭 snapshot |
+| `POST /internal/e3/fault` | `{"fault":"none\|slow-transform\|transform-timeout\|transform-error\|slow-original","delay":"15s"}` | 200과 상태. 잘못된 종류·지연은 400, 장애 주입 비활성이면 409 |
+| `POST /internal/e3/kill-switch` | `{"enabled":true}` | 200과 상태. `kill-switch` 모드가 아니면 409 |
+
+장애는 오염 source hash의 요청에만 적용된다. `slow-transform`과 `slow-original`은 양의 지연이 필요하고, `transform-error`는 선택적 지연 뒤 오류를 반환하며, `transform-timeout`은 transform timeout이 끝날 때까지 정지한다. 장애 훅은 변환 slot 안에서 실행되므로 T1~T3는 slot을 점유한다.
+
+격리 수단이 요청을 일찍 끝내면 `503`, `Retry-After: 1`, `Cache-Control: no-store`와 `X-Media-Isolation: shed` 또는 `kill-switch` 헤더로 응답한다. `Retry-After` 값은 고정 실험 상수다. 그 밖의 오류 응답은 E1과 같다.
+
 ## 기록할 메트릭
 
 E1의 메트릭에 다음을 더한다.
 
 ```text
-media_transform_wait_seconds            변환 slot 대기 시간
-media_transform_shed_total              M1에서 대기 상한 초과로 거부한 요청 수
-media_kill_switch_state                 M2 kill switch 상태 (0/1)와 변경 시각
-media_original_bytes_inflight           메모리에 보유 중인 원본 bytes 합계
-media_fault_injections_total{fault=...} 장애 주입이 적용된 요청 수
+media_transform_wait_seconds_sum / _count   변환 slot 대기 시간 합과 횟수 (거부·timeout 포함)
+media_transform_shed_total                  대기 상한 초과로 거부한 요청 수
+media_kill_switch_state                     kill switch 상태 (0/1)
+media_kill_switch_rejected_total            kill switch가 거부한 miss 요청 수
+media_original_bytes_inflight               메모리에 보유 중인 원본 bytes 합계
+media_fault_injections_total{fault=...}     장애 주입이 적용된 요청 수 (종류별)
 ```
 
-요청별 결과에는 E1 항목에 stream 종류, 오염 여부, 장애 ID, 모드, 요청 시작 시각의 구간(정상/장애/복구), 응답 상태, `Retry-After` 유무를 더한다. 자원 sampling은 E1과 같은 cgroup 기반이다.
+`media_transform_inflight`는 slot을 확보하고 변환 중인 요청 수이며, slot을 기다리는 요청은 제어 endpoint의 gate `waiting`에 따로 보인다. E1에서는 transformer 내부 semaphore 대기가 inflight에 포함됐다.
+
+요청별 결과에는 E1 항목에 stream 종류, 오염 여부, 장애 ID, 모드, 요청 시작 시각의 구간(정상/장애/복구), 응답 상태, `X-Media-Isolation`과 `Retry-After` 유무를 더한다. 자원 sampling은 E1과 같은 cgroup 기반이다.
 
 ## 결과에서 보여줄 것
 
@@ -190,7 +220,8 @@ experiments/e3-failure-isolation/
 
 cmd/e3-runner/                 실행과 분석 CLI (예정)
 internal/e3runner/             workload, raw writer, 검증과 chart 코드 (예정)
-internal/media/                장애 주입, bounded wait, kill switch (예정)
+internal/media/                변환 gate, bounded wait, kill switch, 장애 주입 (구현)
+internal/e3control/            제어 endpoint의 상태·명령 (구현)
 ```
 
 ## 재현 경로 (예정)

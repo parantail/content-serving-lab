@@ -101,6 +101,7 @@ E1에서 한 프로세스 안의 요청 합치기를 채택했고, 여러 ECS Ta
 - NAT 없이 public Fargate Task와 내부 ALB, S3 gateway endpoint를 쓰는 E1 AWS S4 Terraform 및 2시간 자동 정리 workflow
 - `none`/`process-singleflight` coordinator와 요청별 cancellation/server-side timeout 계약
 - govips/libvips transformer와 deterministic failure transformer
+- E3 격리 계층: 프로세스 전체 변환 gate(bounded wait·load shedding), 운영자 kill switch, 오염 source 대상 deterministic 장애 주입과 opt-in 제어 endpoint
 - E1 S0/S1/S2/F1 barrier workload, raw CSV/Prometheus/log/resource output
 - E1 Phase B S3 cold/warm isolation, event-driven F2 cancellation과 local S4 2/4-process workload
 - Raw counter/request 교차 검증, 기반 표와 두 SVG 자동 생성
