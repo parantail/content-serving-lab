@@ -1,0 +1,3 @@
+mode,stream,trials,p50_mean_ms,p95_mean_ms,p99_mean_ms,error_rate_mean,shed_rate_mean,p99_delta_vs_baseline_ms
+baseline,hit,0,0.000,0.000,0.000,0.000000,0.000000,0.000
+baseline,healthy-miss,0,0.000,0.000,0.000,0.000000,0.000000,0.000

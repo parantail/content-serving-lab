@@ -1,0 +1,122 @@
+{"timestamp":"2026-09-11T13:12:28.462304873Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=none"}
+{"timestamp":"2026-09-11T13:12:58.463298755Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r01","offset_ms":30000.993824,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:13:58.463354992Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r01","offset_ms":90001.050063,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:14:58.463255829Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r01","offset_ms":150000.950897,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:14:58.463258355Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r01","offset_ms":150000.953415,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:14:58.682070953Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=none"}
+{"timestamp":"2026-09-11T13:15:28.682723686Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r01","offset_ms":30000.652743,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:16:28.682482917Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r01","offset_ms":90000.411965,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:17:28.682416975Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r01","offset_ms":150000.346022,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:17:28.682418915Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r01","offset_ms":150000.347975,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:17:28.902820283Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=none"}
+{"timestamp":"2026-09-11T13:17:58.903979315Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r01","offset_ms":30001.158997,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:18:58.90285817Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r01","offset_ms":90000.037867,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:19:58.903333646Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r01","offset_ms":150000.51333,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:19:58.903335683Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r01","offset_ms":150000.515362,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:19:59.135143749Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=transform-timeout"}
+{"timestamp":"2026-09-11T13:20:29.136136962Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":30000.993217,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:20:29.136181677Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":30001.037943,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T13:20:49.135287241Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":50000.14351,"event":"kill_switch_on"}
+{"timestamp":"2026-09-11T13:21:29.135754324Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":90000.61058,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:21:29.13576671Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":90000.622961,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:21:39.136242457Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":100001.098731,"event":"kill_switch_off"}
+{"timestamp":"2026-09-11T13:22:29.135293339Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":150000.149604,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:22:29.135296778Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r01","offset_ms":150000.153043,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:22:29.358288386Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=transform-timeout"}
+{"timestamp":"2026-09-11T13:22:59.359416163Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":30001.127713,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:22:59.359436737Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":30001.148294,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T13:23:59.358719704Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":90000.43125,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:23:59.35873179Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":90000.443341,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:24:59.359011375Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":150000.72291,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:24:59.359013707Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r01","offset_ms":150000.725241,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:24:59.574823799Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=transform-timeout"}
+{"timestamp":"2026-09-11T13:25:29.575508198Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":30000.684411,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:25:29.575530714Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":30000.706938,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T13:26:29.575435144Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":90000.611359,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:26:29.575439953Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":90000.616171,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:27:29.575553908Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":150000.730126,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:27:29.575559343Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":150000.73555,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:27:29.807419583Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=slow-original"}
+{"timestamp":"2026-09-11T13:27:59.807852163Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":30000.432507,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:27:59.807885576Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":30000.465943,"event":"fault_on","detail":"kind=slow-original delay=15s"}
+{"timestamp":"2026-09-11T13:28:59.807496471Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":90000.076825,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:28:59.807505705Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":90000.086068,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:29:59.808369132Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":150000.949476,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:29:59.808371971Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r01","offset_ms":150000.952322,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:30:00.032380508Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=slow-original"}
+{"timestamp":"2026-09-11T13:30:30.033378214Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":30000.997665,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:30:30.033414817Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":30001.034289,"event":"fault_on","detail":"kind=slow-original delay=15s"}
+{"timestamp":"2026-09-11T13:31:30.032664699Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":90000.28416,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:31:30.032670214Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":90000.289669,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:32:30.032592912Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":150000.212376,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:32:30.032594834Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r01","offset_ms":150000.214286,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:32:30.258489749Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=slow-original"}
+{"timestamp":"2026-09-11T13:33:00.259285111Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":30000.795284,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:33:00.259310478Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":30000.820674,"event":"fault_on","detail":"kind=slow-original delay=15s"}
+{"timestamp":"2026-09-11T13:33:20.258732861Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":50000.243051,"event":"kill_switch_on"}
+{"timestamp":"2026-09-11T13:34:00.25899429Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":90000.504477,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:34:00.259003953Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":90000.51414,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:34:10.25856968Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":100000.079869,"event":"kill_switch_off"}
+{"timestamp":"2026-09-11T13:35:00.258981487Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":150000.491659,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:35:00.258983149Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r01","offset_ms":150000.493322,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:35:00.480306154Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r02","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=none"}
+{"timestamp":"2026-09-11T13:35:30.480511168Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r02","offset_ms":30000.205015,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:36:30.48130349Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r02","offset_ms":90000.997351,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:37:30.481138058Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r02","offset_ms":150000.831918,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:37:30.481140796Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-none-r02","offset_ms":150000.834648,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:37:30.705249049Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r02","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=none"}
+{"timestamp":"2026-09-11T13:38:00.705843737Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r02","offset_ms":30000.594695,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:39:00.706253019Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r02","offset_ms":90001.003967,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:40:00.70637453Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r02","offset_ms":150001.125487,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:40:00.706379891Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-none-r02","offset_ms":150001.130859,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:40:00.931034943Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r02","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=none"}
+{"timestamp":"2026-09-11T13:40:30.931646629Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r02","offset_ms":30000.611688,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:41:30.931849972Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r02","offset_ms":90000.815028,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:42:30.931211481Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r02","offset_ms":150000.176531,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:42:30.931214846Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-none-r02","offset_ms":150000.17989,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:42:31.159306445Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=transform-timeout"}
+{"timestamp":"2026-09-11T13:43:01.160054933Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":30000.74847,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:43:01.160076356Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":30000.769906,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T13:44:01.160487168Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":90001.180703,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:44:01.160497175Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":90001.190713,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:45:01.159931828Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":150000.62538,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:45:01.159936148Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-transform-timeout-r02","offset_ms":150000.629684,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:45:01.393256865Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=transform-timeout"}
+{"timestamp":"2026-09-11T13:45:31.39381412Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":30000.557254,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:45:31.393887807Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":30000.630958,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T13:46:31.393724447Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":90000.467587,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:46:31.393753594Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":90000.496741,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:47:31.39340505Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":150000.148181,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:47:31.393407241Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-transform-timeout-r02","offset_ms":150000.150388,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:47:31.629118691Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=transform-timeout"}
+{"timestamp":"2026-09-11T13:48:01.629700611Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":30000.581627,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:48:01.629726481Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":30000.607515,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T13:48:21.6297427Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":50000.623733,"event":"kill_switch_on"}
+{"timestamp":"2026-09-11T13:49:01.629927858Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":90000.808877,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:49:01.629939439Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":90000.820472,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:49:11.629422226Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":100000.303253,"event":"kill_switch_off"}
+{"timestamp":"2026-09-11T13:50:01.630160318Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":150001.041331,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:50:01.63016237Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-transform-timeout-r02","offset_ms":150001.043397,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:50:01.860455679Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=slow-original"}
+{"timestamp":"2026-09-11T13:50:31.861027257Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":30000.571588,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:50:31.861057753Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":30000.602094,"event":"fault_on","detail":"kind=slow-original delay=15s"}
+{"timestamp":"2026-09-11T13:51:31.861687406Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":90001.231733,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:51:31.861693122Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":90001.237453,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:52:31.86157877Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":150001.12309,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:52:31.861580793Z","run_id":"aws-measure-3040e3db9be0","trial_id":"bounded-wait-slow-original-r02","offset_ms":150001.125115,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:52:32.089490252Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=slow-original"}
+{"timestamp":"2026-09-11T13:53:02.090185527Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":30000.695195,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:53:02.090224302Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":30000.733987,"event":"fault_on","detail":"kind=slow-original delay=15s"}
+{"timestamp":"2026-09-11T13:53:22.090450323Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":50000.96,"event":"kill_switch_on"}
+{"timestamp":"2026-09-11T13:54:02.090678334Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":90001.18801,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:54:02.090686195Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":90001.195872,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:54:12.090605848Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":100001.115817,"event":"kill_switch_off"}
+{"timestamp":"2026-09-11T13:55:02.089759407Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":150000.269074,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:55:02.089762253Z","run_id":"aws-measure-3040e3db9be0","trial_id":"kill-switch-slow-original-r02","offset_ms":150000.271921,"event":"requests_drained"}
+{"timestamp":"2026-09-11T13:55:02.316177158Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=slow-original"}
+{"timestamp":"2026-09-11T13:55:32.31681083Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":30000.633676,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T13:55:32.316830712Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":30000.653555,"event":"fault_on","detail":"kind=slow-original delay=15s"}
+{"timestamp":"2026-09-11T13:56:32.317356873Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":90001.179728,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T13:56:32.317379455Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":90001.202321,"event":"fault_off"}
+{"timestamp":"2026-09-11T13:57:32.317013866Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":150000.836707,"event":"streams_finished"}
+{"timestamp":"2026-09-11T13:57:32.317015794Z","run_id":"aws-measure-3040e3db9be0","trial_id":"baseline-slow-original-r02","offset_ms":150000.838638,"event":"requests_drained"}

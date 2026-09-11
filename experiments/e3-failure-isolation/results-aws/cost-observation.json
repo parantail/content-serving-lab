@@ -1,0 +1,152 @@
+{
+  "approved_cost_condition_usd": 3.0,
+  "expected_cost_usd": 1.2,
+  "billing": {
+    "aggregation": "DAILY",
+    "billing_final": false,
+    "metric": "UnblendedCost",
+    "observed_at": "2026-09-11T13:59:13.590176+00:00",
+    "query_succeeded": true,
+    "period": {
+      "start": "2026-09-10",
+      "end": "2026-09-12"
+    },
+    "results": [
+      {
+        "TimePeriod": {
+          "Start": "2026-09-10",
+          "End": "2026-09-11"
+        },
+        "Total": {},
+        "Groups": [
+          {
+            "Keys": [
+              "AWS Cost Explorer"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "AWS Glue"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon EC2 Container Registry (ECR)"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "-0.0000000004",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Elastic Container Service"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Simple Storage Service"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Virtual Private Cloud"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "AmazonCloudWatch"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          }
+        ],
+        "Estimated": true
+      },
+      {
+        "TimePeriod": {
+          "Start": "2026-09-11",
+          "End": "2026-09-12"
+        },
+        "Total": {},
+        "Groups": [
+          {
+            "Keys": [
+              "AWS Glue"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          },
+          {
+            "Keys": [
+              "Amazon Simple Storage Service"
+            ],
+            "Metrics": {
+              "UnblendedCost": {
+                "Amount": "0",
+                "Unit": "USD"
+              }
+            }
+          }
+        ],
+        "Estimated": true
+      }
+    ]
+  },
+  "task": {
+    "measure_task_started_at": "2026-09-11T22:12:19.969+09:00",
+    "measure_task_stopped_at": "2026-09-11T22:57:57.434+09:00",
+    "hours": 0.7604
+  },
+  "usage_estimate": {
+    "note": "Fargate CPU/memory subtotal for the measurement Task only, Seoul list prices, excludes IPv4/S3/ECR/logs/egress; not a bill",
+    "cpu_usd": 0.035405,
+    "memory_usd": 0.007771,
+    "subtotal_usd": 0.043176
+  },
+  "artifacts": {
+    "image_bytes": 85765751,
+    "s3_objects": 1607,
+    "s3_bytes": 95578315
+  }
+}

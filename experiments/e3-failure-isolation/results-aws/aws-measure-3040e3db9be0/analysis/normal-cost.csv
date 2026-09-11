@@ -1,0 +1,7 @@
+mode,stream,trials,p50_mean_ms,p95_mean_ms,p99_mean_ms,error_rate_mean,shed_rate_mean,p99_delta_vs_baseline_ms
+baseline,hit,2,25.424,30.572,45.132,0.000000,0.000000,0.000
+baseline,healthy-miss,2,2269.587,2387.594,2405.270,0.000000,0.000000,0.000
+bounded-wait,hit,2,25.326,56.339,59.223,0.000000,0.000000,14.091
+bounded-wait,healthy-miss,2,2246.697,2351.774,2359.316,0.000000,0.000000,-45.953
+kill-switch,hit,2,27.609,65.486,65.712,0.000000,0.000000,20.580
+kill-switch,healthy-miss,2,2261.622,2337.475,2349.669,0.000000,0.000000,-55.601

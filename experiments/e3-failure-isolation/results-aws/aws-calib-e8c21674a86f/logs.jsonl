@@ -1,0 +1,12 @@
+{"timestamp":"2026-09-11T12:53:42.829197187Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=none"}
+{"timestamp":"2026-09-11T12:54:12.881479911Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-none-r01","offset_ms":30052.282727,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:55:12.829218206Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-none-r01","offset_ms":90000.021039,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:56:12.881357602Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-none-r01","offset_ms":150052.160425,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:56:33.398166113Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-none-r01","offset_ms":170568.968926,"event":"requests_drained"}
+{"timestamp":"2026-09-11T12:56:33.671726927Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=transform-timeout"}
+{"timestamp":"2026-09-11T12:57:03.682175018Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":30010.448099,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:57:03.682209815Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":30010.482919,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T12:58:03.671930761Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":90000.203841,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:58:03.671956509Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":90000.229605,"event":"fault_off"}
+{"timestamp":"2026-09-11T12:59:03.682133685Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":150010.406766,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:59:24.181376605Z","run_id":"aws-calib-e8c21674a86f","trial_id":"baseline-transform-timeout-r01","offset_ms":170509.649694,"event":"requests_drained"}

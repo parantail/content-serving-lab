@@ -1,0 +1,10 @@
+mode,fault,trials,peak_cgroup_memory_mean_bytes,peak_cgroup_memory_max_bytes,max_original_bytes_inflight_mean,max_original_bytes_inflight_max,max_transform_waiting_mean,max_transform_waiting_max,cpu_time_mean_ms,poisoned_fault_error_rate_mean,poisoned_fault_p99_mean_ms,transform_timeout_mean,transform_shed_mean,kill_switch_rejected_mean,fault_injections_mean,healthy_miss_fault_http500_mean
+baseline,none,2,0.000,0,8150048.000,8150048,0.000,0,0.000,0.000000,2355.062,0.000,0.000,0.000,0.000,0.000
+bounded-wait,none,2,0.000,0,8150048.000,8150048,0.000,0,0.000,0.000000,2356.225,0.000,0.000,0.000,0.000,0.000
+kill-switch,none,2,0.000,0,8150048.000,8150048,0.000,0,0.000,0.000000,2334.543,0.000,0.000,0.000,0.000,0.000
+baseline,transform-timeout,2,0.000,0,44825264.000,44825264,7.000,7,0.000,0.833333,20019.244,20.000,0.000,0.000,20.000,0.000
+bounded-wait,transform-timeout,2,0.000,0,16300096.000,16300096,2.000,2,0.000,1.000000,20021.553,12.000,19.500,0.000,12.000,0.000
+kill-switch,transform-timeout,2,0.000,0,40750240.000,40750240,6.000,6,0.000,1.000000,20014.828,8.000,0.000,30.000,8.000,0.000
+baseline,slow-original,2,0.000,0,20375120.000,20375120,1.000,1,0.000,0.020833,18856.560,0.500,0.000,0.000,24.000,0.000
+bounded-wait,slow-original,2,0.000,0,12225072.000,16300096,2.000,2,0.000,0.333333,18531.186,0.000,15.000,0.000,16.000,0.000
+kill-switch,slow-original,2,0.000,0,8150048.000,8150048,0.000,0,0.000,0.666667,15925.775,0.000,0.000,30.000,8.000,0.000

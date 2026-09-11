@@ -1,0 +1,7 @@
+mode,fault,trials,trials_with_impact,first_impact_mean_ms,first_impact_min_ms,first_impact_max_ms,trials_with_mitigation,mitigation_mean_ms,mitigation_min_ms,mitigation_max_ms,last_impact_after_fault_off_mean_ms,last_impact_after_fault_off_max_ms,affected_healthy_fault_mean,affected_healthy_recovery_mean
+baseline,transform-timeout,2,2,9999.594,9999.468,9999.719,0,0.000,0.000,0.000,5000.166,5000.286,10.000,2.000
+bounded-wait,transform-timeout,2,2,10000.135,9999.876,10000.395,2,10000.135,9999.876,10000.395,0.000,0.000,7.500,0.000
+kill-switch,transform-timeout,2,2,9999.529,9999.220,9999.838,2,19999.561,19999.106,20000.016,5000.083,5000.208,10.000,2.000
+baseline,slow-original,2,0,0.000,0.000,0.000,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+bounded-wait,slow-original,2,2,9999.997,9999.725,10000.268,2,9999.997,9999.725,10000.268,0.099,0.128,5.000,1.000
+kill-switch,slow-original,2,2,19999.856,19999.465,20000.246,2,19999.824,19999.422,20000.226,4999.985,5000.300,8.000,2.000

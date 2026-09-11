@@ -2,7 +2,7 @@
 
 서울의 Linux amd64 Task 하나에서 E3 runner가 Media Service와 세 request stream을 같은 프로세스에 띄우고, 원본·파생 이미지 저장소만 실제 S3를 사용한다. ECS Service·ALB·NAT 없이 1 vCPU·2 GiB를 고정한다. [실험 계약](../../experiments/e3-failure-isolation/README.md), [비용 계산](COST.md)을 먼저 확인한다.
 
-상태: **배포 전**. 실행 결과와 정리 근거는 완료 후 이 문서와 보고서에 기록한다.
+상태: **실행·정리 완료 (2026-09-11)**. Deployment `e8c21674a86f`는 12:49 UTC bootstrap, 12:53 apply(20 create), calibration 2회, 본 측정 1회 뒤 13:58~13:59 UTC에 21개 자원을 제거했고 Terraform state와 서비스 API 잔여가 모두 0임을 확인했다. 첫 calibration(`aws-calib-e8c21674a86f`, image `e8c2167`)은 로컬과 같은 rate에서 Fargate CPU가 포화되어 T0부터 miss가 timeout됐고, 두 번째 calibration(`aws-calib2-…`)은 rate를 낮춘 뒤 T0 trial이 공유 버킷의 이전 파생 이미지 때문에 `miss_stream_served_as_hit`로 무효였다. 이를 고친 `3040e3d`의 image(`sha256:49937a3f…`)로 task definition을 revision 2로 바꾸고 `aws-measure-3040e3db9be0`(T0·T2·T4 × 세 모드 × 2회, 18 trial 모두 유효, Task 45.6분)를 실행했다. 반복은 2시간 deadline 안에 3회가 들어가지 않아 2회로 줄였다. 원자료는 [results-aws](../../experiments/e3-failure-isolation/results-aws/)에 있고 비용 관측은 [cost-observation.json](../../experiments/e3-failure-isolation/results-aws/cost-observation.json)이다. Fargate에서는 runner의 cgroup 판독이 실패해 AWS 결과의 CPU·메모리 열은 비어 있다.
 
 로컬 Phase A와 다른 점은 저장소뿐이다. hit 요청은 S3 GetObject, miss 요청은 S3 원본 GetObject와 `If-None-Match: *` 파생 PutObject를 거친다. ALB가 없으므로 health check 반응은 보지 않는다. Runner는 실행 후 결과 디렉터리 전체를 같은 버킷의 `experiments/e3-failure-isolation/results-aws/<run-id>/`에 조건부 업로드한다.
 
