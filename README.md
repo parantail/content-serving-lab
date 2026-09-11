@@ -137,9 +137,11 @@ cmd/e1-runner/             E1 실행·분석 CLI
 cmd/e1-phase-b/            E1 Phase B 격리·취소·local multi-process CLI
 cmd/e1-aws-s4/             E1 AWS S4 원격 workload·분석 CLI
 cmd/e2-run, e2-vips, e2-magick/  E2 supervisor와 engine별 worker
+cmd/e3-runner/             E3 장애 격리 실행·분석 CLI
 internal/                  서비스, workload와 분석 코드
 deploy/e1-aws-s4/          E1 AWS S4 Terraform, 사전점검·배포·회수·제거 workflow
 deploy/e2-transformer-ab/  E2 Fargate batch Terraform과 실행·정리 scripts
+deploy/e3-failure-isolation/  E3 one-shot Fargate Terraform과 실행·정리 scripts
 experiments/               실험별 기술 명세, fixture와 원본 측정 자료
 reports/                   실험별 결과 리포트
 docs/                      구성안과 리포트 작성 방법

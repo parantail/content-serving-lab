@@ -23,3 +23,10 @@ bin
 dist
 *.out
 **/__pycache__
+deploy/e3-failure-isolation/local
+deploy/e3-failure-isolation/runtime.auto.tfvars.json
+deploy/e3-failure-isolation/deadline.json
+deploy/e3-failure-isolation/watchdog.pid
+deploy/e3-failure-isolation/watchdog.log
+experiments/e3-failure-isolation/results
+experiments/e3-failure-isolation/results-aws

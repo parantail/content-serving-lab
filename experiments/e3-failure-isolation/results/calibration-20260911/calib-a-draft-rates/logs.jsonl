@@ -1,0 +1,5 @@
+{"timestamp":"2026-09-11T11:57:03.275263778Z","run_id":"calib-a-draft-rates","trial_id":"baseline-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=none"}
+{"timestamp":"2026-09-11T11:57:36.624349128Z","run_id":"calib-a-draft-rates","trial_id":"baseline-none-r01","offset_ms":30000.316096,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T11:58:43.281801659Z","run_id":"calib-a-draft-rates","trial_id":"baseline-none-r01","offset_ms":90000.993627,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T11:59:49.951549224Z","run_id":"calib-a-draft-rates","trial_id":"baseline-none-r01","offset_ms":150000.506547,"event":"streams_finished"}
+{"timestamp":"2026-09-11T11:59:49.951550341Z","run_id":"calib-a-draft-rates","trial_id":"baseline-none-r01","offset_ms":150000.507664,"event":"requests_drained"}

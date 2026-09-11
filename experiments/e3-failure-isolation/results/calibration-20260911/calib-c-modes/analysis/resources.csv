@@ -1,0 +1,7 @@
+mode,fault,trials,peak_cgroup_memory_mean_bytes,peak_cgroup_memory_max_bytes,max_original_bytes_inflight_mean,max_original_bytes_inflight_max,max_transform_waiting_mean,max_transform_waiting_max,cpu_time_mean_ms,poisoned_fault_error_rate_mean,poisoned_fault_p99_mean_ms,transform_timeout_mean,transform_shed_mean,kill_switch_rejected_mean,fault_injections_mean,healthy_miss_fault_http500_mean
+baseline,none,1,620728320.000,620728320,0.000,0,0.000,0,69864.897,0.000000,577.958,0.000,0.000,0.000,0.000,0.000
+bounded-wait,none,1,557903872.000,557903872,0.000,0,0.000,0,69362.255,0.000000,611.371,0.000,0.000,0.000,0.000,0.000
+kill-switch,none,1,617205760.000,617205760,0.000,0,0.000,0,70138.854,0.000000,554.891,0.000,0.000,0.000,0.000,0.000
+baseline,transform-timeout,1,980598784.000,980598784,118175696.000,118175696,25.000,25,56811.044,0.733333,20002.898,44.000,0.000,0.000,44.000,0.000
+bounded-wait,transform-timeout,1,768581632.000,768581632,16300096.000,16300096,3.000,3,44655.437,0.983333,20002.817,14.000,70.000,0.000,14.000,0.000
+kill-switch,transform-timeout,1,707792896.000,707792896,114100672.000,114100672,24.000,24,41063.424,1.000000,20001.191,20.000,0.000,75.000,20.000,0.000

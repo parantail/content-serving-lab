@@ -1,0 +1,2 @@
+mode,fault,trials,peak_cgroup_memory_mean_bytes,peak_cgroup_memory_max_bytes,max_original_bytes_inflight_mean,max_original_bytes_inflight_max,max_transform_waiting_mean,max_transform_waiting_max,cpu_time_mean_ms,poisoned_fault_error_rate_mean,poisoned_fault_p99_mean_ms,transform_timeout_mean,transform_shed_mean,kill_switch_rejected_mean,fault_injections_mean,healthy_miss_fault_http500_mean
+baseline,none,1,637657088.000,637657088,0.000,0,0.000,0,69504.453,0.000000,624.745,0.000,0.000,0.000,0.000,0.000

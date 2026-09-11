@@ -2,7 +2,7 @@
 
 설계 초안일: 2026-09-11
 
-상태: **설계 초안 — 장애 주입·격리 수단 구현, workload·calibration·측정 전**. 이 문서는 실험의 기술 계약이다. 아래 숫자 중 "calibration에서 확정"이라고 적은 값은 로컬 calibration 결과로 바뀔 수 있으며, 확정 시 이 문서를 갱신한다. 서비스 쪽의 [제어 계약](#구현한-제어-계약)(변환 gate, kill switch, 장애 주입, 제어 endpoint)은 구현하고 test로 고정했다. 부하 생성기, 분석기와 차트는 아직 구현하지 않았다.
+상태: **구현·calibration 완료, 본 측정 전**. 이 문서는 실험의 기술 계약이다. 서비스 쪽의 [제어 계약](#구현한-제어-계약)(변환 gate, kill switch, 장애 주입, 제어 endpoint), 부하 생성기·분석기·차트([로컬 재현](#로컬-재현))를 구현하고 test로 고정했다. 실행 조건은 로컬 calibration(1 vCPU/2 GiB, 세 모드 × 다섯 장애 각 1회)에서 확정했으며 아래 표의 값이 `run`의 기본값이다. 본 측정 결과는 아직 없다.
 
 > 이미지 변환기가 느려지거나 오류를 내거나 원본 저장소가 실패할 때, 이미 저장된 파생 이미지 요청은 얼마나 영향을 받고, 격리 수단은 그 영향을 얼마나 줄이는가?
 
@@ -82,7 +82,7 @@ E3는 단일 프로세스와 단일 Task 범위다. 여러 리전, CloudFront, A
 | T3 | 변환 즉시 오류 | 오염 키의 변환이 지연 없이 오류 반환 | 빠른 실패는 번지지 않는가. T1/T2와 대비하는 대조군 |
 | T4 | 원본 읽기 지연 | 오염 키의 원본 읽기를 지연 | 변환 semaphore 밖에서 생기는 지연은 다른 경로로 번지는가 |
 
-지연 길이와 transform timeout은 calibration에서 확정한다. 초안 값은 아래 [고정할 실행 조건](#고정할-실행-조건)에 있다.
+지연 길이와 transform timeout은 아래 [고정할 실행 조건](#고정할-실행-조건)에 있다. Calibration에서 다섯 장애 모두 오염 요청에만 주입되고 정상 원본 요청에는 주입되지 않는 것을 카운터로 확인했다.
 
 ## 비교할 방식
 
@@ -103,11 +103,13 @@ M1은 원본 읽기를 slot 확보 뒤로 옮기므로, T4(원본 읽기 지연)
 
 한 실행(trial)은 한 모드와 한 장애 조합이다. 정상 → 장애 → 복구의 세 구간을 가진 고정 길이 timeline이며, 세 stream을 동시에 보낸다.
 
-| stream | 요청 | 키 | 초안 rate | 목적 |
+| stream | 요청 | 키 | 확정 rate | 목적 |
 | --- | --- | --- | --- | --- |
-| hit | 미리 저장한 파생 이미지 | 고정된 소수의 키 반복 | 20 req/s | hit 경로가 영향을 받는가 |
-| healthy-miss | 매번 새 키의 변환 | 정상 원본 + 서로 다른 spec | 1 req/s | 변환 경로 안의 정상 요청이 영향을 받는가 |
-| poisoned-miss | 오염 키의 변환 | 오염 표식 + 서로 다른 spec | 2 req/s | 장애를 실제로 만드는 요청 |
+| hit | 미리 저장한 파생 이미지 | 고정된 4개 키 반복 (`width=640..643,height=480`) | 20 req/s | hit 경로가 영향을 받는가 |
+| healthy-miss | 매번 새 키의 변환 | 정상 원본 + 서로 다른 spec | 0.5 req/s | 변환 경로 안의 정상 요청이 영향을 받는가 |
+| poisoned-miss | 오염 키의 변환 | 오염 표식 + 서로 다른 spec | 1 req/s | 장애를 실제로 만드는 요청 |
+
+Miss rate는 calibration에서 초안(1/2 req/s)의 절반으로 확정했다. 초안 rate에서는 T0 baseline의 CPU 시간이 150초 중 144초로 포화되어 정상 miss p50이 약 1초, slot 대기가 최대 6건이었다. 절반 rate에서는 CPU 약 46%, slot 대기 0, 정상 miss p50 약 0.55초였다. 변환 1건이 1 vCPU에서 약 0.3~0.5초를 쓰므로 miss 합계 1.5 req/s가 baseline을 큐잉 없이 유지하는 상한 근처다.
 
 - 부하 생성기는 open loop다. 정해진 간격으로 요청을 시작하고 응답을 기다리지 않는다. 그래야 응답이 늦어질 때 요청이 실제로 쌓인다.
 - 각 stream에는 동시 진행 상한을 둔다. 상한에 걸려 시작하지 못한 요청은 "생성기 포화"로 따로 세고 서버 오류와 섞지 않는다.
@@ -115,11 +117,11 @@ M1은 원본 읽기를 slot 확보 뒤로 옮기므로, T4(원본 읽기 지연)
 - healthy-miss는 매 요청이 실제 libvips 변환을 일으켜야 하므로 spec을 매번 바꾼다. 같은 원본의 서로 다른 크기를 사용한다.
 - poisoned-miss도 spec을 매번 바꾼다. 같은 키를 반복하면 singleflight가 합쳐서 slot을 하나만 차지한다. 서로 다른 키가 slot 4개를 모두 차지하는 상황이 의도한 장애다.
 
-Timeline 초안은 정상 30초, 장애 60초, 복구 60초의 총 150초다. Rate와 timeline 길이는 calibration에서 다음 조건으로 확정한다.
+Timeline은 정상 30초, 장애 60초, 복구 60초의 총 150초다. Calibration에서 다음 세 조건을 확인했다.
 
-- T0에서 세 stream이 모두 오류 없이 처리되고 생성기 포화가 없다.
-- M0 + T2에서 정상 miss 요청의 영향이 측정 가능하게 나타난다. 나타나지 않으면 poisoned rate를 올린다.
-- 복구 구간 끝에서 정상 요청 지표가 장애 전 수준으로 돌아온다. 돌아오지 않으면 복구 구간을 늘린다.
+- T0에서 세 모드 모두 세 stream이 오류 없이 처리되고 생성기 포화가 없었다.
+- M0 + T2에서 정상 miss 요청의 93%가 기준 지연을 넘었고(p99 약 17.3초), M1은 83%를 2초 안에 거부했으며, M2는 kill switch 전에는 M0처럼 대기하고 켜진 뒤에는 즉시 거부했다.
+- M0 + T2의 정상 miss 지연은 장애 종료 약 15초 뒤에 장애 전 수준으로 돌아왔다. 60초 복구 구간이 충분했다.
 
 ## 고정할 실행 조건
 
@@ -131,16 +133,16 @@ Timeline 초안은 정상 30초, 장애 60초, 복구 60초의 총 150초다. Ra
 | Container limit | 1 vCPU, 2 GiB | E1/E2와 동일 |
 | Coordinator | `process-singleflight` | E1 채택 결과 |
 | 동시 변환 상한 | 4 | E1 calibration 값 |
-| Request timeout / transform timeout | 30초 / 20초 (초안) | E1의 90/60초는 150초 timeline에 비해 너무 길다. calibration에서 확정 |
-| T1 지연 / T4 지연 | 15초 / 15초 (초안) | transform timeout보다 짧게. calibration에서 확정 |
+| Request timeout / transform timeout | 30초 / 20초 | E1의 90/60초는 150초 timeline에 비해 너무 길다. Transform timeout이 slot 대기·원본 읽기·변환을 함께 묶으므로 client timeout보다 짧게 두어 서버가 요청을 끝낸다. Calibration에서 client timeout 0건 확인 |
+| T1 지연 / T4 지연 | 15초 / 15초 | transform timeout보다 짧아 오염 요청이 결국 성공한다 |
 | T2 | 지연값 없음. transform timeout까지 정지 | timeout 값이 곧 T2의 점유 시간 |
-| M1 slot 대기 상한 | 2초 (초안) | 정상 miss의 T0 p99보다 크고 request timeout보다 훨씬 짧게 |
-| M2 kill switch on/off 시각 | 장애 시작 +20초 / 장애 종료 +10초 (초안) | 고정값. 자동 탐지 시간이 아니다 |
-| 반복 | 모드×장애 조합별 5회 (초안) | calibration 분산이 작으면 3회로 줄일 수 있음 |
+| M1 slot 대기 상한 | 2초 | 정상 miss의 T0 p99(약 0.6초)의 3배 이상이고 request timeout보다 훨씬 짧다. Calibration T0에서 M1의 거부 0건 |
+| M2 kill switch on/off 시각 | 장애 시작 +20초 / 장애 종료 +10초 | 고정값. 자동 탐지 시간이 아니다 |
+| 반복 | 모드×장애 조합별 5회 (로컬), 3회 (AWS 부분 matrix) | Calibration 1회에서 M0/M1/M2 차이가 분명했으므로 로컬은 5회를 유지한다 |
 | 저장소 (로컬) | 파일 원본, 로컬 파생 디렉터리 | E1 Phase A/B와 동일 |
-| 저장소 (AWS, 선택) | S3 원본과 S3 파생 | E1 AWS S4 구성 재사용 |
+| 저장소 (AWS) | 같은 S3 버킷의 `originals/`와 `derivatives/` | [E3 one-shot Fargate](../../deploy/e3-failure-isolation/README.md) |
 
-필수 조합은 모드 3개(M0/M1/M2) × 장애 5개(T0~T4) = 15개다. 반복 5회, timeline 150초면 본 측정은 약 3.1시간이다. M3를 추가하면 5개 조합이 늘어난다.
+필수 조합은 모드 3개(M0/M1/M2) × 장애 5개(T0~T4) = 15개다. 반복 5회, timeline 150초면 본 측정은 약 3.3시간이다. M3를 추가하면 5개 조합이 늘어난다. AWS 단계는 T0·T2·T4 × 세 모드 × 3회의 27개 조합으로 제한한다.
 
 ## 구현한 제어 계약
 
@@ -185,12 +187,12 @@ media_fault_injections_total{fault=...}     장애 주입이 적용된 요청 �
 
 ## 결과에서 보여줄 것
 
-1. **Timeline chart**: 초 단위로 hit과 healthy-miss stream의 p99와 오류율을 그리고 장애 구간과 완화 시각을 음영·선으로 표시한다. M0/M1/M2를 같은 축에 놓는다. 장애 종류별로 한 장씩 만든다.
-2. **Blast radius 표**: 모드×장애별로 정상 요청 중 실패·기준 지연 초과 비율, 정상 miss p99, hit p99, peak memory를 적는다.
+1. **Timeline chart**: 요청 시작 시각 기준 5초 bucket으로 hit과 healthy-miss stream의 p99와 영향 비율(실패 또는 기준 지연 초과)을 그리고 장애 구간과 kill switch 시각을 음영·선으로 표시한다. M0/M1/M2를 같은 축에 놓는다. 장애 종류별로 한 장씩 만든다.
+2. **Blast radius 표**: 모드×장애×stream×구간별로 정상 요청 중 실패·기준 지연 초과 비율(affected rate), p50/p95/p99와 최대 지연, 거부·kill switch 비율을 적는다. 자원 표에는 peak cgroup memory, 보유 원본 bytes 최대, slot 대기 최대와 오염 stream의 결과를 둔다.
 3. **정상 시 비용 표**: T0에서 M1/M2가 M0 대비 더한 지연과 오류.
-4. **시간 간격 표**: 장애 시작 → 정상 요청 영향 시작 → 완화 → 복구.
+4. **시간 간격 표**: 장애 시작 → 정상 요청 첫 영향 → 완화(M1은 첫 거부, M2는 kill switch on) → 장애 종료 뒤 마지막 영향까지의 시간.
 
-그래프는 원자료에서 다시 만들 수 있어야 한다. 축 이름과 단위를 적고 색만으로 구분하지 않는다.
+기준 지연은 stream별로 모든 유효 trial의 정상 구간 p99 중 최댓값의 3배다. hit stream의 정상 구간 p99는 동시에 실행 중인 변환의 CPU 경합에 따라 1ms에서 20ms대까지 흔들리므로 중앙값 대신 최댓값을 쓴다. 비율과 percentile은 trial마다 계산한 뒤 평균해 trial 경계를 보존한다. 그래프는 원자료에서 다시 만들 수 있어야 한다. 축 이름과 단위를 적고 색만으로 구분하지 않는다.
 
 ## 결과를 보고 내릴 결정
 
@@ -205,30 +207,58 @@ media_fault_injections_total{fault=...}     장애 주입이 적용된 요청 �
 experiments/e3-failure-isolation/
   README.md
   results/<run-id>/
-    run.json                   실행 환경, 모드, 장애 조건, 시각
-    trials.csv                 모드×장애×반복의 유효 여부와 요약
-    requests.csv               요청별 결과 (stream, 구간, 상태, 지연)
-    timeline.csv               초 단위 stream별 집계
-    resources.csv              시간대별 CPU·메모리
-    metrics.prom               메트릭 원본
-    logs.jsonl                 장애 주입·kill switch 이벤트를 포함한 로그
+    run.json                   실행 환경, 모드, 장애 조건, 초안/확정 값, 실행 명령
+    trials.csv                 모드×장애×반복의 유효 여부, 이벤트 시각, 카운터와 구간별 요약
+    requests.csv.gz            요청별 결과 (stream, 구간, 상태, 지연, 격리 헤더). 사전 예열 요청도 포함. gzip
+    state.csv                  1초 간격의 서버 상태 (inflight, slot 대기, 보유 원본 bytes, kill switch, 누적 카운터)
+    resources.csv.gz           100ms 간격의 cgroup CPU·메모리. gzip
+    metrics.prom               trial별 메트릭 증분
+    logs.jsonl                 장애 주입·kill switch·구간 경계 이벤트
     analysis/
-      analysis.json            raw 교차 검증과 집계 조건
-      blast-radius.csv         모드×장애 기반 표
-      timeline-<fault>.svg     장애별 timeline chart
+      analysis.json            raw 교차 검증, 무효 trial과 이유, 기준 지연
+      blast-radius.csv         모드×장애×stream×구간 표
+      resources.csv            모드×장애 자원·오염 stream 요약
       normal-cost.csv          정상 시 비용 표
+      intervals.csv            시간 간격 표
+      timeline-summary.csv     5초 bucket 집계 (chart의 입력)
+      timeline-<fault>.svg     장애별 timeline chart
 
-cmd/e3-runner/                 실행과 분석 CLI (예정)
-internal/e3runner/             workload, raw writer, 검증과 chart 코드 (예정)
-internal/media/                변환 gate, bounded wait, kill switch, 장애 주입 (구현)
-internal/e3control/            제어 endpoint의 상태·명령 (구현)
+cmd/e3-runner/                 실행과 분석 CLI
+internal/e3runner/             workload, raw writer, 검증, 집계와 chart 코드
+internal/media/                변환 gate, bounded wait, kill switch, 장애 주입
+internal/e3control/            제어 endpoint의 상태·명령
 ```
 
-## 재현 경로 (예정)
+Runner는 trial마다 새 processor·저장소·메트릭으로 서비스를 같은 프로세스 안에 띄우고 loopback HTTP로 세 stream을 보낸다. 장애와 kill switch는 같은 컨트롤러를 직접 호출하며 시각을 `logs.jsonl`에 남긴다. 분석은 `requests.csv.gz`의 요청 수·격리 결과·hit/miss 분류를 `trials.csv`와 `metrics.prom`의 카운터, `logs.jsonl`의 이벤트 시각과 대조하고 불일치한 trial을 무효로 표시한다.
 
-구현 후 이 절에 Docker build, 로컬 실행, calibration, 본 측정과 분석 명령을 적는다. 명령은 공개 저장소 안의 것만 사용한다.
+## 로컬 재현
 
-AWS 단계는 선택이다. 진행하면 [E1 AWS S4 Terraform](../../deploy/e1-aws-s4/README.md)을 Task 1개 구성으로 재사용하고, S3 원본·파생 저장소에서 같은 workload를 실행한다. ALB health check가 장애 구간에서 어떻게 반응하는지와 S3 지연이 로컬 파일과 어떻게 다른지를 추가로 본다. AWS 단계를 생략하면 보고서에 생략했다고 적고 로컬 결과의 한계로 기록한다.
+Docker와 Git LFS가 필요하다. `run`은 완료 후 원자료를 교차 검증하고 표와 차트를 만든다.
+
+```bash
+git lfs pull
+commit="$(git rev-parse HEAD)"
+image="content-serving-e3:${commit}"
+docker build --target experiment-e3 --build-arg "GIT_COMMIT=${commit}" -t "${image}" .
+image_id="$(docker image inspect --format '{{.Id}}' "${image}")"
+
+mkdir -p experiments/e3-failure-isolation/results
+docker run --rm --cpus=1 --memory=2g \
+  --mount "type=bind,source=${PWD}/experiments/e3-failure-isolation/results,target=/results" \
+  "${image}" run \
+  --run-id "retained-${commit}" \
+  --container-image "${image}#${image_id}"
+```
+
+`run`의 기본 flag가 확정 실행 조건이다. `--calibration`은 결과를 calibration으로 표시하고, `--modes`, `--faults`, `--repetitions`로 부분 matrix를 실행할 수 있다. 기존 원자료에서 검증과 차트만 다시 만들 때는 다음을 사용한다.
+
+```bash
+docker run --rm \
+  --mount "type=bind,source=${PWD}/experiments/e3-failure-isolation/results,target=/results" \
+  "${image}" analyze --run-dir "/results/retained-${commit}"
+```
+
+AWS 단계는 [E3 Fargate 배포](../../deploy/e3-failure-isolation/README.md)를 사용한다. 같은 image의 `run --storage s3`가 Task 1개 안에서 서비스와 부하 생성기를 함께 실행하고 원본·파생 저장소만 S3를 쓴다. ALB는 없으므로 health check 반응은 보지 않는다.
 
 ## 완료 조건
 
@@ -237,3 +267,14 @@ AWS 단계는 선택이다. 진행하면 [E1 AWS S4 Terraform](../../deploy/e1-a
 - 장애별 timeline chart, blast radius 표, 정상 시 비용 표, 시간 간격 표를 원자료에서 다시 만들 수 있다.
 - 보고서에 예상 전파 경로와 실제 결과의 차이, 채택한 수단, 되돌릴 조건, 확인하지 못한 것을 적었다.
 - AWS 단계를 실행했다면 자원 제거와 잔여 0개를 확인했고, 실행하지 않았다면 그 사실을 적었다.
+
+## Calibration에서 확인한 것
+
+Calibration 실행은 대표 결과에 포함하지 않으며 실행 조건을 정하는 데만 사용했다. 1회씩이지만 다음 경향이 분명했다.
+
+- 세 모드 모두 다섯 장애에서 hit stream의 장애 구간 오류는 0이었고 p99는 1ms 안팎이었다. hit p99는 정상·복구 구간에서 20ms대로 튀는데, 이는 동시에 실행 중인 변환의 CPU 경합 때문이며 장애 구간(변환 정지 = CPU 유휴)에서는 오히려 낮아진다.
+- M0 + T1/T2: 정상 miss의 90% 이상이 기준 지연을 넘었고 p99는 약 17초였다. 오류는 없었다. slot 대기 최대 25건, 보유 원본 bytes 최대 약 113 MiB, peak cgroup memory 약 0.9~1.1 GiB.
+- M1 + T1/T2: 정상 miss의 80% 이상이 2초 안에 거부됐다. slot 대기 최대 3~4건, 보유 원본 약 16 MiB.
+- M0 + T4: 정상 miss에 영향이 없었다. 원본 읽기 지연은 slot 밖에서 일어나기 때문이다. 반면 M1 + T4에서는 slot을 먼저 잡고 읽기를 기다리므로 정상 miss의 87%가 거부됐다. M1의 설계 상충이 그대로 나타났다.
+- T3(즉시 오류)는 어느 모드에서도 정상 miss에 번지지 않았다.
+- M2는 kill switch를 켜기 전 20초 동안 M0와 같았고, 켜진 뒤에는 장애 종류와 무관하게 모든 miss를 거부했다. 번지지 않는 장애(T3, T4)에서도 정상 miss를 거부했다.

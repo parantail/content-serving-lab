@@ -46,3 +46,13 @@ deploy/e2-transformer-ab/runtime.auto.tfvars.json
 deploy/e2-transformer-ab/deadline.json
 deploy/e2-transformer-ab/watchdog.pid
 deploy/e2-transformer-ab/watchdog.log
+
+# E3 deployment credentials, plans, local recovery and watchdog state.
+deploy/e3-failure-isolation/local/
+deploy/e3-failure-isolation/runtime.auto.tfvars.json
+deploy/e3-failure-isolation/deadline.json
+deploy/e3-failure-isolation/watchdog.pid
+deploy/e3-failure-isolation/watchdog.log
+
+# E3 calibration runs are excluded unless selected as public evidence.
+experiments/e3-failure-isolation/results/calib-*/

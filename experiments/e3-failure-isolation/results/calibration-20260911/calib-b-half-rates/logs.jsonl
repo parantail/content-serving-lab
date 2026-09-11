@@ -1,0 +1,5 @@
+{"timestamp":"2026-09-11T12:00:42.259522415Z","run_id":"calib-b-half-rates","trial_id":"baseline-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=none"}
+{"timestamp":"2026-09-11T12:01:15.601340494Z","run_id":"calib-b-half-rates","trial_id":"baseline-none-r01","offset_ms":30001.017102,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:02:22.277191579Z","run_id":"calib-b-half-rates","trial_id":"baseline-none-r01","offset_ms":90001.003056,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:03:28.951586049Z","run_id":"calib-b-half-rates","trial_id":"baseline-none-r01","offset_ms":150000.554465,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:03:28.951587589Z","run_id":"calib-b-half-rates","trial_id":"baseline-none-r01","offset_ms":150000.556006,"event":"requests_drained"}

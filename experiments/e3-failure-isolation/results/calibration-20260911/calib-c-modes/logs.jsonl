@@ -1,0 +1,38 @@
+{"timestamp":"2026-09-11T12:04:02.599745985Z","run_id":"calib-c-modes","trial_id":"bounded-wait-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=none"}
+{"timestamp":"2026-09-11T12:04:35.928539627Z","run_id":"calib-c-modes","trial_id":"bounded-wait-none-r01","offset_ms":30000.949821,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:05:42.604488088Z","run_id":"calib-c-modes","trial_id":"bounded-wait-none-r01","offset_ms":90000.364406,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:06:49.279034148Z","run_id":"calib-c-modes","trial_id":"bounded-wait-none-r01","offset_ms":150001.055197,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:06:49.279036767Z","run_id":"calib-c-modes","trial_id":"bounded-wait-none-r01","offset_ms":150001.057816,"event":"requests_drained"}
+{"timestamp":"2026-09-11T12:06:50.353791475Z","run_id":"calib-c-modes","trial_id":"kill-switch-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=none"}
+{"timestamp":"2026-09-11T12:07:23.683948985Z","run_id":"calib-c-modes","trial_id":"kill-switch-none-r01","offset_ms":30000.400468,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:08:30.369394433Z","run_id":"calib-c-modes","trial_id":"kill-switch-none-r01","offset_ms":90001.293867,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:09:37.041578502Z","run_id":"calib-c-modes","trial_id":"kill-switch-none-r01","offset_ms":150000.513892,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:09:37.041579919Z","run_id":"calib-c-modes","trial_id":"kill-switch-none-r01","offset_ms":150000.51531,"event":"requests_drained"}
+{"timestamp":"2026-09-11T12:09:38.096343367Z","run_id":"calib-c-modes","trial_id":"baseline-none-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=none"}
+{"timestamp":"2026-09-11T12:10:11.429993234Z","run_id":"calib-c-modes","trial_id":"baseline-none-r01","offset_ms":30000.554113,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:11:18.096906042Z","run_id":"calib-c-modes","trial_id":"baseline-none-r01","offset_ms":90001.021774,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:12:24.769184284Z","run_id":"calib-c-modes","trial_id":"baseline-none-r01","offset_ms":150000.474914,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:12:24.769185448Z","run_id":"calib-c-modes","trial_id":"baseline-none-r01","offset_ms":150000.476078,"event":"requests_drained"}
+{"timestamp":"2026-09-11T12:12:25.838094745Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=kill-switch fault=transform-timeout"}
+{"timestamp":"2026-09-11T12:12:59.16229532Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":30000.935312,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:12:59.16234473Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":30000.984708,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T12:13:22.495945219Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":50000.171218,"event":"kill_switch_on"}
+{"timestamp":"2026-09-11T12:14:05.836194592Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":90000.89092,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:14:05.836202607Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":90000.89893,"event":"fault_off"}
+{"timestamp":"2026-09-11T12:14:15.835936097Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":100000.63242,"event":"kill_switch_off"}
+{"timestamp":"2026-09-11T12:15:12.516048657Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":150000.97949,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:15:12.516049581Z","run_id":"calib-c-modes","trial_id":"kill-switch-transform-timeout-r01","offset_ms":150000.980412,"event":"requests_drained"}
+{"timestamp":"2026-09-11T12:15:13.582547684Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=baseline fault=transform-timeout"}
+{"timestamp":"2026-09-11T12:15:46.908326048Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":30001.077746,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:15:46.908343969Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":30001.095666,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T12:16:53.574323675Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":90000.433136,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:16:53.574326704Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":90000.436164,"event":"fault_off"}
+{"timestamp":"2026-09-11T12:18:00.257202653Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":150001.133448,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:18:00.257205974Z","run_id":"calib-c-modes","trial_id":"baseline-transform-timeout-r01","offset_ms":150001.136762,"event":"requests_drained"}
+{"timestamp":"2026-09-11T12:18:01.340842892Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":0,"event":"trial_started","detail":"mode=bounded-wait fault=transform-timeout"}
+{"timestamp":"2026-09-11T12:18:34.680371202Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":30000.84012,"event":"phase_fault_started"}
+{"timestamp":"2026-09-11T12:18:34.680385256Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":30000.854176,"event":"fault_on","detail":"kind=transform-timeout delay=0s"}
+{"timestamp":"2026-09-11T12:19:41.334036617Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":90000.420623,"event":"phase_recovery_started"}
+{"timestamp":"2026-09-11T12:19:41.334042127Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":90000.426134,"event":"fault_off"}
+{"timestamp":"2026-09-11T12:20:48.004413426Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":150000.242714,"event":"streams_finished"}
+{"timestamp":"2026-09-11T12:20:48.004414661Z","run_id":"calib-c-modes","trial_id":"bounded-wait-transform-timeout-r01","offset_ms":150000.243949,"event":"requests_drained"}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "e3-v1",
+  "run_id": "calib-c-modes",
+  "calibration": true,
+  "raw_validation": "passed",
+  "total_trials": 6,
+  "valid_trials": 6,
+  "invalid_trials": 0,
+  "invalid_trials_list": {},
+  "affected_latency_threshold_ms": {
+    "healthy-miss": 1849.659,
+    "hit": 83.505
+  },
+  "threshold_rule": "3 x the largest normal-phase p99 across all valid trials, per stream; a healthy request is affected when it fails or exceeds this latency",
+  "aggregation_note": "Rows aggregate valid trials only. Rates and percentiles are computed per trial and then averaged, so trial boundaries are preserved. Timeline buckets are keyed by request start offset.",
+  "files": [
+    "analysis.json",
+    "blast-radius.csv",
+    "resources.csv",
+    "normal-cost.csv",
+    "intervals.csv",
+    "timeline-summary.csv",
+    "timeline-none.svg",
+    "timeline-transform-timeout.svg"
+  ]
+}
