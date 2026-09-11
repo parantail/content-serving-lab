@@ -1,0 +1,29 @@
+{
+  "schema_version": "e3-v1",
+  "run_id": "retained-e8c21674a86f5d4737b23a59e2071da7754f4ff2",
+  "calibration": false,
+  "raw_validation": "passed",
+  "total_trials": 75,
+  "valid_trials": 75,
+  "invalid_trials": 0,
+  "invalid_trials_list": {},
+  "affected_latency_threshold_ms": {
+    "healthy-miss": 1833.948,
+    "hit": 171.97500000000002
+  },
+  "threshold_rule": "3 x the largest normal-phase p99 across all valid trials, per stream; a healthy request is affected when it fails or exceeds this latency",
+  "aggregation_note": "Rows aggregate valid trials only. Rates and percentiles are computed per trial and then averaged, so trial boundaries are preserved. Timeline buckets are keyed by request start offset.",
+  "files": [
+    "analysis.json",
+    "blast-radius.csv",
+    "resources.csv",
+    "normal-cost.csv",
+    "intervals.csv",
+    "timeline-summary.csv",
+    "timeline-none.svg",
+    "timeline-slow-transform.svg",
+    "timeline-transform-timeout.svg",
+    "timeline-transform-error.svg",
+    "timeline-slow-original.svg"
+  ]
+}

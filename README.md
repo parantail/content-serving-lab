@@ -2,7 +2,7 @@
 
 이미지 요청이 한꺼번에 몰리거나 변환기와 저장소에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-세 가지 실험으로 범위를 정했습니다. E1은 같은 이미지의 동시 첫 요청을 프로세스 안에서 합치는 방식을 채택했고, 실제 AWS에서 Task 1/2/4개일 때 변환이 1/2/4회 발생하는 것까지 확인했습니다. E2는 libvips와 ImageMagick을 같은 corpus와 자원 제한에서 비교해 libvips를 유지하기로 했습니다. E3는 변환기나 원본 저장소의 장애가 정상 요청에 번지는 경로와 격리 수단의 효과를 측정합니다. E1 전체 AWS Usage 비용은 조회 시점 기준 약 US$0.68이었고, E2 본 측정의 Task CPU·memory 추정 소계는 약 US$0.21이었습니다. 둘 다 월말 확정 청구액이 아닙니다.
+세 가지 실험으로 범위를 정했습니다. E1은 같은 이미지의 동시 첫 요청을 프로세스 안에서 합치는 방식을 채택했고, 실제 AWS에서 Task 1/2/4개일 때 변환이 1/2/4회 발생하는 것까지 확인했습니다. E2는 libvips와 ImageMagick을 같은 corpus와 자원 제한에서 비교해 libvips를 유지하기로 했습니다. E3는 변환기나 원본 저장소의 장애가 정상 요청에 번지는 경로와 격리 수단의 효과를 측정했습니다. 캐시된 이미지 요청은 어떤 장애에서도 영향이 없었고, 다른 이미지의 변환 요청은 baseline에서 17초를 기다렸으며 2초 bounded wait가 이를 2초 안의 503으로 바꿨습니다. E1 전체 AWS Usage 비용은 조회 시점 기준 약 US$0.68이었고, E2와 E3 본 측정의 Task CPU·memory 추정 소계는 각각 약 US$0.21과 US$0.04였습니다. 모두 월말 확정 청구액이 아닙니다.
 
 ## 실험
 
@@ -10,9 +10,9 @@
 | --- | --- | --- | --- |
 | [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B](reports/e1-cache-stampede/PHASE-B.md), [AWS S4: Task 1/2/4개에서 변환 1/2/4회](reports/e1-cache-stampede/AWS-S4.md) | Phase A/B 및 AWS S4 retained 측정 완료 |
 | [E2. 이미지 변환기 비교](experiments/e2-transformer-ab/README.md) | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, peak RSS, 파일 크기와 품질 | [AWS 전체 검증·정리 완료](reports/e2-transformer-ab/aws-20260910-c2/README.md) · libvips 유지, Q80 처리량 1.25~3.17배·RSS/품질 상충 |
-| [E3. 장애 격리](experiments/e3-failure-isolation/README.md) | 변환기가 느려지거나 오류를 내거나 원본 저장소가 실패할 때, 이미 저장된 이미지 요청과 다른 이미지의 변환 요청까지 얼마나 번지는가? 격리 수단은 그 범위를 얼마나 줄이는가? | 정상 요청의 p99와 오류율 timeline, blast radius, 완화·복구 시간 | 설계 초안 (구현·측정 전) |
+| [E3. 장애 격리](experiments/e3-failure-isolation/README.md) | 변환기가 느려지거나 오류를 내거나 원본 저장소가 실패할 때, 이미 저장된 이미지 요청과 다른 이미지의 변환 요청까지 얼마나 번지는가? 격리 수단은 그 범위를 얼마나 줄이는가? | [로컬 75 trial·AWS 18 trial](reports/e3-failure-isolation/README.md): hit 오류 0, 정상 miss 93% 17초 대기 → bounded wait로 2초 503·복구 지연 0 | 로컬·AWS 측정 완료 · bounded wait 채택, 원본 읽기 순서와 kill switch 사용 조건은 재검토 |
 
-E3가 끝나면 이 표에서 결과 요약, 그래프, 실행 방법과 원본 측정 자료로 바로 이동할 수 있게 합니다. 멀티 리전 전환과 포맷별 전달 비용 모델은 검토했지만 이번 프로젝트 범위에서 실행하지 않기로 했습니다. 아래 구성안은 그 배경으로 남깁니다.
+각 보고서에서 결과 요약, 그래프, 실행 방법과 원본 측정 자료로 이동할 수 있습니다. 멀티 리전 전환과 포맷별 전달 비용 모델은 검토했지만 이번 프로젝트 범위에서 실행하지 않기로 했습니다. 아래 구성안은 그 배경으로 남깁니다.
 
 ## AWS 구성안
 
@@ -102,6 +102,7 @@ E1에서 한 프로세스 안의 요청 합치기를 채택했고, 여러 ECS Ta
 - `none`/`process-singleflight` coordinator와 요청별 cancellation/server-side timeout 계약
 - govips/libvips transformer와 deterministic failure transformer
 - E3 격리 계층: 프로세스 전체 변환 gate(bounded wait·load shedding), 운영자 kill switch, 오염 source 대상 deterministic 장애 주입과 opt-in 제어 endpoint
+- E3 open-loop 세 stream workload, gzip 원자료, 교차 검증 분석기, 장애별 timeline SVG와 S3 결과 업로드, one-shot Fargate Terraform
 - E1 S0/S1/S2/F1 barrier workload, raw CSV/Prometheus/log/resource output
 - E1 Phase B S3 cold/warm isolation, event-driven F2 cancellation과 local S4 2/4-process workload
 - Raw counter/request 교차 검증, 기반 표와 두 SVG 자동 생성

@@ -1,0 +1,13 @@
+mode,fault,trials,trials_with_impact,first_impact_mean_ms,first_impact_min_ms,first_impact_max_ms,trials_with_mitigation,mitigation_mean_ms,mitigation_min_ms,mitigation_max_ms,last_impact_after_fault_off_mean_ms,last_impact_after_fault_off_max_ms,affected_healthy_fault_mean,affected_healthy_recovery_mean
+baseline,slow-transform,5,5,3999.846,3999.232,4000.234,0,0.000,0.000,0.000,10802.651,12000.440,28.000,6.400
+bounded-wait,slow-transform,5,5,3999.876,3999.681,4000.151,5,3999.791,3999.503,3999.987,0.001,0.007,26.400,0.200
+kill-switch,slow-transform,5,5,3999.414,3999.004,3999.772,5,19999.796,19999.465,19999.923,7999.857,8000.773,28.000,5.000
+baseline,transform-timeout,5,5,3999.888,3999.418,4000.392,0,0.000,0.000,0.000,11216.847,12000.074,28.000,6.600
+bounded-wait,transform-timeout,5,5,4000.128,3999.549,4000.968,5,4000.043,3999.405,4000.887,0.000,0.000,26.200,0.000
+kill-switch,transform-timeout,5,5,3999.709,3999.247,4000.106,5,19999.456,19998.945,19999.780,7999.988,8000.720,28.000,5.000
+baseline,transform-error,5,0,0.000,0.000,0.000,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+bounded-wait,transform-error,5,0,0.000,0.000,0.000,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+kill-switch,transform-error,5,5,20000.283,19999.805,20000.783,5,20000.283,19999.795,20000.792,8000.353,8000.582,20.000,5.000
+baseline,slow-original,5,0,0.000,0.000,0.000,0,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+bounded-wait,slow-original,5,5,3999.993,3999.594,4000.260,5,3999.912,3999.594,4000.260,0.000,0.000,27.000,0.200
+kill-switch,slow-original,5,5,20400.089,19999.735,21999.951,5,20003.891,19999.751,20019.124,7999.838,8000.120,19.800,5.000
