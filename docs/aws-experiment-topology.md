@@ -1,8 +1,8 @@
 # AWS 실험 구성안
 
-상태: **구현과 측정 전**
+상태: **장기 구성안. 단일 리전 부분만 실행함**
 
-콘텐츠 전달 경로를 AWS에 올릴 때 처음 사용할 구성입니다. 같은 입력과 부하에서 다른 방식을 비교하고 지연, 오류, 비용과 운영 복잡성을 기준으로 구성을 확정합니다.
+프로젝트를 시작할 때 세운 AWS 구성안입니다. 이 가운데 실제로 만들고 측정한 것은 한 리전의 `ALB → ECS Fargate → S3`([E1 Terraform](../deploy/e1-aws-s4/README.md))과 ALB 없는 Fargate batch([E2 Terraform](../deploy/e2-transformer-ab/README.md))입니다. CloudFront, 두 번째 리전, 리전 간 복제, Global Accelerator, AWS FIS와 Lambda 비교는 구현하거나 측정하지 않았고 이번 프로젝트 범위에서 실행하지 않기로 했습니다. 아래 내용은 그 결정의 배경과 다시 검토할 때의 출발점으로 남깁니다.
 
 ## 첫 구성
 
@@ -149,30 +149,34 @@ S3가 제공하는 하나의 전역 주소와 장애 전환 기능을 비교할 
 
 ## 만들 장애와 관측할 값
 
-| 만들 상황 | 방법 | 관측할 값 |
-| --- | --- | --- |
-| 이미지 변환 시간 초과나 오류 | 특정 요청에만 적용되는 테스트 기능 | 캐시 적중 요청까지 영향을 받는지, 재시도 증가와 p99 |
-| CPU 또는 메모리 압박 | 제한된 부하 또는 FIS | 정상 요청의 지연, ECS Service scale-out과 새 Task가 준비되는 시간 |
-| 네트워크 지연과 패킷 손실 | AWS FIS의 ECS Task action | origin timeout, health check 변화와 리전 전환 |
-| 프로세스 종료 | FIS 또는 새 버전 배포 | 처리 중인 요청(in-flight request), ECS Task 교체와 복구 시간 |
-| S3 지연이나 오류 | 저장소 접근 코드의 테스트 기능 | 재시도 증가, 장애 확산과 기능 제한 방식 |
-| 리전 응답 저하 | 상태 확인과 트래픽 조절 | 탐지, 다른 리전으로 이동, 이동 직후 중복 변환 |
+| 만들 상황 | 방법 | 관측할 값 | 실행 여부 |
+| --- | --- | --- | --- |
+| 이미지 변환 시간 초과나 오류 | 특정 요청에만 적용되는 테스트 기능 | 캐시 적중 요청까지 영향을 받는지, 재시도 증가와 p99 | [E3](../experiments/e3-failure-isolation/README.md) 설계 초안 |
+| S3 지연이나 오류 | 저장소 접근 코드의 테스트 기능 | 재시도 증가, 장애 확산과 기능 제한 방식 | [E3](../experiments/e3-failure-isolation/README.md) 설계 초안 (원본 읽기 지연) |
+| CPU 또는 메모리 압박 | 제한된 부하 또는 FIS | 정상 요청의 지연, ECS Service scale-out과 새 Task가 준비되는 시간 | 실행하지 않음 |
+| 네트워크 지연과 패킷 손실 | AWS FIS의 ECS Task action | origin timeout, health check 변화와 리전 전환 | 실행하지 않음 |
+| 프로세스 종료 | FIS 또는 새 버전 배포 | 처리 중인 요청(in-flight request), ECS Task 교체와 복구 시간 | 실행하지 않음 |
+| 리전 응답 저하 | 상태 확인과 트래픽 조절 | 탐지, 다른 리전으로 이동, 이동 직후 중복 변환 | 실행하지 않음 |
 
-FIS는 실험용 AWS 계정의 태그가 붙은 자원만 대상으로 삼습니다. CloudWatch 경보가 정한 수치를 넘으면 실험을 중단하게 합니다.
+FIS를 사용한다면 실험용 AWS 계정의 태그가 붙은 자원만 대상으로 삼고, CloudWatch 경보가 정한 수치를 넘으면 실험을 중단하게 합니다. 이번 프로젝트에서는 FIS를 사용하지 않았습니다.
 
 - [Use fault injection with ECS and Fargate workloads](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fault-injection.html)
 - [AWS FIS ECS task actions](https://docs.aws.amazon.com/fis/latest/userguide/ecs-task-actions.html)
 
-## 진행 순서
+## 진행 순서와 실제 진행
 
-1. 한 리전에서 `CloudFront → ALB → ECS Fargate → S3` 구성
-2. 캐시 폭주와 이미지 변환기 비교 도구 완성
-3. 같은 Terraform 구성을 두 번째 리전에 배포
-4. 원본 복제와 리전별 파생 이미지 저장
-5. CloudFront Origin Group으로 주 리전 장애 실험
-6. FIS로 ECS Task와 네트워크 장애를 만들고 복구 과정 기록
-7. 필요하면 Global Accelerator로 두 리전을 동시에 쓰는 방식 비교
-8. ECS Fargate와 Lambda 비교
-9. 결과가 필요성을 보일 때만 MRAP, ECS on EC2 또는 EKS 검토
+처음 계획한 순서와 실제 진행은 다음과 같습니다.
 
-각 단계의 완료 기준은 변경 전후의 지연, 오류, 중복 작업, 복구 시간과 비용을 같은 조건에서 다시 측정할 수 있는 상태입니다.
+| 순서 | 계획 | 실제 |
+| --- | --- | --- |
+| 1 | 한 리전에서 `CloudFront → ALB → ECS Fargate → S3` 구성 | CloudFront 없이 `ALB → ECS Fargate → S3`만 구성 (E1) |
+| 2 | 캐시 폭주와 이미지 변환기 비교 도구 완성 | 완료 (E1, E2) |
+| 3 | 같은 Terraform 구성을 두 번째 리전에 배포 | 실행하지 않음 |
+| 4 | 원본 복제와 리전별 파생 이미지 저장 | 실행하지 않음 |
+| 5 | CloudFront Origin Group으로 주 리전 장애 실험 | 실행하지 않음. 대신 단일 Task 안의 장애 격리를 E3로 진행 |
+| 6 | FIS로 ECS Task와 네트워크 장애를 만들고 복구 과정 기록 | 실행하지 않음. E3는 애플리케이션의 테스트 기능으로 장애를 만듦 |
+| 7 | Global Accelerator 비교 | 실행하지 않음 |
+| 8 | ECS Fargate와 Lambda 비교 | 실행하지 않음 |
+| 9 | MRAP, ECS on EC2, EKS 검토 | 실행하지 않음 |
+
+멀티 리전 단계를 실행하지 않은 이유는 새 인프라(CloudFront, 두 번째 리전, 복제, FIS)를 만드는 시간이 남은 실험 예산을 넘고, 전환 시간의 측정 결과가 이 서비스의 코드 선택보다 AWS 서비스의 동작에 더 크게 좌우되기 때문입니다. 각 단계의 완료 기준은 변경 전후의 지연, 오류, 중복 작업, 복구 시간과 비용을 같은 조건에서 다시 측정할 수 있는 상태입니다.

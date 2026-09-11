@@ -1,8 +1,8 @@
 # Content Serving Lab
 
-이미지 요청이 한꺼번에 몰리거나 한 리전에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
+이미지 요청이 한꺼번에 몰리거나 변환기와 저장소에 장애가 났을 때 콘텐츠 전달 경로에서 무슨 일이 일어나는지 직접 확인해 보는 프로젝트입니다. 작은 AWS 환경에 부하와 장애를 만들어 보고, 대응 전후의 지연 시간과 오류, 비용을 비교합니다.
 
-현재 구현된 범위는 Go media endpoint, E1 Phase A/B workload·분석과 AWS S4의 S3 store·Task 계측·원격 workload/analyzer 및 일회성 Terraform 환경입니다. Phase A에서 프로세스 내부 동일 요청 합치기를 채택했고, Phase B에서 다른 key 격리, leader cancellation과 local 2/4-process 경계를 retained 측정했습니다. [AWS S4 retained](reports/e1-cache-stampede/AWS-S4.md)는 30회 유효·3,000개 HTTP 200을 확인했으며 Task 1/2/4개에서 같은 이미지 변환이 1/2/4회 발생했습니다. 서버 간 분산 조정(S5)은 이번 E1 범위에서 제외했습니다. 기술 측정·정리와 비용 기록을 완료했습니다. 여러 차례의 배포·진단·부하 실험을 포함한 E1 전체 AWS Usage 비용은 조회 시점 기준 약 US$0.68입니다.
+세 가지 실험으로 범위를 정했습니다. E1은 같은 이미지의 동시 첫 요청을 프로세스 안에서 합치는 방식을 채택했고, 실제 AWS에서 Task 1/2/4개일 때 변환이 1/2/4회 발생하는 것까지 확인했습니다. E2는 libvips와 ImageMagick을 같은 corpus와 자원 제한에서 비교해 libvips를 유지하기로 했습니다. E3는 변환기나 원본 저장소의 장애가 정상 요청에 번지는 경로와 격리 수단의 효과를 측정합니다. E1 전체 AWS Usage 비용은 조회 시점 기준 약 US$0.68이었고, E2 본 측정의 Task CPU·memory 추정 소계는 약 US$0.21이었습니다. 둘 다 월말 확정 청구액이 아닙니다.
 
 ## 실험
 
@@ -10,15 +10,13 @@
 | --- | --- | --- | --- |
 | [E1. 캐시 폭주](experiments/e1-cache-stampede/README.md) | 같은 이미지의 첫 요청이 동시에 들어올 때 중복 변환을 얼마나 줄일 수 있는가? | [Phase A: 변환 100→1회](reports/e1-cache-stampede/README.md), [Phase B](reports/e1-cache-stampede/PHASE-B.md), [AWS S4: Task 1/2/4개에서 변환 1/2/4회](reports/e1-cache-stampede/AWS-S4.md) | Phase A/B 및 AWS S4 retained 측정 완료 |
 | [E2. 이미지 변환기 비교](experiments/e2-transformer-ab/README.md) | 같은 이미지 묶음에서 libvips와 ImageMagick 중 어느 쪽이 적합한가? | 처리량, peak RSS, 파일 크기와 품질 | [AWS 전체 검증·정리 완료](reports/e2-transformer-ab/aws-20260910-c2/README.md) · libvips 유지, Q80 처리량 1.25~3.17배·RSS/품질 상충 |
-| E3. 멀티 리전 장애 | 한 리전의 응답이 느려지거나 끊겼을 때 사용자에게 얼마나 오래 영향을 주는가? | 리전별 p95/p99, 오류율, 복구 시간 | 준비 중 |
-| E4. 장애 격리 | 변환기나 저장소 장애가 캐시에 있는 이미지 요청까지 번지는 것을 막을 수 있는가? | 영향받은 요청 범위, 탐지·완화·복구 시간 | 준비 중 |
-| E5. 전달 비용 | 이미지 포맷과 캐시 정책이 응답 속도와 비용을 어떻게 바꾸는가? | 캐시 적중률, 전송량, 요청당 비용 | 준비 중 |
+| [E3. 장애 격리](experiments/e3-failure-isolation/README.md) | 변환기가 느려지거나 오류를 내거나 원본 저장소가 실패할 때, 이미 저장된 이미지 요청과 다른 이미지의 변환 요청까지 얼마나 번지는가? 격리 수단은 그 범위를 얼마나 줄이는가? | 정상 요청의 p99와 오류율 timeline, blast radius, 완화·복구 시간 | 설계 초안 (구현·측정 전) |
 
-실험이 끝나면 이 표에서 결과 요약, 그래프, 실행 방법과 원본 측정 자료로 바로 이동할 수 있게 할 예정입니다.
+E3가 끝나면 이 표에서 결과 요약, 그래프, 실행 방법과 원본 측정 자료로 바로 이동할 수 있게 합니다. 멀티 리전 전환과 포맷별 전달 비용 모델은 검토했지만 이번 프로젝트 범위에서 실행하지 않기로 했습니다. 아래 구성안은 그 배경으로 남깁니다.
 
 ## AWS 구성안
 
-아래 장기 구성안과 별도로 E1 AWS S4에 필요한 [단일 Region 일회성 Terraform 환경](deploy/e1-aws-s4/README.md)에서 AWS calibration과 retained 측정을 실행했습니다. 우선 ECS Fargate로 시작하고, 같은 요청을 Lambda에서도 실행해 볼 필요가 있는지는 측정 결과를 보고 결정합니다.
+실제로 실행한 AWS 환경은 E1과 E2의 [단일 Region 일회성 Terraform 환경](deploy/e1-aws-s4/README.md)입니다. 아래 그림은 프로젝트를 시작할 때 세운 장기 구성안이며, CloudFront, 두 번째 리전, 리전 간 복제와 AWS FIS는 구현하거나 측정하지 않았습니다. E3도 단일 리전·단일 Task 범위에서 애플리케이션의 테스트 기능으로 장애를 만듭니다.
 
 ```mermaid
 flowchart LR
@@ -45,7 +43,7 @@ flowchart LR
     OBS --> REPORT[실험 리포트]
 ```
 
-원본은 두 리전이 공유하는 source of truth이므로 리전 간 복제를 적용합니다. 변환해서 만든 이미지는 원본에서 다시 만들 수 있으므로 각 리전에 따로 저장하는 방식으로 시작합니다. 이 구성이 실제로 나은지는 리전 간 전송량, 중복 변환 횟수, 지연 시간과 장애 영향을 비교한 뒤 판단합니다.
+이 구성안에서 원본은 두 리전이 공유하는 source of truth이고 변환한 이미지는 리전별로 다시 만들 수 있다고 가정했습니다. 이 가정이 실제로 나은지는 측정하지 않았습니다.
 
 AWS 자원은 Terraform으로 만들고 실험이 끝나면 제거합니다. 여기서 만드는 트래픽은 실제 사용자가 아닌 부하 생성기의 요청입니다. 개인 환경에서 확인한 결과를 대규모 서비스를 운영한 경험처럼 설명하지 않습니다.
 
@@ -78,19 +76,19 @@ GET  /i/{content_hash}/{transform_spec}.{format}
 
 클라이언트는 미리 발급받은 업로드 URL로 원본을 S3에 직접 올립니다. 서비스는 업로드가 끝난 뒤 파일을 실제로 열어 포맷, 해상도와 용량을 확인하고 콘텐츠 해시로 원본을 식별합니다.
 
-이미지 변환 요청은 같은 의미의 옵션이 항상 같은 키가 되도록 정규화합니다. CloudFront에 이미지가 없으면 Media Service가 다음 순서로 처리합니다.
+이미지 변환 요청은 같은 의미의 옵션이 항상 같은 키가 되도록 정규화합니다. Media Service는 다음 순서로 처리합니다.
 
 ```text
 변환 옵션 검사 및 정규화
   → 파생 이미지 키 계산
-  → 해당 리전의 파생 이미지 조회
+  → 파생 이미지 조회
   → 같은 키로 동시에 들어온 요청 합치기
   → 원본 읽기와 이미지 변환
   → 완성된 파생 이미지 저장
   → Cache-Control과 ETag를 포함해 응답
 ```
 
-한 프로세스 안에서 요청을 합치는 것만으로 충분한지, 여러 ECS Task 사이에서도 조정이 필요한지는 같은 부하 조건에서 중복 변환 횟수와 비용을 비교해 결정합니다.
+E1에서 한 프로세스 안의 요청 합치기를 채택했고, 여러 ECS Task 사이의 조정은 도입하지 않았습니다. E3는 이 순서에서 변환과 원본 읽기 단계의 장애가 앞 단계의 정상 요청에 번지는지를 봅니다.
 
 ## 현재 구현
 
@@ -133,18 +131,17 @@ curl http://localhost:8080/health/ready
 ## 저장소 구조
 
 ```text
-cmd/content-serving/     실행 프로그램
-cmd/e1-runner/           E1 실행·분석 CLI
-cmd/e1-phase-b/          E1 Phase B 격리·취소·local multi-process CLI
-cmd/e1-aws-s4/           E1 AWS S4 원격 workload·분석 CLI
-internal/                서비스, workload와 분석 코드
-api/                     OpenAPI와 API 동작 테스트 (예정)
-deploy/e1-aws-s4/        E1 AWS S4 Terraform, 사전점검·배포·회수·제거 workflow
-experiments/             부하·장애 시나리오, fixture와 원본 측정 자료
-reports/                 실험별 결과 리포트 (예정)
-docs/                    구성안과 설계 결정
-operations/              대시보드, 운영 절차와 장애 실험 기록 (예정)
-samples/                 사용 조건이 명확한 테스트 이미지와 예제 (예정)
+cmd/content-serving/       실행 프로그램
+cmd/e1-runner/             E1 실행·분석 CLI
+cmd/e1-phase-b/            E1 Phase B 격리·취소·local multi-process CLI
+cmd/e1-aws-s4/             E1 AWS S4 원격 workload·분석 CLI
+cmd/e2-run, e2-vips, e2-magick/  E2 supervisor와 engine별 worker
+internal/                  서비스, workload와 분석 코드
+deploy/e1-aws-s4/          E1 AWS S4 Terraform, 사전점검·배포·회수·제거 workflow
+deploy/e2-transformer-ab/  E2 Fargate batch Terraform과 실행·정리 scripts
+experiments/               실험별 기술 명세, fixture와 원본 측정 자료
+reports/                   실험별 결과 리포트
+docs/                      구성안과 리포트 작성 방법
 ```
 
 첫 번째 범위는 요청 시점의 이미지 변환과 전달입니다. 이미지 실험과 AWS 재현이 끝난 뒤에만 FFmpeg worker와 HLS 전달을 추가합니다. Kubernetes나 멀티 CDN도 실제로 비교할 문제가 생겼을 때 검토합니다.
