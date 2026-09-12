@@ -148,5 +148,22 @@
     "image_bytes": 85765751,
     "s3_objects": 1607,
     "s3_bytes": 95578315
+  },
+  "billing_next_day": {
+    "observed_at": "2026-09-12",
+    "source": "Cost Explorer daily service CSV exported by the operator (UTC dates)",
+    "row_date": "2026-09-11",
+    "note": "E3 bootstrap through destroy ran 12:49-13:59 UTC on 2026-09-11; the E2 c2 run ended 18:37 UTC on 2026-09-10, so this row holds E3 only plus Cost Explorer API charges from cost queries",
+    "services_usd": {
+      "Elastic Container Service": 0.0531681611,
+      "S3": 0.01717955,
+      "VPC": 0.00478611,
+      "Cost Explorer": 0.01,
+      "ECR": 1.31697e-05
+    },
+    "total_usd": 0.0851469908,
+    "e3_excluding_cost_explorer_usd": 0.0751469908,
+    "billing_final": false,
+    "operator_note": "Daily rows have settled within about 24 hours in earlier experiments; the month-end invoice is still separate"
   }
 }
