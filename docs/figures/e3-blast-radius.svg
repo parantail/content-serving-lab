@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img">
+<style>text{font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;fill:#0b0b0b}.title{font-size:20px;font-weight:700}.subtitle{font-size:13px;fill:#52514e}.group{font-size:14px;font-weight:600}.label{font-size:13px}.value{font-size:13px;font-weight:600}.small{font-size:11px;fill:#898781}.muted{font-size:12px;fill:#898781}.axis{stroke:#c3c2b7;stroke-width:1}.grid{stroke:#e1e0d9;stroke-width:1}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40" y="34" class="title" text-anchor="start">변환 정지 장애 중 다른 이미지 변환 요청의 p99 응답 시간</text>
+<text x="40" y="56" class="subtitle" text-anchor="start">로컬 Docker 1 vCPU·2 GiB · 오염된 요청이 변환 slot 4개를 20초 timeout까지 점유 · 5초 구간 p99, 5회 평균</text>
+<text x="40" y="74" class="subtitle" text-anchor="start">정상 요청 stream만 표시 · kill switch 모드(M2)는 보고서 참조</text>
+<rect x="236" y="100" width="332" height="290" rx="0" fill="#f3f2ee"/>
+<text x="402" y="92" class="muted" text-anchor="middle">장애 주입 30~90초</text>
+<line x1="70" y1="390" x2="900" y2="390" class="grid"/>
+<text x="60" y="394" class="label" text-anchor="end">0초</text>
+<line x1="70" y1="317.5" x2="900" y2="317.5" class="grid"/>
+<text x="60" y="321.5" class="label" text-anchor="end">5초</text>
+<line x1="70" y1="245" x2="900" y2="245" class="grid"/>
+<text x="60" y="249" class="label" text-anchor="end">10초</text>
+<line x1="70" y1="172.5" x2="900" y2="172.5" class="grid"/>
+<text x="60" y="176.5" class="label" text-anchor="end">15초</text>
+<line x1="70" y1="100" x2="900" y2="100" class="grid"/>
+<text x="60" y="104" class="label" text-anchor="end">20초</text>
+<line x1="70" y1="390" x2="70" y2="395" class="axis"/>
+<text x="70" y="412" class="label" text-anchor="middle">0초</text>
+<line x1="236" y1="390" x2="236" y2="395" class="axis"/>
+<text x="236" y="412" class="label" text-anchor="middle">30초</text>
+<line x1="402" y1="390" x2="402" y2="395" class="axis"/>
+<text x="402" y="412" class="label" text-anchor="middle">60초</text>
+<line x1="568" y1="390" x2="568" y2="395" class="axis"/>
+<text x="568" y="412" class="label" text-anchor="middle">90초</text>
+<line x1="734" y1="390" x2="734" y2="395" class="axis"/>
+<text x="734" y="412" class="label" text-anchor="middle">120초</text>
+<line x1="900" y1="390" x2="900" y2="395" class="axis"/>
+<text x="900" y="412" class="label" text-anchor="middle">150초</text>
+<line x1="70" y1="100" x2="70" y2="390" class="axis"/>
+<line x1="70" y1="390" x2="900" y2="390" class="axis"/>
+<text x="485" y="434" class="muted" text-anchor="middle">요청 시작 시각 (trial 시작 기준)</text>
+<polyline points="83.8,389.9 111.5,389.9 139.2,389.8 166.8,389.9 194.5,389.8 222.2,390 249.8,390 277.5,390 305.2,389.9 332.8,390 360.5,390 388.2,390 415.8,390 443.5,390 471.2,390 498.8,390 526.5,390 554.2,390 581.8,389.4 609.5,389.1 637.2,389.4 664.8,389.8 692.5,389.9 720.2,390 747.8,389.8 775.5,389.9 803.2,389.7 830.8,390 858.5,389.9 886.2,389.8" fill="none" stroke="#199e70" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="83.8,381.7 111.5,381.7 139.2,381.7 166.8,382.1 194.5,381.9 222.2,381.9 249.8,385.7 277.5,153.8 305.2,142.3 332.8,145.2 360.5,150.9 388.2,145.2 415.8,139.4 443.5,153.8 471.2,142.3 498.8,180.1 526.5,209.7 554.2,255.8 581.8,284.8 609.5,329.5 637.2,360.7 664.8,381.6 692.5,381.7 720.2,381.9 747.8,381.7 775.5,381.9 803.2,381.7 830.8,382.1 858.5,381.8 886.2,382.1" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="83.8,381.9 111.5,381.9 139.2,381.8 166.8,382.1 194.5,381.7 222.2,381.9 249.8,385.7 277.5,361 305.2,361 332.8,361 360.5,363 388.2,361 415.8,361 443.5,363 471.2,361 498.8,361 526.5,361 554.2,363.1 581.8,381.7 609.5,382.1 637.2,381.9 664.8,382.3 692.5,381.7 720.2,381.8 747.8,381.7 775.5,381.9 803.2,381.7 830.8,381.9 858.5,381.9 886.2,382.1" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="196.9" y="117.3" width="12" height="12" rx="2" fill="#eb6834"/>
+<text x="214.9" y="127.3" class="label" text-anchor="start">baseline: 장애 구간 p99 17.3초 · 장애 종료 뒤 11.2초 더 영향</text>
+<rect x="126.8" y="339" width="12" height="12" rx="2" fill="#2a78d6"/>
+<text x="144.8" y="349" class="label" text-anchor="start">2초 bounded wait: p99 2.0초 (84.7%는 즉시 503) · 장애 종료 뒤 영향 0초</text>
+<rect x="569.8" y="230" width="12" height="12" rx="2" fill="#199e70"/>
+<text x="587.8" y="240" class="label" text-anchor="start">캐시 적중 요청(baseline): 오류 0 · p99 64ms 이하</text>
+<rect x="40" y="446" width="12" height="12" rx="2" fill="#eb6834"/>
+<text x="58" y="456" class="label" text-anchor="start">M0 baseline (변경 전)</text>
+<rect x="219.9" y="446" width="12" height="12" rx="2" fill="#2a78d6"/>
+<text x="237.9" y="456" class="label" text-anchor="start">M1 2초 bounded wait + shedding (채택)</text>
+<rect x="509.5" y="446" width="12" height="12" rx="2" fill="#199e70"/>
+<text x="527.5" y="456" class="label" text-anchor="start">캐시 적중 요청 stream (baseline)</text>
+</svg>

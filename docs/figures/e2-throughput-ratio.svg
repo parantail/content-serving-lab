@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="400" viewBox="0 0 960 400" role="img">
+<style>text{font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;fill:#0b0b0b}.title{font-size:20px;font-weight:700}.subtitle{font-size:13px;fill:#52514e}.group{font-size:14px;font-weight:600}.label{font-size:13px}.value{font-size:13px;font-weight:600}.small{font-size:11px;fill:#898781}.muted{font-size:12px;fill:#898781}.axis{stroke:#c3c2b7;stroke-width:1}.grid{stroke:#e1e0d9;stroke-width:1}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40" y="34" class="title" text-anchor="start">같은 조건에서 libvips 처리량은 ImageMagick의 몇 배인가</text>
+<text x="40" y="58" class="subtitle" text-anchor="start">AWS Fargate 1 vCPU·2 GiB, 요청 Q80 · 24입력 batch 다섯 반복 중앙값의 비율 · 포맷별 점 6개 = geometry 3종 × 동시성 1/4, 막대 = 최소~최대</text>
+<line x1="130" y1="92" x2="130" y2="316" class="grid"/>
+<text x="130" y="336" class="label" text-anchor="middle">0×</text>
+<line x1="322.5" y1="92" x2="322.5" y2="316" class="axis"/>
+<text x="322.5" y="336" class="label" text-anchor="middle">1×</text>
+<line x1="515" y1="92" x2="515" y2="316" class="grid"/>
+<text x="515" y="336" class="label" text-anchor="middle">2×</text>
+<line x1="707.5" y1="92" x2="707.5" y2="316" class="grid"/>
+<text x="707.5" y="336" class="label" text-anchor="middle">3×</text>
+<line x1="900" y1="92" x2="900" y2="316" class="grid"/>
+<text x="900" y="336" class="label" text-anchor="middle">4×</text>
+<text x="322.5" y="84" class="muted" text-anchor="middle">1× = 같은 처리량</text>
+<line x1="130" y1="316" x2="900" y2="316" class="axis"/>
+<text x="40" y="125" class="group" text-anchor="start">JPEG</text>
+<rect x="578.1" y="116" width="155.2" height="8" rx="4" fill="#b7d3f6"/>
+<circle cx="578.1" cy="120" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="629.8" cy="120" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="637.3" cy="120" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="640.2" cy="120" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="690.7" cy="120" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="733.3" cy="120" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="566.1" y="125" class="value" text-anchor="end">2.33×</text>
+<text x="745.3" y="125" class="value" text-anchor="start">3.13×</text>
+<text x="40" y="181" class="group" text-anchor="start">PNG</text>
+<rect x="617.4" y="172" width="123.3" height="8" rx="4" fill="#b7d3f6"/>
+<circle cx="617.4" cy="176" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="638.5" cy="176" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="640.2" cy="176" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="644.1" cy="176" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="740.7" cy="176" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="740.7" cy="176" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="605.4" y="181" class="value" text-anchor="end">2.53×</text>
+<text x="752.7" y="181" class="value" text-anchor="start">3.17×</text>
+<text x="40" y="237" class="group" text-anchor="start">WebP</text>
+<rect x="539.2" y="228" width="112.6" height="8" rx="4" fill="#b7d3f6"/>
+<circle cx="539.2" cy="232" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="582.4" cy="232" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="585.8" cy="232" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="594.9" cy="232" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="633.7" cy="232" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="651.8" cy="232" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="527.2" y="237" class="value" text-anchor="end">2.13×</text>
+<text x="663.8" y="237" class="value" text-anchor="start">2.71×</text>
+<text x="40" y="293" class="group" text-anchor="start">AVIF</text>
+<rect x="371.5" y="284" width="107.5" height="8" rx="4" fill="#b7d3f6"/>
+<circle cx="371.5" cy="288" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="402.2" cy="288" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="405.1" cy="288" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="443.3" cy="288" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="472.9" cy="288" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<circle cx="478.9" cy="288" r="5" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="359.5" y="293" class="value" text-anchor="end">1.25×</text>
+<text x="490.9" y="293" class="value" text-anchor="start">1.81×</text>
+<text x="40" y="366" class="muted" text-anchor="start">worker peak RSS는 24개 조건 중 21개에서 libvips가 더 높았음 · 품질(SSIM)과 파일 크기의 입력별 상충은 보고서 참조</text>
+</svg>

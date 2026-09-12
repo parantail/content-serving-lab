@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img">
+<style>text{font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;fill:#0b0b0b}.title{font-size:20px;font-weight:700}.subtitle{font-size:13px;fill:#52514e}.group{font-size:14px;font-weight:600}.label{font-size:13px}.value{font-size:13px;font-weight:600}.small{font-size:11px;fill:#898781}.muted{font-size:12px;fill:#898781}.axis{stroke:#c3c2b7;stroke-width:1}.grid{stroke:#e1e0d9;stroke-width:1}</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40" y="34" class="title" text-anchor="start">같은 이미지의 동시 cold 요청 100개 → 실제 이미지 변환 횟수</text>
+<text x="40" y="58" class="subtitle" text-anchor="start">cold = 파생 이미지가 아직 없는 상태 · 막대 = trial당 실제 변환 횟수 평균 · 모든 요청은 같은 640×640 WebP 파생 이미지를 요청</text>
+<text x="40" y="100" class="group" text-anchor="start">로컬 Docker 1 vCPU·2 GiB · 프로세스 1개 · 10회 평균</text>
+<text x="40" y="136" class="label" text-anchor="start">요청 합치기 없음</text>
+<text x="40" y="151" class="small" text-anchor="start">none</text>
+<path d="M330,121 h546 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-546 z" fill="#eb6834"/>
+<text x="888" y="137" class="value" text-anchor="start">100회</text>
+<text x="40" y="180" class="label" text-anchor="start">프로세스 안에서 같은 요청 합치기</text>
+<text x="40" y="195" class="small" text-anchor="start">process-singleflight</text>
+<path d="M330,165 h1.5 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-1.5 z" fill="#2a78d6"/>
+<text x="343.5" y="181" class="value" text-anchor="start">1회</text>
+<text x="40" y="232" class="group" text-anchor="start">AWS Fargate ap-northeast-2 · Task별 1 vCPU·2 GiB · 프로세스 안에서 합치기 적용 · 요청 100개를 Task에 균등 분배 · 10회 평균</text>
+<text x="40" y="268" class="label" text-anchor="start">Task 1개</text>
+<text x="40" y="283" class="small" text-anchor="start">S4-AWS-1-CONTROL</text>
+<path d="M330,253 h1.5 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-1.5 z" fill="#2a78d6"/>
+<text x="343.5" y="269" class="value" text-anchor="start">1회</text>
+<text x="40" y="312" class="label" text-anchor="start">Task 2개</text>
+<text x="40" y="327" class="small" text-anchor="start">S4-AWS-2</text>
+<path d="M330,297 h7 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-7 z" fill="#2a78d6"/>
+<text x="349" y="313" class="value" text-anchor="start">2회</text>
+<text x="40" y="356" class="label" text-anchor="start">Task 4개</text>
+<text x="40" y="371" class="small" text-anchor="start">S4-AWS-4</text>
+<path d="M330,341 h18 a4,4 0 0 1 4,4 v14 a4,4 0 0 1 -4,4 h-18 z" fill="#2a78d6"/>
+<text x="360" y="357" class="value" text-anchor="start">4회</text>
+<line x1="330" y1="375" x2="880" y2="375" class="axis"/>
+<rect x="40" y="395" width="12" height="12" rx="2" fill="#eb6834"/>
+<text x="58" y="405" class="label" text-anchor="start">요청 합치기 없음 (none)</text>
+<rect x="233.9" y="395" width="12" height="12" rx="2" fill="#2a78d6"/>
+<text x="251.9" y="405" class="label" text-anchor="start">프로세스 안에서 같은 요청 합치기 (process-singleflight)</text>
+<text x="40" y="431" class="muted" text-anchor="start">로컬 100개 요청의 p99 31.8초 → 0.36초 · peak cgroup memory 1,352 MiB → 219 MiB (none → process-singleflight, 10회 평균)</text>
+</svg>
