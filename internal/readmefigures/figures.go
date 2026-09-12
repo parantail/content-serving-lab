@@ -185,9 +185,9 @@ func renderE3(data E3Data) []byte {
 		c.text(centerX-w/2, y, "label", "", s)
 	}
 	labelCentered(toX(faultStart+data.FaultMS/2), toY(data.BaselineFaultP99MS)-12, colorBefore,
-		fmt.Sprintf("baseline: 장애 구간 p99 %s · 장애 종료 뒤 %s 더 영향", seconds(data.BaselineFaultP99MS), seconds(data.BaselineLastImpact)))
+		fmt.Sprintf("baseline: p99 %s · 마지막 영향 요청 시작: 장애 종료 +%s", seconds(data.BaselineFaultP99MS), seconds(data.BaselineLastImpact)))
 	labelCentered(toX(faultStart+data.FaultMS*0.4), toY(data.BoundedFaultP99MS)-12, colorAfter,
-		fmt.Sprintf("%s bounded wait: p99 %s (%.1f%%는 즉시 503) · 장애 종료 뒤 영향 %s", seconds(data.SlotWaitLimitMS), seconds(data.BoundedFaultP99MS), data.BoundedErrorRate*100, seconds(data.BoundedLastImpact)))
+		fmt.Sprintf("%s 대기 상한: p99 %s · 정상 miss의 %.1f%%는 503", seconds(data.SlotWaitLimitMS), seconds(data.BoundedFaultP99MS), data.BoundedErrorRate*100))
 	hitLabel := fmt.Sprintf("캐시 적중 요청(baseline): 오류 %s · p99 %.0fms 이하", num(data.HitFaultErrors), math.Ceil(data.HitMaxP99MS))
 	hitX := right - 2 - textWidth(hitLabel, 13)
 	c.rect(hitX-18, 240-10, 12, 12, colorContext, 2)

@@ -123,7 +123,7 @@ type E3Data struct {
 	BoundedMiss        []E3Point // healthy-miss p99 per bucket, bounded-wait mode
 	BaselineHit        []E3Point // hit p99 per bucket, baseline mode
 	BaselineFaultP99MS float64
-	BaselineLastImpact float64 // ms after fault end
+	BaselineLastImpact float64 // last affected request start, ms after fault end
 	BoundedFaultP99MS  float64
 	BoundedErrorRate   float64
 	BoundedLastImpact  float64

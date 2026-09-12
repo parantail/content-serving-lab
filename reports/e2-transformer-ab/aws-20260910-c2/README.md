@@ -98,6 +98,8 @@ ECR bootstrap 1개와 저장된 full plan 20개를 생성했다. 변경/삭제 �
 
 보수적 사전 견적은 US$1.50, 허용 조건은 US$3 이내였다. ECR image는 168,654,878 bytes, S3 결과는 2,166개·106,731,634 bytes다. Task pull 시작~정지 시각의 CPU·memory 추정 소계는 **US$0.205638**이며 IPv4·S3·ECR·로그·전송·세금 등을 제외한 값이다. 03:33 KST 조회한 UTC 09-10 계정 전체 Usage는 **US$0.0559455727, Estimated=true**였다. 집계 지연과 다른 실행이 섞인 잠정값으로 이번 c2 비용이나 확정 invoice가 아니다. [사용량·비용 관측](cost-observation.json), [단가와 전체 배포 모델](../../../deploy/e2-transformer-ab/COST.md).
 
+2026-09-12에 운영자가 확인한 Cost Explorer 일별 CSV의 **2026-09-10 UTC 계정 사용료는 약 US$0.5304**였다(소수 넷째 자리까지 전달된 관측값). 이 날짜에는 a1 calibration, b1 전체 실행과 c2 재실행이 포함되므로 c2 Task 하나의 비용으로 해석하지 않는다. README의 E2 약 US$0.53은 이 실행일의 집계다. [후속 비용 관측](cost-observation.json)의 `billing_next_day`에 조회일·범위·정밀도를 기록했다. 월말 확정 invoice는 아니다.
+
 ## 결정·한계·재검토 조건
 
 현재 workload에서 ImageMagick으로 전면 교체할 근거는 충분하지 않아 libvips를 유지한다. 처리량 이점은 뚜렷하지만 메모리 절감의 보편적 승자는 아니며, alpha/JPEG처럼 ImageMagick의 bytes·SSIM 이점이 있는 유형은 별도 선택의 근거가 될 수 있다. 실제 트래픽에서 이런 입력의 비중이나 특정 기능 요구가 커지면 해당 품질점에서 성능을 다시 측정해 재검토한다.

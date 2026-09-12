@@ -1,6 +1,6 @@
 # E2 quality 수정본 — 전체 로컬 검증 통과
 
-ImageMagick AVIF quality 전달을 수정한 clean commit `5774b94a2f84d95b12534d5de22057b4307e1bde`에서 전체 validation·calibration·quality가 통과했다. **로컬 총 3,120회 호출 성공, 오류·timeout·interrupted 0**이다. AWS 전체 재측정과 최종 변환기 선택은 아직 완료하지 않았다.
+ImageMagick AVIF quality 전달을 수정한 clean commit `5774b94a2f84d95b12534d5de22057b4307e1bde`에서 전체 validation·calibration·quality가 통과했다. **로컬 총 3,120회 호출 성공, 오류·timeout·interrupted 0**이다. 이후 [AWS 전체 재측정과 최종 선택](../aws-20260910-c2/README.md)도 완료했다. 아래 값은 그에 앞선 로컬 검증 결과다.
 
 | Mode | 측정 / warm-up / 사전 진단 호출 | Loop 시간 | 최대 native 시간 | 최대 worker wait4 RSS |
 | --- | ---: | ---: | ---: | ---: |

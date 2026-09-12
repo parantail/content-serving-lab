@@ -1,6 +1,6 @@
-# E3 — 변환 경로 장애는 캐시 적중 요청에 번지지 않았고, 다른 변환 요청에는 17초 대기로 번졌다
+# E3 — 변환 경로 장애에서 hit 오류 0, 정상 miss p99는 대기 제한으로 17.3초에서 약 2초로 감소
 
-> 1 vCPU/2 GiB 한 프로세스에서 오염된 변환 요청이 slot 4개를 20초씩 점유하자 baseline은 관련 없는 변환 요청의 93%를 17초 넘게 기다리게 했다. 2초 bounded wait는 그 요청들을 2초 안에 503으로 끝내고 장애 종료 즉시 정상으로 돌아왔으며, kill switch는 켜기 전 20초 동안 baseline과 같았고 번지지 않는 장애에서도 정상 요청을 거부했다. 이미 저장된 파생 이미지 요청은 어떤 조건에서도 오류 0건, p99 70ms 이하였다.
+> 로컬 1 vCPU·2 GiB의 T2 변환 정지에서 baseline 정상 miss의 93.3%가 기준 지연 1.83초를 넘었고 p99는 17.3초였다. Slot 대기를 2초로 제한한 M1은 정상 miss의 84.7%를 503으로 거부하며 p99를 약 2초로 줄였다. 장애 종료 후 새로 시작한 정상 요청에는 추가 영향이 관측되지 않았다. 로컬·AWS 모두 hit 오류는 0이었고, kill switch는 영향이 없던 장애에서도 정상 miss를 거부했다.
 
 ![transform-timeout 장애의 정상 요청 영향 timeline](../../experiments/e3-failure-isolation/results/retained-e8c21674a86f5d4737b23a59e2071da7754f4ff2/analysis/timeline-transform-timeout.svg)
 
@@ -11,13 +11,15 @@
 | 영향(실패 또는 1.83초 초과) 비율 | 93.3% | 87.3% | 93.3% |
 | 오류 비율 (503) | 0% | 84.7% | 66.7% |
 | p50 / p99 (ms) | 16,287 / 17,291 | 2,001 / 2,001 | 0.3 / 17,285 |
-| 첫 영향 → 완화 (장애 시작 기준) | 4.0초 → 없음 | 4.0초 → 4.0초 | 4.0초 → 20.0초 |
-| 장애 종료 뒤 마지막 영향 | 11.2초 | 0초 | 8.0초 |
+| 첫 영향 요청 시작 → 대응 기준 시각¹ (장애 시작 기준) | 4.0초 → 없음 | 4.0초 → 4.0초 | 4.0초 → 20.0초 |
+| 장애 종료 뒤 마지막 영향 요청 시작¹ | 11.2초 | 0초 | 8.0초 |
 | slot 대기 최대 / 보유 원본 bytes 최대 | 25건 / 118 MiB | 4건 / 16 MiB | 24건 / 114 MiB |
 | peak cgroup memory (T0 대비) | 1,218 MiB (+350) | 912 MiB (+54) | 1,006 MiB (+151) |
 | hit 요청 오류 / p99 | 0 / 1.2ms | 0 / 0.5ms | 0 / 0.6ms |
 
-**결정:** 변환 slot 대기에 bounded wait와 shedding(M1)을 기본으로 채택한다. 단, M1이 원본 읽기까지 slot 안으로 옮긴 결과 원본 저장소 지연(T4)에서는 baseline이 번지지 않던 장애를 85% 거부로 바꿨으므로, 원본 읽기는 slot 밖에 두고 보유 원본 bytes에 별도 상한을 두는 변형을 다음 검토 조건으로 둔다. Kill switch(M2)는 운영자의 최후 수단으로 유지하되, 번지지 않는 장애(T3, T4)에서도 정상 miss의 67%를 거부했으므로 "장애가 실제로 번지는지"를 확인한 뒤에만 켜는 절차와 함께 쓴다.
+¹ 요청 시작 기준 지표다. M1의 대응 기준 시각은 처음 거부된 요청의 시작, M2는 실제 kill switch on 시각이다. 0초는 장애 종료 후 새로 시작한 요청에 추가 영향이 관측되지 않았다는 뜻이다. 진행 중 요청의 완료 시각과는 다르다.
+
+**결정:** 변환 slot 대기 제한 방식으로 bounded wait와 shedding(M1)을 채택한다. 단, M1이 원본 읽기까지 slot 안으로 옮긴 결과 원본 저장소 지연(T4)에서는 baseline이 번지지 않던 장애를 85% 거부로 바꿨으므로, 원본 읽기는 slot 밖에 두고 보유 원본 bytes에 별도 상한을 두는 변형을 다음 검토 조건으로 둔다. Kill switch(M2)는 운영자의 최후 수단으로 유지하되, 번지지 않는 장애(T3, T4)에서도 정상 miss의 67%를 거부했으므로 "장애가 실제로 번지는지"를 확인한 뒤에만 켜는 절차와 함께 쓴다.
 
 ## 확인할 문제
 
@@ -56,7 +58,7 @@ hit stream은 미리 저장한 4개 키를 반복하고, 정상 miss와 오염 m
 ## 변경 전 결과 (M0 baseline)
 
 - T0(장애 없음): 세 stream 모두 오류 0. hit p50 0.36ms, p99 19ms. 정상 miss p50 571ms, p99 583ms. CPU 시간 69.7초/150초, peak cgroup memory 868 MiB.
-- T1(15초 지연)과 T2(20초 정지): 오염 요청이 1 req/s로 slot 4개를 채우는 데 4초가 걸렸고, 그 뒤 정상 miss 요청의 93.3%가 slot을 기다리다 17.3초에 응답했다. 오류는 0건인데, transform timeout 20초가 slot 대기와 변환을 함께 묶어 대기가 끝나면 0.5초 변환이 성공했기 때문이다. 대기 요청 최대 25건이 원본 118 MiB를 들고 있었고 peak memory는 1,218 MiB로 T0보다 350 MiB 늘었다. 장애 종료 뒤에도 11.2초 동안 영향이 이어졌고 복구 구간 요청의 22%가 기준 지연을 넘었다.
+- T1(15초 지연)과 T2(20초 정지): 오염 요청이 1 req/s로 slot 4개를 채우는 데 4초가 걸렸고, 그 뒤 장애 구간 정상 miss의 93.3%가 기준 지연 1.83초를 넘었다. Trial별 p99 평균은 약 17.3초였다. 오류는 0건인데, transform timeout 20초가 slot 대기와 변환을 함께 묶어 대기가 끝나면 0.5초 변환이 성공했기 때문이다. Slot 대기는 최대 25건, 보유 원본은 최대 118 MiB였고 T2 peak cgroup memory는 1,218 MiB로 T0보다 350 MiB 높았다. T2에서 마지막 영향 요청의 시작 시각은 장애 종료 뒤 평균 11.2초였으며, 복구 구간에 시작한 정상 miss의 22%가 기준 지연을 넘었다.
 - T3(즉시 오류): 정상 miss에 영향 0. 오염 요청이 CPU를 쓰지 않아 정상 miss p99가 오히려 301ms로 낮아졌다.
 - T4(원본 읽기 15초 지연): 정상 miss에 영향 0. 원본 읽기가 slot 밖에서 일어나므로 오염 요청은 slot을 점유하지 않았다(대기 0건, 보유 원본 최대 8 MiB).
 - hit 요청: 모든 장애에서 오류 0, 장애 구간 p99 0.9~10ms. 장애 구간의 hit p99가 정상 구간(12~19ms)보다 낮은 것은 정지·지연 장애가 CPU를 쓰지 않아 경합이 줄기 때문이다.
@@ -86,15 +88,17 @@ hit stream은 미리 저장한 4개 키를 반복하고, 정상 miss와 오염 m
 
 ### 시간 간격 (장애 시작 기준, 로컬)
 
-| 장애 | 모드 | 첫 영향 | 완화 | 장애 종료 뒤 마지막 영향 |
+| 장애 | 모드 | 첫 영향 요청 시작 | 대응 기준 시각 | 장애 종료 뒤 마지막 영향 요청 시작 |
 | --- | --- | ---: | ---: | ---: |
 | T1/T2 | M0 | 4.0초 | 없음 | 10.8~11.2초 |
-| T1/T2 | M1 | 4.0초 | 4.0초 (첫 거부) | 0초 |
-| T1/T2 | M2 | 4.0초 | 20.0초 (kill switch on) | 8.0초 (off까지) |
+| T1/T2 | M1 | 4.0초 | 4.0초 (첫 거부 요청 시작) | 0초 |
+| T1/T2 | M2 | 4.0초 | 20.0초 (kill switch on) | 8.0초 |
 | T4 | M1 | 4.0초 | 4.0초 | 0초 |
 | T3/T4 | M2 | 20.0초 | 20.0초 | 8.0초 |
 
-첫 영향 4초는 오염 요청 1 req/s가 slot 4개를 채우는 시간이다. M0의 복구 지연은 장애 종료 시점에 slot을 잡고 있던 정지 요청과 대기열이 20초 timeout으로 빠져나가는 시간이다.
+영향 시각은 요청 시작 offset으로 집계한다. M1의 대응 기준 시각도 첫 shed 요청의 시작이고, M2만 제어 이벤트의 실제 on 시각이다. T2 M1의 첫 shed 요청은 장애 시작 약 4초 뒤 시작해 약 6초 뒤 응답했다. 따라서 표의 4초를 실제 첫 503 응답 시각으로 읽지 않는다.
+
+마지막 영향 요청 시작이 0초인 경우에도 장애 종료 전에 시작한 요청은 처리 중일 수 있다. T2 M1에는 장애 종료 뒤 약 0.294초까지 남은 정상 miss가 있었고, M0의 마지막 영향 정상 miss가 완료된 시각은 trial별 장애 종료 뒤 12.73~15.27초였다. 표는 새 요청에 영향이 남은 범위를 나타내며, 대기열이 완전히 비워지는 시각이나 연속 시간의 복구 보장을 뜻하지 않는다.
 
 ### 정상 시 비용 (T0, 전체 구간)
 
@@ -116,7 +120,7 @@ hit stream은 미리 저장한 4개 키를 반복하고, 정상 miss와 오염 m
 | T1/T2 | M2 | 18~24 | 90~114 MiB | 956~1,006 MiB |
 | T4 | M0 / M1 / M2 | 0 / 4 / 0 | 8 / 8 / 4 MiB | 953 / 928 / 902 MiB |
 
-M0의 memory 증가분은 대기 요청이 들고 있던 원본 bytes와 일치한다. 2 GiB 한도에는 닿지 않았지만 대기 요청 수에 비례해 늘어나는 구조다.
+M0에서 보유 원본은 최대 118 MiB였고 T2 peak cgroup memory의 T0 대비 증가는 약 350 MiB였다. 보유 원본은 메모리 증가의 한 요인이지만 cgroup에는 native allocator·runtime·file cache 등도 포함되므로 두 값을 동일시하지 않는다. 2 GiB 한도에는 닿지 않았으며 원본을 읽은 대기 요청이 늘면 보유 bytes도 증가하는 구조다.
 
 ### AWS (S3 저장소, Fargate, 2회 평균)
 
@@ -125,14 +129,14 @@ M0의 memory 증가분은 대기 요청이 들고 있던 원본 bytes와 일치�
 | 영향 비율 / 오류 비율 | 83.3% / 0% | 62.5% / 62.5% | 83.3% / 66.7% | 0% / 0% | 41.7% / 41.7% | 66.7% / 66.7% |
 | p99 (ms) | 13,351 | 2,039 | 13,331 | 2,344 | 2,042 | 928 |
 
-AWS의 T0 정상 miss는 p50 2,248ms, p99 2,334ms로 로컬의 4배다. S3 원본 GetObject(4.9 MB), Fargate vCPU의 변환, S3 PutObject가 더해진 값이다. hit은 S3 GetObject를 거쳐 p50 25ms, p99 40~66ms이며 모든 조합에서 오류 0이다. 오염 요청이 0.4 req/s라 첫 영향은 10초였고, 정상 miss 표본이 trial당 12건이라 비율의 단위가 8.3%다. 모드 간 양상은 로컬과 같다.
+AWS의 T0 정상 miss는 p50 2,248ms, p99 2,334ms로 로컬의 4배다. S3 원본 GetObject(4,075,024 bytes, 약 4.08 MB), Fargate vCPU의 변환, S3 PutObject가 더해진 값이다. hit은 S3 GetObject를 거쳐 p50 25ms, p99 40~66ms이며 모든 조합에서 오류 0이다. 오염 요청이 0.4 req/s라 첫 영향은 10초였고, 정상 miss 표본이 trial당 12건이라 비율의 단위가 8.3%다. 모드 간 양상은 로컬과 같다.
 
 ## 결과를 보고 무엇을 선택했나
 
 1. **hit 경로는 격리되어 있다.** 75개 로컬 trial과 18개 AWS trial 전부에서 hit 오류 0, 장애 구간 p99는 로컬 10ms 이하·AWS 66ms 이하였다. 별도 수단 없이도 파생 이미지 조회가 변환 slot과 무관하다는 코드 구조가 실측으로 확인됐다.
-2. **번짐은 변환 slot을 통해 정상 miss에만 나타났다.** 대기 요청은 원본 bytes를 들고 있어 memory 증가로 이어졌고, 장애 종료 뒤 11초까지 영향이 남았다.
-3. **M1을 채택한다.** 정상 시 비용 없이 장애 구간의 정상 miss를 2초 안에 끝내고 복구 지연을 0으로 만들었다. 오류율 85%는 "17초 대기 뒤 성공"을 "2초 뒤 503"으로 바꾼 결과이며, 클라이언트가 `Retry-After`를 따를 수 있을 때 유리하다. 사전 기준(request timeout 도달)은 충족되지 않았지만, 17초 대기는 이 서비스의 30초 client timeout에서 사실상 실패와 같다고 판단했다.
-4. **M1의 원본 읽기 순서는 되돌린다.** T4에서 M0는 영향 0이었으나 M1은 85%를 거부했다. 원본 읽기를 slot 안으로 옮긴 선택이 저장소 지연을 변환 slot 점유로 바꿨기 때문이다. 다음 판에서는 원본 읽기를 slot 밖에 두고 보유 원본 bytes 합계에 상한을 두는 방식을 검토한다.
+2. **다른 키로의 영향은 변환 slot을 통해 정상 miss에 나타났다.** 대기 중 보유 원본이 늘었고, 마지막 영향 요청은 장애 종료 뒤 약 11초에 시작했다.
+3. **M1을 채택한다.** 정상 시 지연 차이는 반복 간 변동 안이었고, T2 정상 miss p99는 약 2초로 줄었다. 정상 miss의 84.7%를 503으로 거부하는 대신 slot 대기를 제한했으며, 장애 종료 후 새 요청에는 추가 영향이 관측되지 않았다. 사전 기준(request timeout 도달)은 충족되지 않았다. 다만 p99 17.3초의 긴 대기보다 상한을 둔 거부가 운영 제어에 적합하다고 판단했다. 실제 SLO와 클라이언트 재시도 효과는 측정하지 않았으므로 적용 시 함께 검토한다.
+4. **원본 읽기를 slot 밖에 두는 변형을 후속 검토한다.** T4에서 M0는 영향 0이었으나 M1은 85%를 거부했다. 원본 읽기를 slot 안으로 옮긴 선택이 저장소 지연을 변환 slot 점유로 바꿨기 때문이다. 원본 읽기를 slot 밖에 두고 보유 원본 bytes 합계에 상한을 두는 방식은 아직 구현·측정하지 않았다.
 5. **M2는 유지하되 조건부다.** 켜기 전 20초는 M0와 같았고, 켜진 뒤에는 장애 종류와 무관하게 정상 miss를 거부했다. T3·T4처럼 번지지 않는 장애에서 켜면 손해다. 운영자는 정상 miss의 대기·거부 지표가 실제로 나빠졌는지 확인한 뒤 켜야 한다.
 
 되돌릴 조건: 실제 workload에서 변환 시간 분포의 p99가 2초에 가까워지면 상한을 올리거나 M0로 되돌린다. 클라이언트가 503을 재시도하지 않고 사용자에게 바로 노출한다면 shedding 대신 대기 상한을 늘리는 쪽을 검토한다.
@@ -143,18 +147,22 @@ AWS의 T0 정상 miss는 p50 2,248ms, p99 2,334ms로 로컬의 4배다. S3 원�
 - 클라이언트 재시도가 있을 때의 증폭. 생성기는 재시도하지 않았다.
 - 자동 탐지. kill switch는 고정 시각에 켰다. Circuit breaker(M3)는 구현하지 않았다.
 - 실제 traffic 분포와 SLO. 세 stream의 rate와 timeline은 실험 장치다.
-- 2 GiB 한도에 닿는 memory 압박. M0의 증가분이 118 MiB에서 멈춘 것은 rate와 timeout의 산물이다.
+- 2 GiB 한도에 닿는 memory 압박. 관측한 보유 원본 최대 118 MiB와 T2 cgroup 증가 약 350 MiB는 이번 rate·timeout·실행 환경의 결과다.
 - AWS의 CPU·memory. Fargate에서 runner의 cgroup 판독이 실패해 AWS 자원 열은 비어 있다.
 - 로컬 실행 중 13:09~13:11 UTC에 같은 host에서 AWS image build가 돌았다. 해당 시각의 trial(4~5번째)이 영향을 받았을 수 있으나 유효성 검사와 반복 간 범위 안에 있다.
 - AWS는 반복 2회·부분 matrix이며 첫 calibration은 CPU 포화, 두 번째는 공유 버킷의 이전 파생 이미지 때문에 무효였다. 두 기록은 [results-aws](../../experiments/e3-failure-isolation/results-aws/)에 보존했다.
 
 ## 원자료에서 재생성
 
-원자료는 [results/retained-e8c21674a86f…](../../experiments/e3-failure-isolation/results/retained-e8c21674a86f5d4737b23a59e2071da7754f4ff2/)(요청별 `requests.csv.gz` 약 259k행, `state.csv`, `resources.csv.gz`, `logs.jsonl`, `metrics.prom`, `trials.csv`)와 [results-aws/aws-measure-3040e3db9be0](../../experiments/e3-failure-isolation/results-aws/aws-measure-3040e3db9be0/)에 있다. 아래 명령은 같은 image로 검증과 표·차트를 다시 만들며, 이 보고서의 `analysis/` 산출물은 실행 직후와 독립 재분석의 SHA-256이 같았다.
+원자료는 [results/retained-e8c21674a86f…](../../experiments/e3-failure-isolation/results/retained-e8c21674a86f5d4737b23a59e2071da7754f4ff2/)(요청별 `requests.csv.gz` 약 259k행, `state.csv`, `resources.csv.gz`, `logs.jsonl`, `metrics.prom`, `trials.csv`)와 [results-aws/aws-measure-3040e3db9be0](../../experiments/e3-failure-isolation/results-aws/aws-measure-3040e3db9be0/)에 있다. 아래 명령은 현재 checkout의 분석기로 검증과 표·차트를 다시 만든다. 측정 당시 image를 사용한 독립 재분석에서 `analysis/` 전체 산출물의 SHA-256이 최초 생성본과 같았다.
+
+AWS `run.json`의 registry·hostname·bucket 이름은 [공개 사본 생성 규칙](../../deploy/e3-failure-isolation/README.md#회수-결과의-공개-사본)에 따라 생략하거나 별칭으로 표시한다. 측정 commit·image digest·fixture·조건과 요청·자원·분석 파일은 보존했다.
 
 ```bash
-image="content-serving-e3:e8c21674a86f5d4737b23a59e2071da7754f4ff2"
-docker build --target experiment-e3 --build-arg "GIT_COMMIT=e8c21674a86f5d4737b23a59e2071da7754f4ff2" -t "${image}" .
+git lfs pull
+commit="$(git rev-parse HEAD)"
+image="content-serving-e3:analysis-${commit}"
+docker build --target experiment-e3 --build-arg "GIT_COMMIT=${commit}" -t "${image}" .
 docker run --rm \
   --mount "type=bind,source=${PWD}/experiments/e3-failure-isolation/results,target=/results" \
   "${image}" analyze --run-dir /results/retained-e8c21674a86f5d4737b23a59e2071da7754f4ff2

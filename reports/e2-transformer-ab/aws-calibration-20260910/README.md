@@ -2,7 +2,7 @@
 
 후속 [전체 실행의 품질 검사](../aws-20260910/README.md)에서 같은 adapter의 ImageMagick AVIF quality 전달 오류가 확인됐다. 이 기록의 AVIF Q80은 요청값이며 실제 encoder Q80 검증 근거가 아니다. 아래 실행·시간 gate·제거 관측과 원자료는 당시 상태로 보존한다.
 
-**AWS 진단·출력 검증·calibration은 성공했지만, 본 측정의 60분 진입 gate를 통과하지 못했다.** Calibration 30.734분에 5회 반복과 25% 여유를 적용하면 192.087분이 필요하다. 5회 본 측정과 AWS quality sweep은 시작하지 않았다. E2의 성능 판정은 미완료이며, 이번 배포의 결과 회수·자원 제거는 완료했다.
+**AWS 진단·출력 검증·calibration은 성공했지만, 본 측정의 60분 진입 gate를 통과하지 못했다.** Calibration 30.734분에 5회 반복과 25% 여유를 적용하면 192.087분이 필요하다. 5회 본 측정과 AWS quality sweep은 시작하지 않았다. 당시에는 성능 판정에 이르지 못했고 이번 배포의 결과 회수·자원 제거만 완료했다. 후속 [수정본의 최종 측정·선택](../aws-20260910-c2/README.md)은 별도 결과다.
 
 | 확인 | 결과 |
 | --- | --- |
@@ -60,4 +60,4 @@ python experiments/e2-transformer-ab/checkpoint.py "$evidence/raw" dist/e2-repro
 python experiments/e2-transformer-ab/check_outputs.py dist/e2-reproduce-validate dist/e2-reproduce-calibrate dist/e2-reproduce-hashes.json
 ```
 
-`summary.json`은 `checkpoint.py`로 원자료의 성공 수·warm-up 수·loop 시간·RSS와 gate를 다시 계산한 값이다. 분석 산출물은 별도 실행의 SHA-256과 대조했다. AWS를 다시 실행하는 명령과 현재 시간 제한은 [배포 문서](../../../deploy/e2-transformer-ab/README.md), [실험 계약](../../../experiments/e2-transformer-ab/README.md)에 있다. 새 시간 제한을 확정하기 전에는 본 측정을 실행하지 않는다.
+`summary.json`은 `checkpoint.py`로 원자료의 성공 수·warm-up 수·loop 시간·RSS와 gate를 다시 계산한 값이다. 분석 산출물은 별도 실행의 SHA-256과 대조했다. AWS를 다시 실행하는 명령과 현재 시간 제한은 [배포 문서](../../../deploy/e2-transformer-ab/README.md), [실험 계약](../../../experiments/e2-transformer-ab/README.md)에 있다. 후속 실행에는 현재 문서에 확정된 시간 제한과 진입 gate를 적용한다.

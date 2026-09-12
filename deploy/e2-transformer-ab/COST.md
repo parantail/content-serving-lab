@@ -36,3 +36,5 @@
 후속 `20260910-b1`은 다섯 mode 실행 후 quality 전달 오류를 확인했고 2026-09-10 19:46 KST에 21개 자원을 모두 제거했다. [후속 사용량·비용 관측](../../reports/e2-transformer-ab/aws-20260910/cost-observation.json)의 image는 168,653,619 bytes, S3는 2,166개·103,515,646 bytes다. Task 시각과 위 단가로 계산한 CPU·memory 소계는 US$0.194960이며 기타 자원 비용을 제외한 추정치다. 19:47 KST의 account-wide 당일 Usage 집계는 비어 있고 `Estimated=true`였으므로 E2 비용 US$0, 청구 확정액 또는 전체 비용으로 해석하지 않는다.
 
 수정본 `20260910-c2`는 다섯 mode 성공 후 2026-09-11 03:37 KST에 21개 자원 제거·잔여 0개를 확인했다. [사용량·비용 관측](../../reports/e2-transformer-ab/aws-20260910-c2/cost-observation.json)의 image는 168,654,878 bytes, S3 결과는 2,166개·106,731,634 bytes다. Task pull~정지 시각 13,038초와 위 단가의 CPU·memory 추정 소계는 US$0.205638이다. 03:33 KST에 조회한 UTC 09-10 계정 전체 Usage는 US$0.0559455727·Estimated=true였다. 집계 지연과 다른 실행이 섞인 값이며 c2 귀속 비용이나 확정 invoice로 해석하지 않는다. 사전 US$1.50 견적과 US$3 실행 조건을 유지했다.
+
+2026-09-12 운영자 확인에서 Cost Explorer의 2026-09-10 UTC 일별 계정 사용료는 약 US$0.5304였다. 같은 날짜의 a1·b1·c2를 포함하는 계정 집계이며 c2만의 비용은 아니다. 소수 넷째 자리까지 전달된 관측값을 [후속 비용 기록](../../reports/e2-transformer-ab/aws-20260910-c2/cost-observation.json)의 `billing_next_day`에 보존했다.

@@ -632,6 +632,9 @@ func intervals(valid []*trialRaw, thresholds map[string]float64, metadata RunMet
 		for _, raw := range matches {
 			trial := raw.trial
 			faultOn, faultOff := trial.FaultOnOffsetMS, trial.FaultOffOffsetMS
+			// Impact offsets describe request arrivals, not response completion.
+			// For bounded-wait, mitigation also records the first shed request's
+			// arrival; the actual 503 response follows its slot wait.
 			firstImpact := -1.0
 			lastAfterOff := 0.0
 			affectedFault, affectedRecovery := 0, 0

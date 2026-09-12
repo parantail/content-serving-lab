@@ -37,7 +37,7 @@ Memory는 Task별 sampled peak 중 최댓값이며 Task 전체 합계나 정확�
 
 Resource sample 1,955개, 인접 간격 1,885개를 관측했다. Timestamp 간격 중앙값 50.2899ms, nearest-lower p99 62.8417ms, 최대 100.8238ms다. 50ms는 목표 간격이지 보장이 아니다. 원자료 timestamp를 100ns 정밀도로 읽어 계산했으며 간격을 보간하거나 sample을 제거하지 않았다.
 
-## 판단과 미완료 범위
+## 판단과 범위에서 제외한 것
 
 프로세스 내부 요청 합치기는 각 Task 안에서 작동했지만 Task 간 중복 변환을 제거하지 못했다. S3 조건부 저장은 완성된 object 충돌을 해결했으며 중복 계산 자체를 막지는 않았다.
 

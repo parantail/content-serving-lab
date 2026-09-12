@@ -76,7 +76,7 @@ Singleflight가 이미지 한 장의 변환 자체를 빠르게 만든 것은 �
 F1은 200ms 뒤 실패하도록 정한 deterministic transformer에 동시 요청 10개를 보냈습니다.
 
 - 실제 첫 transform은 1회였고 waiter 9개가 합쳐졌습니다.
-- Leader와 waiter 10개 모두 약 203ms 안에 HTTP 500으로 끝났습니다.
+- Leader 1개와 waiter 9개 모두 약 203ms 안에 HTTP 500으로 끝났습니다.
 - In-flight entry가 제거된 뒤 recovery 요청이 두 번째 transform을 시작했습니다.
 - Recovery 요청은 성공해 결과를 publish했습니다.
 - 전체 transform attempt는 실패 1회와 복구 성공 1회, 합계 2회였습니다.

@@ -2,7 +2,7 @@
 
 상태: **장기 구성안. 단일 리전 부분만 실행함**
 
-프로젝트를 시작할 때 세운 AWS 구성안입니다. 이 가운데 실제로 만들고 측정한 것은 한 리전의 `ALB → ECS Fargate → S3`([E1 Terraform](../deploy/e1-aws-s4/README.md))과 ALB 없는 Fargate batch([E2 Terraform](../deploy/e2-transformer-ab/README.md))입니다. CloudFront, 두 번째 리전, 리전 간 복제, Global Accelerator, AWS FIS와 Lambda 비교는 구현하거나 측정하지 않았고 이번 프로젝트 범위에서 실행하지 않기로 했습니다. 아래 내용은 그 결정의 배경과 다시 검토할 때의 출발점으로 남깁니다.
+프로젝트를 시작할 때 세운 AWS 구성안입니다. 이 가운데 실제로 만들고 측정한 것은 한 리전의 `ALB → ECS Fargate → S3`([E1 Terraform](../deploy/e1-aws-s4/README.md))과 ALB 없는 Fargate batch([E2 Terraform](../deploy/e2-transformer-ab/README.md)), 단일 Task의 loopback HTTP·S3 장애 격리([E3 Terraform](../deploy/e3-failure-isolation/README.md))입니다. CloudFront, 두 번째 리전, 리전 간 복제, Global Accelerator, AWS FIS와 Lambda 비교는 구현하거나 측정하지 않았고 이번 프로젝트 범위에서 실행하지 않기로 했습니다. 아래 내용은 그 결정의 배경과 다시 검토할 때의 출발점으로 남깁니다.
 
 ## 첫 구성
 
@@ -104,7 +104,7 @@ HTTP 요청 처리
 | ECS on EC2 | 인스턴스 종류와 호스트를 더 직접 고정할 수 있음 | AMI, 용량과 확장 관리가 별도로 필요함 |
 | EKS | Pod 배치와 Kubernetes 장애를 시험할 수 있음 | 현재 실험에는 Kubernetes 자체가 추가 변수가 됨 |
 
-ECS Fargate로 먼저 실험 도구를 완성합니다. 이후 같은 HTTP 요청과 이미지를 Lambda에서 처리해 cold start, 처리량, 오류와 비용을 비교합니다. Fargate 실행 사이의 차이가 이미지 라이브러리 비교 결과보다 크다면 고정된 EC2 인스턴스나 로컬 장비에서 한 번 더 확인합니다.
+초기에는 ECS Fargate 실험 후 같은 HTTP 요청과 이미지를 Lambda에서도 처리해 cold start, 처리량, 오류와 비용을 비교하려 했습니다. Fargate 실험은 완료했고 Lambda 비교는 범위에서 제외했습니다. Fargate 실행 사이의 차이가 이미지 라이브러리 비교 결과보다 크다면 고정된 EC2 인스턴스나 로컬 장비에서 한 번 더 확인합니다.
 
 AWS에서 제공하는 Dynamic Image Transformation for Amazon CloudFront도 Lambda 구성과 ECS 구성을 별도 선택지로 제공합니다.
 
@@ -151,8 +151,8 @@ S3가 제공하는 하나의 전역 주소와 장애 전환 기능을 비교할 
 
 | 만들 상황 | 방법 | 관측할 값 | 실행 여부 |
 | --- | --- | --- | --- |
-| 이미지 변환 시간 초과나 오류 | 특정 요청에만 적용되는 테스트 기능 | 캐시 적중 요청까지 영향을 받는지, 재시도 증가와 p99 | [E3](../experiments/e3-failure-isolation/README.md) 설계 초안 |
-| S3 지연이나 오류 | 저장소 접근 코드의 테스트 기능 | 재시도 증가, 장애 확산과 기능 제한 방식 | [E3](../experiments/e3-failure-isolation/README.md) 설계 초안 (원본 읽기 지연) |
+| 이미지 변환 시간 초과나 오류 | 특정 요청에만 적용되는 테스트 기능 | 캐시 적중 요청까지 영향을 받는지, 재시도 증가와 p99 | [E3](../experiments/e3-failure-isolation/README.md) 로컬 T1~T3·AWS T2 측정 완료 |
+| S3 지연이나 오류 | 저장소 접근 코드의 테스트 기능 | 재시도 증가, 장애 확산과 기능 제한 방식 | [E3](../experiments/e3-failure-isolation/README.md) 로컬·AWS 측정 완료 (원본 읽기 지연) |
 | CPU 또는 메모리 압박 | 제한된 부하 또는 FIS | 정상 요청의 지연, ECS Service scale-out과 새 Task가 준비되는 시간 | 실행하지 않음 |
 | 네트워크 지연과 패킷 손실 | AWS FIS의 ECS Task action | origin timeout, health check 변화와 리전 전환 | 실행하지 않음 |
 | 프로세스 종료 | FIS 또는 새 버전 배포 | 처리 중인 요청(in-flight request), ECS Task 교체와 복구 시간 | 실행하지 않음 |

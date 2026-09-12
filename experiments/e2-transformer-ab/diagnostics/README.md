@@ -30,6 +30,6 @@ docker run --rm --network none --mount "type=bind,source=$((Get-Location).Path),
 ./experiments/e2-transformer-ab/diagnostics/run.ps1
 ```
 
-2026-09-10 확정한 비교는 동일 CPU/memory·요청 동시성 제한 아래 표준 패키지의 실제 동작이다. ImageMagick native 빌드/패치를 추가하지 않으며 AVIF delegate 기본 thread 수는 명시적 예외다. 후속 본 측정·AWS 배포·제거는 완료했지만 **별개의 AVIF quality 전달 오류로 최종 판정을 보류**했다. 기존 probe는 threads/speed만 읽어 이 결함을 잡지 못했다. [실제 quality 조회 코드와 관측](../../../reports/e2-transformer-ab/aws-20260910/quality-parameter/codec_trace.c)을 참고한다.
+2026-09-10 확정한 비교는 동일 CPU/memory·요청 동시성 제한 아래 표준 패키지의 실제 동작이다. ImageMagick native 빌드/패치를 추가하지 않으며 AVIF delegate 기본 thread 수는 명시적 예외다. 선행 AWS 실행에서는 별개의 AVIF quality 전달 오류를 확인했고, 이후 수정·재측정을 거쳐 [최종 선택](../../../reports/e2-transformer-ab/aws-20260910-c2/README.md)을 완료했다. 기존 probe는 threads/speed만 읽어 이 결함을 잡지 못했다. [실제 quality 조회 코드와 관측](../../../reports/e2-transformer-ab/aws-20260910/quality-parameter/codec_trace.c)을 참고한다.
 
 Native integration test는 E2 이미지의 AVIF encoder를 사용하므로 `e2integration` tag로 실행한다. 기존 E1 이미지의 기본 테스트에 AVIF encoder 설치를 요구하지 않는다. 테스트는 두 engine의 작은 입력·세 geometry·네 encode 경로, JPEG 흰 배경 합성과 PNG/WebP alpha, invalid 입력 거부를 확인한다. 수정본은 ImageInfo quality setter를 함께 사용하고 동일 4:2:0의 Q50/Q80 출력 차이를 회귀 검사한다. 현재 probe는 threads/speed에 실제 quality query를 추가했다. `quality-sweep.ps1 -Image <runtime-image> -RunId <fresh-id>`는 대표 8개에 네 Q를 실제 조회하며, 새 diagnose/preflight는 8개 모두 실제 Q80이어야 통과한다. 과거 로그는 두 query만 포함하므로 실제 Q 검증 증거가 아니다.

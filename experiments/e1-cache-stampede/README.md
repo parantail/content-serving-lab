@@ -23,7 +23,7 @@ AWS의 세부 [계측 정의](AWS-S4-MEASUREMENT.md)와 [배포·회수·삭제 
 
 ### 식별자 읽는 법
 
-- E1은 실험 주제 번호입니다. 다른 실험 E2~E5와 구분합니다.
+- E1은 실험 주제 번호입니다. 다른 실험 E2·E3와 구분합니다.
 - S0~S5는 비교 시나리오 식별자이고 F0~F5는 실패·취소 조건입니다. 번호순 필수 작업 목록이 아닙니다.
 - Phase A/B는 완료한 구현·측정 묶음입니다. E2의 변환기 A/B 비교와 관계없습니다.
 - 시나리오 S3는 다른 키 요청 격리이며, 저장 서비스 Amazon S3와 다릅니다.
@@ -106,7 +106,7 @@ Media Service는 기본 `STORAGE_BACKEND=local`을 유지하고 AWS Task에서�
 
 ### AWS S4 Task 식별과 trial 계측 계약
 
-CPU 측정 경계, Task/Trial memory 집계 차이와 retained 전 남은 검증은 [자원 계측 계약 검토](AWS-S4-MEASUREMENT.md)를 따른다. 최종 조건 확정과 retained 실행은 아직 승인 전이다.
+CPU 측정 경계와 Task/Trial memory 집계는 [자원 계측 계약](AWS-S4-MEASUREMENT.md)을 따릅니다. 최종 조건 검증과 retained 30 trial 측정을 완료했으며 [AWS 보고서](../../reports/e1-cache-stampede/AWS-S4.md)에 결과를 기록했습니다.
 
 AWS S4 실험 모드는 기본적으로 꺼져 있습니다. `E1_EXPERIMENT_MODE=true`일 때만 시작 과정에서 `ECS_CONTAINER_METADATA_URI_V4`의 `/task`를 한 번 읽고 내부 제어 endpoint를 등록합니다. `E1_CONTAINER_NAME`으로 지정한 container를 찾으며 기본 이름은 `media-service`입니다. 필요한 metadata를 읽지 못하거나 container image digest가 `sha256:` digest 형식이 아니면 실험 모드로 기동하지 않습니다.
 
@@ -126,7 +126,7 @@ Task identity에는 account ID와 전체 ARN을 넣지 않고 다음 값만 유�
 
 같은 Task에 같은 trial의 prepare/finish를 다시 호출해도 같은 상태나 완료 report를 반환합니다. 제어 응답은 `Cache-Control: no-store`를 사용하며 report schema는 `e1-aws-s4-task-v1`입니다. Report에는 Task별 이미지 요청 수, 파생/원본 S3 GET 결과와 byte, 변환 시도·성공·실패·시간·최대 동시 실행 수, coalesced 요청 수, S3 publish의 created/existing/conflict/error와 시도 byte, 첫/마지막 요청 시각, 종료 시점의 진행 중 요청·변환·coordinator 상태가 들어갑니다.
 
-Resource sample은 container 내부에서 보이는 Linux cgroup counter를 직접 읽습니다. v1은 `cpuacct.usage`(ns)와 `memory.usage_in_bytes`, v2는 `cpu.stat`의 `usage_usec`(ns로 변환)와 `memory.current`를 사용합니다. 지원 counter를 읽을 수 없으면 실험 모드 기동을 실패시키며 ECS stats로 대체하지 않습니다. Task identity는 계속 ECS metadata로 확인합니다. `resource_source`를 Task identity와 `tasks.csv`에 기록하여 container-visible 범위를 명시하며, Task 전체 container 합계라고 해석하지 않습니다. 실제 Fargate의 counter 접근성과 범위는 재calibration에서 확인해야 합니다.
+Resource sample은 container 내부에서 보이는 Linux cgroup counter를 직접 읽습니다. v1은 `cpuacct.usage`(ns)와 `memory.usage_in_bytes`, v2는 `cpu.stat`의 `usage_usec`(ns로 변환)와 `memory.current`를 사용합니다. 지원 counter를 읽을 수 없으면 실험 모드 기동을 실패시키며 ECS stats로 대체하지 않습니다. Task identity는 계속 ECS metadata로 확인합니다. `resource_source`를 Task identity와 `tasks.csv`에 기록하여 container-visible 범위를 명시하며, Task 전체 container 합계라고 해석하지 않습니다. 실제 Fargate의 counter 접근성과 범위는 [동일 환경의 진단](../../reports/e1-cache-stampede/aws-s4-resource-diagnostic/README.md)에서 확인했습니다.
 
 Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는 50ms를 첫 후보 간격으로 사용합니다. Report의 CPU는 사용률(%)이 아니라 첫 sample과 마지막 유효 sample의 누적 CPU 시간 차이(ns)입니다. Memory는 관측 sample 중 최댓값이며 정확한 순간 peak가 아닙니다. Sampling 오류 수도 함께 반환합니다. 50ms 간격은 개발 calibration에서 overhead와 peak 누락 가능성을 확인한 뒤 최종 측정 전에 고정합니다.
 
@@ -140,9 +140,9 @@ Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는
 
 공개 가능한 원자료에는 Region·AZ·Task definition·image digest를 유지하지만 account ID, 전체 Task ARN, cluster/service/target group ARN, bucket 이름과 ALB DNS를 쓰지 않습니다. 실행 전 image digest, source hash와 canonical transform에서 계산한 파생 key가 서로 맞지 않으면 중단합니다. Retained run에는 calibration에서 미리 고정한 양수 start-skew 한계가 필수이고, calibration만 `0`으로 검증을 잠시 끌 수 있습니다.
 
-원격 동작은 실제 제어 endpoint와 같은 report 계약을 구현한 1/2/4 Task 모사 통합 test로 300-request round trip을 확인합니다. 요청 행 삭제, Task counter·resource sample·Task ID 변조는 재분석 단계에서 거부합니다. ECS `DescribeServices`·`ListTasks`·`DescribeTasks`와 ELB `DescribeTargetHealth`·`DescribeTargetGroupAttributes`를 조합한 probe도 exact healthy target 집합, round robin·stickiness off와 sanitized Task ID mapping을 단위 test로 고정했습니다. [Terraform 환경](../../deploy/e1-aws-s4/README.md)은 mock provider plan/apply 계약까지 검증했지만 아직 실제 AWS 측정 결과가 아니며, 개발 calibration 이후에만 retained 결과를 만듭니다.
+원격 동작은 실제 제어 endpoint와 같은 report 계약을 구현한 1/2/4 Task 모사 통합 test로 300-request round trip을 확인합니다. 요청 행 삭제, Task counter·resource sample·Task ID 변조는 재분석 단계에서 거부합니다. ECS `DescribeServices`·`ListTasks`·`DescribeTasks`와 ELB `DescribeTargetHealth`·`DescribeTargetGroupAttributes`를 조합한 probe도 exact healthy target 집합, round robin·stickiness off와 sanitized Task ID mapping을 단위 test로 고정했습니다. [Terraform 환경](../../deploy/e1-aws-s4/README.md)은 mock provider 검증에 이어 실제 AWS 배포·retained 측정·제거까지 완료했습니다.
 
-여러 프로세스 사이의 요청 조정은 Redis나 DynamoDB 같은 외부 저장소를 이용해 실제 변환 담당을 하나로 정합니다. 이 경우에도 lock(잠금) 만료나 담당 프로세스 교체 중 두 작업이 겹칠 수 있으므로 S3 conditional write를 마지막 안전장치로 사용합니다.
+이번 범위에서 제외한 프로세스 간 조정은 Redis나 DynamoDB 같은 외부 저장소로 변환 담당을 정하는 방식입니다. 이 경우에도 lock(잠금) 만료나 담당 프로세스 교체 중 두 작업이 겹칠 수 있으므로 S3 conditional write를 마지막 안전장치로 사용합니다.
 
 여러 프로세스 사이의 요청 조정은 중복 변환 비용이 외부 저장소, lock 만료와 실패 복구의 복잡성보다 큰 경우에 도입합니다.
 
@@ -162,7 +162,7 @@ Prepare 직후와 finish 시점에는 반드시 sampling하고, 그 사이에는
 
 `640 × 640`은 업로드 원본의 크기가 아니라 card/thumbnail용 파생 이미지 크기입니다. 약 16.1 megapixel인 원본을 사용해 고해상도 JPEG decode와 큰 폭의 축소를 포함합니다. 실제 변환기와 인코더 버전도 실행 결과에 남깁니다.
 
-대표 결과를 얻은 뒤에는 같은 원본의 `1280 × 1280` 변환, 더 큰 JPEG와 알파 채널이 있는 PNG에서도 같은 경향이 나타나는지 확인합니다. 추가 조건은 sensitivity scenario로 분리하며 첫 결과의 조건을 사후에 바꾸지 않습니다.
+같은 원본의 `1280 × 1280` 변환, 더 큰 JPEG와 알파 채널 PNG의 캐시 폭주 민감도 비교는 실행하지 않았습니다. 이 조건들은 후속 검토 후보이며 이번 E1 결과의 적용 범위에 포함하지 않습니다.
 
 ## 고정한 구현과 실행 조건
 

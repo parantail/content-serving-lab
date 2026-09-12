@@ -145,5 +145,14 @@
     "observed_at": "2026-09-10T18:36:57.5928699+00:00",
     "s3_bytes": 106731634.0,
     "s3_objects": 2166
+  },
+  "billing_next_day": {
+    "observed_at": "2026-09-12",
+    "source": "Operator-reported Cost Explorer daily service CSV observation",
+    "row_date": "2026-09-10",
+    "reported_total_usd": 0.5304,
+    "precision": "Reported to four decimal places; the original CSV is not retained here",
+    "scope": "Account-wide UTC day containing E2 a1 calibration, b1 full run and c2 rerun; not a c2-only cost",
+    "billing_final": false
   }
 }
