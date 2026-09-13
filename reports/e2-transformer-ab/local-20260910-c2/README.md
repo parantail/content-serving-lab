@@ -10,7 +10,7 @@ ImageMagick AVIF quality 전달을 수정한 clean commit `5774b94a2f84d95b12534
 
 각 mode는 새 container에서 1 vCPU·2 GiB 제한으로 실행했다. 세 mode의 102개 worker 모두 cgroup membership 일치와 `wait4 RSS >= self RSS`를 확인했다. RSS는 worker 수명 전체의 high-water mark이며 cgroup 사용량과 구분한다. Loop 시간은 최초 corpus 준비와 별도 preflight를 제외한다. 정확한 package·corpus hash·job·시각은 각 raw manifest에 있다.
 
-Calibration 600.478728938초 × 5 × 1.25 = **62.550분**, 승인된 210분 gate 이내다. 로컬과 AWS 속도를 같다고 가정하지 않으므로 AWS에서도 새 calibration을 통과해야 5회 본 측정을 시작한다. Native 30초·인프라 5시간·견적 US$1.50·상한 US$3 조건은 유지한다.
+Calibration 600.478728938초 × 5 × 1.25 = **62.550분**, 사전에 정한 210분 gate 이내다. 로컬과 AWS 속도를 같다고 가정하지 않으므로 AWS에서도 새 calibration을 통과해야 5회 본 측정을 시작한다. Native 30초·인프라 5시간·견적 US$1.50·상한 US$3 조건은 유지한다.
 
 Validation 576개와 quality 192개 출력을 독립 디코딩해 geometry·alpha·JPEG 4:4:4·PNG truecolor 조건 및 SSIM/PSNR을 확인했다. Calibration Q80 출력 1,152개와 quality의 Q80 출력 48개 모두 validation의 hash/bytes와 일치했다. 두 engine·세 lossy format·대표 입력 8개 모두 Q50/65/80/90의 네 출력 hash가 서로 달랐다. 같은 Q 숫자가 같은 화질을 뜻하지는 않는다.
 

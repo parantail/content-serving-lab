@@ -65,7 +65,7 @@
 
 **결과:**
 
-- 캐시 적중 요청은 93개 trial 전부에서 오류 0, 장애 구간 p99는 로컬 10ms 이하·AWS 66ms 이하였습니다. 파생 이미지 조회가 변환 slot과 무관한 코드 구조가 실측으로 확인됐습니다.
+- 캐시 적중 요청은 93개 trial 전부에서 오류 0, 장애를 주입한 trial의 장애 구간 p99는 로컬 최대 10.4ms·AWS 최대 46ms였습니다(장애 없는 T0까지 포함하면 로컬 31ms·AWS 66ms). 파생 이미지 조회가 변환 slot과 무관한 코드 구조가 실측으로 확인됐습니다.
 - 영향을 받은 것은 다른 이미지의 변환 요청(정상 miss)뿐이었고, 경로는 변환 slot이었습니다. 로컬 T1/T2에서 오염된 요청이 slot 4개를 모두 점유하자 baseline 정상 miss의 93.3%가 기준 지연 1.83초를 넘었고, trial별 p99 평균은 17.3초였습니다. Slot 대기는 최대 25건, 보유 원본은 최대 118 MiB였으며 peak cgroup memory는 T0보다 약 350 MiB 높았습니다. 마지막으로 영향을 받은 요청의 시작은 장애 종료 뒤 약 11초였습니다.
 - M1은 slot 대기를 2초로 제한하고 초과 요청에 503(`Retry-After: 1`)을 반환했습니다. 로컬 T2 정상 miss의 84.7%가 거부됐고 p99는 약 2초, peak cgroup memory의 T0 대비 증가는 약 54 MiB였습니다. 장애 종료 후 새로 시작한 정상 요청에는 추가 영향이 관측되지 않았습니다. 정상 시 지연 차이는 반복 간 변동 안이었습니다.
 - M1이 원본 읽기를 slot 안으로 옮긴 탓에 원본 지연(T4)에서는 baseline에서 영향이 없던 장애가 정상 miss의 85% 거부로 바뀌었습니다.
@@ -139,10 +139,16 @@ docker run --rm -p 8080:8080 \
   content-serving-lab:local
 ```
 
-다른 터미널에서 응답을 확인합니다.
+다른 터미널에서 readiness를 확인한 뒤 fixture로 포함된 원본을 요청합니다. 변환 옵션은 `width`·`height`(1~4096)·`fit=cover`·`quality`(1~100)를 쉼표로 이어 쓰고, 현재 출력 포맷은 `webp`만 지원합니다. 첫 요청은 `X-Media-Cache: miss`로 변환하고, 같은 요청을 다시 보내면 저장된 파생 이미지를 `derivative`로 응답합니다.
 
 ```bash
 curl http://localhost:8080/health/ready
+hash=de206136ed0eeaa42499840f49fa35bd3d57745b8a9580b16f0d6e6393ac7f91
+curl -o out.webp -D - "http://localhost:8080/i/${hash}/width=640,height=640,fit=cover,quality=80.webp"
 ```
 
 Docker build 안에서 `go test ./...`와 `go vet ./...`가 실행됩니다. 각 실험의 workload 실행과 결과 재생성 명령은 기술 명세와 보고서에 있습니다: [E1](experiments/e1-cache-stampede/README.md#로컬-재현) · [E2](reports/e2-transformer-ab/aws-20260910-c2/README.md#원자료에서-재생성) · [E3](experiments/e3-failure-isolation/README.md#로컬-재현).
+
+## 라이선스
+
+코드와 문서는 [MIT License](LICENSE)입니다. 사진 fixture는 CC0이며 출처와 조건은 [E1 fixture](experiments/e1-cache-stampede/fixtures/README.md)와 [E2 corpus](experiments/e2-transformer-ab/fixtures/README.md) 문서에 있습니다.

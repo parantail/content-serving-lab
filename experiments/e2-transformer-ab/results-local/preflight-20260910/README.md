@@ -1,4 +1,4 @@
-# Local verification and calibration — 2026-09-10
+# E2 로컬 검증과 calibration — 2026-09-10
 
 후속 [AWS 품질 검사와 동일 이미지 진단](../../../../reports/e2-transformer-ab/aws-20260910/README.md)에서 ImageMagick AVIF quality 전달 오류가 확인됐다. 아래 실행·decode·hash 검사 통과는 실제 AVIF Q 적용을 증명하지 않으며, 최종 비교 근거로 승격하지 않는다.
 

@@ -54,7 +54,7 @@ Set-Location deploy/e1-aws-s4
 
 `bootstrap-images.ps1`은 ECR만 먼저 만들고 clean commit에서 `linux/amd64`용 `service`와 `experiment-aws-s4` image를 build/push한 뒤 tag가 아닌 registry digest를 full plan에 고정합니다. `plan.ps1`은 ECR bootstrap 이후 정확히 67개 create, 0개 update/replace/delete와 NAT/EIP/CloudFront/WAF/autoscaling 부재를 확인합니다. 예상과 다른 기존 state나 drift가 있으면 적용하지 않습니다.
 
-A5 calibration부터 일회성 runner를 다음처럼 시작합니다. 종료한 Task의 결과는 `recovered-results/<deployment-id>/`에도 내려받습니다.
+Calibration 단계부터 일회성 runner를 다음처럼 시작합니다. 종료한 Task의 결과는 `recovered-results/<deployment-id>/`에도 내려받습니다.
 
 ```powershell
 .\scripts\run-task.ps1
@@ -70,7 +70,7 @@ A5 calibration부터 일회성 runner를 다음처럼 시작합니다. 종료한
 
 ### 본 실험 모드
 
-기본값은 calibration이다. [계측 계약](../../experiments/e1-cache-stampede/AWS-S4-MEASUREMENT.md)의 retained는 bootstrap부터 `-RunMode retained`를 지정한다. Clean public commit의 앞 12자가 deployment ID여야 한다.
+기본값은 calibration입니다. [계측 계약](../../experiments/e1-cache-stampede/AWS-S4-MEASUREMENT.md)의 retained는 bootstrap부터 `-RunMode retained`를 지정합니다. Clean public commit의 앞 12자가 deployment ID여야 합니다.
 
 ```powershell
 .\scripts\bootstrap-images.ps1 -DeploymentId $deploymentId -ExpectedCostUsd 3 -RunMode retained
@@ -81,7 +81,7 @@ A5 calibration부터 일회성 runner를 다음처럼 시작합니다. 종료한
 .\scripts\destroy.ps1
 ```
 
-각 단계 성공을 확인한 뒤 다음 명령을 실행한다. 실패하면 본 실험을 반복하지 말고 회수 가능한 원자료를 확보한 뒤 destroy한다. 모드 불일치·진단 누락/불일치·기존 로컬/원격 결과·예약 충돌은 차단된다. 실패 run의 예약은 삭제해 재사용하지 않는다. 새 run은 새 checkpoint와 별도 배포에서 검토한다.
+각 단계 성공을 확인한 뒤 다음 명령을 실행합니다. 실패하면 본 실험을 반복하지 말고 회수 가능한 원자료를 확보한 뒤 destroy합니다. 모드 불일치·진단 누락/불일치·기존 로컬/원격 결과·예약 충돌은 차단됩니다. 실패 run의 예약은 삭제해 재사용하지 않습니다. 새 run은 새 checkpoint와 별도 배포에서 검토합니다.
 
 ### 검증 명령
 

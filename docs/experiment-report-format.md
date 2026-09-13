@@ -80,13 +80,16 @@ AWS 자원 생성, 데이터 준비, 부하 실행, 결과 수집, 그래프 생
 
 ```text
 experiments/<experiment-id>/
-  README.md              실행 계획과 데이터 형식
-  workload/              부하와 장애를 만드는 코드
-  results/<run-id>/      원본 측정 자료와 실행 환경 정보
-  analyze/               집계와 그래프 생성 코드
+  README.md              기술 명세, 실행 조건과 데이터 형식
+  fixtures/              입력 이미지와 사용 조건
+  results*/<run-id>/     원본 측정 자료, 실행 환경 정보와 analysis/ 산출물
+cmd/<experiment>-*/, internal/<experiment>*/
+                         부하·장애 생성과 집계·그래프 코드 (E2는 experiments/e2-transformer-ab/*.py)
 reports/<experiment-id>/
-  README.md              결과 리포트
-  assets/                생성한 그래프와 구성도
+  README.md              결과 리포트 (E1은 Phase A/B·AWS 보고서로 분리)
+  figures/, raw/         E2처럼 보고서가 원자료 사본과 그래프를 함께 둘 때
 ```
+
+보고서의 그래프는 위 `analysis/` 또는 `figures/` 산출물을 직접 참조합니다.
 
 그래프를 손으로 고쳐 수치와 모양이 달라지게 하지 않습니다. 원본 측정 자료에서 다시 만들 수 있어야 하며, 리포트의 숫자가 집계 결과와 맞는지도 자동으로 확인합니다.

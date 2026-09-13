@@ -1,6 +1,6 @@
 # E3 배포 전 비용 계산
 
-조회일: 2026-09-11. 서울 Linux/x86 Fargate, 한 번에 1 vCPU·2 GiB Task 하나, bootstrap부터 최대 2시간이다. **보수적 실행 견적 US$1.20**, 합의한 US$3 이내다. 자동 과금 차단 한도가 아니며 PC와 인증이 유효해야 로컬 watchdog가 동작한다. 단가는 [E2 비용 계산](../e2-transformer-ab/COST.md)과 같은 서울 Price List 항목을 사용한다.
+조회일: 2026-09-11. 서울 Linux/x86 Fargate, 한 번에 1 vCPU·2 GiB Task 하나, bootstrap부터 최대 2시간이다. **보수적 실행 견적 US$1.20**, 사전에 정한 상한 US$3 이내다. 자동 과금 차단 한도가 아니며 PC와 인증이 유효해야 로컬 watchdog가 동작한다. 단가는 [E2 비용 계산](../e2-transformer-ab/COST.md)과 같은 서울 Price List 항목을 사용한다.
 
 | 항목 | 적용 수량·단가 | 계산 US$ |
 | --- | --- | ---: |
@@ -18,7 +18,7 @@
 | 추가 여유 | 약 79% | 0.52980 |
 | 실행 견적 | 세금·환율 변환 전 USD | **1.20000** |
 
-AWS 측정 범위는 사용자 결정(2026-09-11)에 따라 T0·T2·T4 × M0/M1/M2 × 3회의 27 trial과 calibration 2 trial이다. 각 trial은 150초 timeline과 예열·drain을 포함해 약 2.75분이며, calibration 약 6분·본 측정 약 75분·image build/push·plan/apply·destroy를 합쳐 2시간 deadline 안에 끝내는 것을 전제로 한다. 시간이 부족하면 본 측정을 시작하지 않는다.
+AWS 측정 범위는 2026-09-11에 정한 대로 T0·T2·T4 × M0/M1/M2 × 3회의 27 trial과 calibration 2 trial이다. 각 trial은 150초 timeline과 예열·drain을 포함해 약 2.75분이며, calibration 약 6분·본 측정 약 75분·image build/push·plan/apply·destroy를 합쳐 2시간 deadline 안에 끝내는 것을 전제로 한다. 시간이 부족하면 본 측정을 시작하지 않는다.
 
 예상 사용량 계산과 계정 청구 내역은 구분한다. 실행 후 비용 조회 시각·범위·집계 지연을 별도 기록하며, 아직 집계되지 않은 비용을 US$0으로 확정하지 않는다.
 

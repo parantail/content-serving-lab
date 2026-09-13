@@ -46,7 +46,7 @@ ImageMagick은 trixie의 Q16 non-HDRI 패키지를 사용한다. 현재 이미�
 | 합계 | 포맷 변형은 별도 콘텐츠로 세지 않음 | 24 |
 
 - 작은 입력은 장변 1024px, 큰 입력은 장변 약 4096px로 하며 원본을 확대해 고해상도 사진인 것처럼 만들지 않는다. E1 원본은 별도의 연결 확인 fixture로 보존한다.
-- 일반 입력은 8-bit sRGB 정지 이미지로 제한한다. ICC가 있는 입력은 sRGB 변환 후 metadata를 제거하고, orientation은 픽셀에 먼저 반영한다. HDR·CMYK·animation·다중 page는 이번 주 비교에서 제외한다.
+- 일반 입력은 8-bit sRGB 정지 이미지로 제한한다. ICC가 있는 입력은 sRGB 변환 후 metadata를 제거하고, orientation은 픽셀에 먼저 반영한다. HDR·CMYK·animation·다중 page는 이번 비교에서 제외한다.
 - 두 번째 사진은 CC0 과일 정물 5040×3234이며 24개 입력·대표 품질 입력 8개·생성 옵션·hash는 [corpus](fixtures/README.md)에 고정했다.
 - 생성된 WebP/AVIF 등을 실제 사용자 원본으로 표현하지 않는다. 이 작은 묶음의 균등 가중 결과와 입력 유형별 결과를 함께 보고한다. production 분포의 대표성을 주장하지 않는다.
 - 정상 입력 밖에 잘린 파일, 지원하지 않는 형식, 공통 크기 제한 초과 입력의 소규모 검증 세트를 둔다. 악성 파일 전체 대응이나 fuzzing 실험으로 범위를 넓히지 않는다.
@@ -89,23 +89,23 @@ libvips operation cache는 E1처럼 끈다. ImageMagick의 pixel cache는 이미
 
 초기 유지 기준은 현재 libvips다. ImageMagick으로 교체하려면 명확한 품질/지원 기능 이득 또는 반복 편차를 넘는 자원·처리량 개선이 있고, 다른 주요 지표의 손해를 설명할 수 있어야 한다. 단일 가중 점수로 보편적 승자를 만들지 않는다. 유형별 승자·상충·판단 유보를 허용한다. 현재는 단일 수치 문턱을 두지 않는다. 이후 판정 기준을 바꿀 때는 적용 전 변경 내용과 이유를 문서화하고 이전 결과와 구분한다.
 
-예정 시각 결과는 처리량–RSS scatter(단위와 반복 범위), 포맷별 SSIM–bytes curve, 입력 유형별 속도/bytes/오류 matrix다. RSS는 batch 값이므로 입력별 RSS 승자를 도출하지 않는다.
+시각 결과는 처리량–RSS scatter(단위와 반복 범위), 포맷별 SSIM–bytes curve, 입력 유형별 속도/bytes/오류 matrix 세 가지다. RSS는 batch 값이므로 입력별 RSS 승자를 도출하지 않는다.
 
 ## AWS 구성과 실행 조건
 
 서울 `ap-northeast-2`의 Linux amd64 Fargate 일회성 Task 1개, 1 vCPU·2 GiB를 사용한다. 같은 Task 안에서 두 engine worker를 교대로 실행한다. 별도 ECS Service와 ALB는 두지 않는다. 변환 함수만의 비교에 HTTP와 저장소 latency를 섞지 않기 위한 구성이다.
 
-새 E2 Terraform에 VPC/public subnet/IGW/route/security group, ECS cluster/task definition, immutable ECR, 결과 S3, IAM, CloudWatch Logs, S3 gateway endpoint를 만든다. corpus는 이미지에 고정하고 결과 S3에는 batch 종료 후 업로드한다. public IPv4로 image pull/log 전송 경로를 확보하며 inbound는 열지 않는다. NAT와 유료 interface endpoint는 사용하지 않는다. 기존 E1 state/resource와 섞지 않는다.
+E2 Terraform은 VPC/public subnet/IGW/route/security group, ECS cluster/task definition, immutable ECR, 결과 S3, IAM, CloudWatch Logs, S3 gateway endpoint를 만든다. corpus는 이미지에 고정하고 결과는 batch 종료 후 S3에 업로드한다. public IPv4로 image pull/log 전송 경로를 확보하며 inbound는 열지 않는다. NAT와 유료 interface endpoint는 사용하지 않는다. 기존 E1 state/resource와 섞지 않는다.
 
-월간 US$10 Budget·알림을 재확인하고, 이번 배포 예상 비용 US$3 이내·인프라 최대 5시간을 실행 조건으로 사용한다. US$3은 실행 허용 기준이며 산출된 견적이나 실제 과금의 자동 차단 한도가 아니다. 실제 단가는 구현할 resource 수·보존량·소요 시간과 함께 apply 전에 계산한다. Fargate는 image 다운로드부터 종료까지의 자원 사용시간에 요금이 적용되며 S3/ECR/로그/IPv4 비용도 따로 포함해야 한다. [Fargate 요금](https://aws.amazon.com/fargate/pricing/).
+실행 조건은 월간 US$10 Budget·알림 확인, 배포 예상 비용 US$3 이내, 인프라 최대 5시간이다. US$3은 실행 허용 기준이며 산출된 견적이나 실제 과금의 자동 차단 한도가 아니다. 실제 단가는 resource 수·보존량·소요 시간과 함께 apply 전에 [비용 계산](../../deploy/e2-transformer-ab/COST.md)으로 고정했다. Fargate는 image 다운로드부터 종료까지의 자원 사용시간에 요금이 적용되며 S3/ECR/로그/IPv4 비용도 따로 포함해야 한다. [Fargate 요금](https://aws.amazon.com/fargate/pricing/).
 
 E1에서 검증한 preflight → clean checkpoint → ECR bootstrap/push → 저장된 plan 검토/apply → 동일 이미지 진단 → calibration/본 측정 → 회수/독립 재분석 → destroy/잔여 검사 흐름을 E2에 맞춘다. watchdog는 bootstrap 전에 시작하고 deadline에 실행 중 Task를 중단·회수·제거한다. 기존 로컬 watchdog는 운영 PC가 계속 켜져 있고 AWS 인증이 유효해야 동작한다. AWS 자체 예약 정리는 새 범위이므로 포함한 것으로 간주하지 않는다.
 
 Local/AWS raw는 분리한다. 동일 image와 설정이어도 Docker 환경과 Fargate의 성능 수치를 하나의 모집단으로 합치지 않는다. 단일 Fargate 배치 결과를 다양한 호스트에서의 일반적 성능으로 확대하지 않는다.
 
-## 실행 전에 고정할 산출물
+## 실행 전에 고정한 산출물
 
-설계 확정은 파일 확보·동작 검증 완료를 의미하지 않는다. 아래 항목이 갖춰진 clean checkpoint에서만 본 측정을 실행한다.
+설계 확정은 파일 확보·동작 검증 완료를 의미하지 않는다. 아래 항목이 갖춰진 clean checkpoint에서만 본 측정을 실행했다.
 
 | 단계 | 고정하거나 검증할 내용 |
 | --- | --- |
@@ -116,20 +116,18 @@ Local/AWS raw는 분리한다. 동일 image와 설정이어도 Docker 환경과 
 | Harness/calibration | seed·raw schema·warm-up 포함 최대 호출 수, 오류/timeout 회수, RSS와 cgroup scope, 210분 이내 본 측정 실행 가능 여부 |
 | AWS 사전점검 | 현재 인증·Budget·quota·잔여 자원, 자원별 비용 계산, 생성 자원 plan, image digest·watchdog·회수/제거 경로 |
 
-각 항목은 공개 파일과 명령으로 확인 가능해야 한다. 예정된 파일의 hash나 버전을 추정해서 채우지 않는다. 합의된 범위·제한의 변경이 필요하거나 실행이 막히면 후속 측정을 중단하고 사유를 기록한다. AWS 자원이 이미 존재하면 가능한 원자료 회수와 정리를 우선한다.
+각 항목은 공개 파일과 명령으로 확인할 수 있다. 파일의 hash나 버전을 추정해서 채우지 않는다. 사전에 정한 범위·제한의 변경이 필요하거나 실행이 막히면 후속 측정을 중단하고 사유를 기록한다. AWS 자원이 이미 존재하면 가능한 원자료 회수와 정리를 우선한다.
 
 ## 재현 경로와 완료 조건
 
-현재 구현의 실제 명령·원자료 형식은 [RUN.md](RUN.md)에 있다.
+실제 명령·원자료 형식은 [RUN.md](RUN.md)에 있다. 구현과 측정은 다음 순서로 진행했고, 각 단계의 명령과 산출물 경로는 해당 문서에 있다.
 
-다음 순서로 구현하며, 해당 기능을 검증할 때 실제 명령과 산출물 경로를 추가한다.
+1. Corpus를 확보하고 license/hash·생성 재현성을 확인했다. → [corpus](fixtures/README.md)
+2. 동일 입력 계약의 adapter와 runner/analyzer를 구현하고 container에서 로컬 검증했다. → [로컬 검증](../../reports/e2-transformer-ab/local-20260910-c2/README.md)
+3. Calibration 결과와 실제 실행 조건을 고정하고 clean checkpoint를 만들었다.
+4. E2 인프라를 만들고 plan/apply 후 동일 이미지 진단과 본 측정을 실행했다. → [배포 절차](../../deploy/e2-transformer-ab/README.md)
+5. 원자료를 회수하고 별도 분석 실행으로 표·차트가 재생성되는지 대조했다.
+6. 즉시 destroy하고 Terraform state와 서비스 API로 잔여 자원을 확인했다.
+7. 결과·한계·선택·재검토 조건과 비용 근거를 보고서에 남겼다. → [최종 보고서](../../reports/e2-transformer-ab/aws-20260910-c2/README.md)
 
-1. Corpus를 확보하고 license/hash·생성 재현성을 확인한다.
-2. 동일 입력 계약의 adapter와 runner/analyzer를 구현하고 container에서 로컬 검증한다.
-3. Calibration 결과와 실제 실행 조건을 고정하고 clean checkpoint를 만든다.
-4. E2 인프라를 셋업하고 plan/apply 후 동일 이미지 진단과 본 측정을 실행한다.
-5. 원자료를 회수하고 별도 분석 실행으로 표·차트가 재생성되는지 대조한다.
-6. 즉시 destroy하고 Terraform state와 서비스 API로 잔여 자원을 확인한다.
-7. 결과·한계·선택·재검토 조건과 비용 근거를 보고서에 남긴다.
-
-완료에는 전체 예정 호출의 성공/오류/중단 분류, 두 engine의 결과 정확성 검증, 원자료에서 재생성한 세 시각 결과, 독립 재분석, AWS 제거 근거가 필요하다. 실패·무효 run을 숨기거나 좋은 결과만 골라 반복을 보충하지 않는다. 측정 결과와 실제 비용 기록에는 조회 시점과 범위를 표시한다.
+완료 조건은 전체 예정 호출의 성공/오류/중단 분류, 두 engine의 결과 정확성 검증, 원자료에서 재생성한 세 시각 결과, 독립 재분석, AWS 제거 근거다. 실패·무효 run을 숨기거나 좋은 결과만 골라 반복을 보충하지 않는다. 측정 결과와 실제 비용 기록에는 조회 시점과 범위를 표시한다.

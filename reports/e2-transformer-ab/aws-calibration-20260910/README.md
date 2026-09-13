@@ -41,7 +41,7 @@ Cgroup v1에서 parent+worker 직접 멤버 2개, hidden member 0과 membership 
 - [독립 출력 검증](analysis/validate/verification.json), [Q80 품질 값](analysis/validate/quality.json), [확대 crop](analysis/validate/crops.png).
 - [Calibration 분석](analysis/calibrate/verification.json), [Q80 hash 대조](calibration-hash-check.json), [독립 재생성 대조](reanalysis-check.json).
 - [검토한 plan](raw/reviewed-plan.json), [실제 배포 확인](raw/live-verification.json), [제거 기록](raw/cleanup.json), [서비스별 잔여 검사](raw/residual-check.json).
-- [사용량·비용 관측](cost-observation.json). 배포 전 보수적 견적은 US$1.00, 승인 비용 조건은 US$3 이내였다. 계정 청구 집계와 자원 사용량으로 계산한 추정치는 구분한다.
+- [사용량·비용 관측](cost-observation.json). 배포 전 보수적 견적은 US$1.00, 사전에 정한 상한은 US$3이었다. 계정 청구 집계와 자원 사용량으로 계산한 추정치는 구분한다.
 
 원자료는 회수한 bytes 그대로이며 AWS 계정·ARN·네트워크 attachment 등은 별도 metadata에서 제외했다. EXIF 6/8 방향 패턴, 과일 질감과 alpha 경계를 확대 crop으로 확인했다.
 
